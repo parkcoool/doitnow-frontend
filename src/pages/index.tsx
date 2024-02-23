@@ -13,9 +13,5 @@ export default function App() {
     if (session.user === null) navigate("/login");
   }, [session]);
 
-  return (
-    <div className="App">
-      <Outlet />
-    </div>
-  );
+  return <Outlet />;
 }
