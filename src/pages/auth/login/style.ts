@@ -10,6 +10,7 @@ export const formContainerStyle = (theme: Theme) =>
     padding: "50px 30px",
     border: `1px solid ${theme.palette.grey[300]}`,
     borderRadius: "10px",
+    overflow: "hidden",
   });
 
 export const formStyle = (theme: Theme) =>

@@ -1,0 +1,55 @@
+/* 오른쪽으로 슬라이드하는 트랜지션 */
+.slide-right-enter {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slide-right-enter-active {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.slide-right-exit {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.slide-right-exit-active {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.slide-right-enter-active,
+.slide-right-exit-active {
+  transition:
+    opacity 300ms,
+    transform 300ms;
+}
+
+/* 왼쪽으로 슬라이드하는 트랜지션 */
+.slide-left-enter {
+  opacity: 0;
+  transform: translateX(100%);
+}
+
+.slide-left-enter-active {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.slide-left-exit {
+  opacity: 1;
+  transform: translateX(0%);
+}
+
+.slide-left-exit-active {
+  opacity: 0;
+  transform: translateX(-100%);
+}
+
+.slide-left-enter-active,
+.slide-left-exit-active {
+  transition:
+    opacity 300ms,
+    transform 300ms;
+}

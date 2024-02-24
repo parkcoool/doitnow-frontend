@@ -2,9 +2,11 @@
 
 import React from "react";
 import { useLocation } from "react-router-dom";
+import { CSSTransition, SwitchTransition } from "react-transition-group";
 
 import { useTheme } from "@mui/material/styles";
 import { ReactComponent as LogoIcon } from "assets/icon/common/doitnow_icon.svg";
+import "styles/transition.css";
 
 import Identifier from "./Identifier";
 import Password from "./Password";
@@ -42,6 +44,13 @@ export default function Login() {
     step: LoginStep.Identifier,
   }) as LoginLocationState;
 
+  // stepNodeRef를 생성하여 CSSTransition에 전달한다.
+  const stepNodeRef = React.useRef<HTMLDivElement>(null);
+
+  // stepRef를 생성하여 step을 관리한다.
+  const stepRef = React.useRef<LoginStep>(step);
+
+  // loginData를 관리하는 loginDataReducer를 생성한다.
   const [loginData, loginDataDispatch] = React.useReducer(loginDataReducer, {
     identifier: "",
     password: "",
@@ -99,15 +108,22 @@ export default function Login() {
         </div>
 
         {/* step에 따른 컴포넌트 렌더링 */}
-        {step === LoginStep.Identifier && (
-          <Identifier loginData={loginData} loginDataDispatch={loginDataDispatch} theme={theme} />
-        )}
-        {step === LoginStep.Password && (
-          <Password loginData={loginData} loginDataDispatch={loginDataDispatch} theme={theme} />
-        )}
-        {step === LoginStep.Complete && (
-          <Complete loginData={loginData} loginDataDispatch={loginDataDispatch} theme={theme} />
-        )}
+        {/* TODO: transition 방향 설정 */}
+        <SwitchTransition mode="out-in">
+          <CSSTransition key={step} timeout={300} classNames={`slide-${"left"}`} nodeRef={stepNodeRef}>
+            <div ref={stepNodeRef}>
+              {step === LoginStep.Identifier && (
+                <Identifier loginData={loginData} loginDataDispatch={loginDataDispatch} theme={theme} />
+              )}
+              {step === LoginStep.Password && (
+                <Password loginData={loginData} loginDataDispatch={loginDataDispatch} theme={theme} />
+              )}
+              {step === LoginStep.Complete && (
+                <Complete loginData={loginData} loginDataDispatch={loginDataDispatch} theme={theme} />
+              )}
+            </div>
+          </CSSTransition>
+        </SwitchTransition>
       </div>
     </div>
   );
