@@ -17,7 +17,7 @@ interface PreferenceMethods {
 const usePreferenceStore = create(
   persist<PreferenceValues & PreferenceMethods>(
     (set) => ({
-      theme: Theme.Dark,
+      theme: Theme.Light,
 
       setTheme: (theme) => set({ theme }),
     }),
