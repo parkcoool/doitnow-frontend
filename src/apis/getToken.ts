@@ -4,7 +4,9 @@ import type { APIResponse, AuthProvider } from "api";
 
 interface GetTokenBody {
   authProvider: AuthProvider;
-  code: string;
+  code?: string;
+  identifier?: string;
+  password?: string;
 }
 
 interface GetTokenResponse {

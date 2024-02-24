@@ -9,7 +9,7 @@ declare module "api" {
    * @template T 응답의 `result` 필드에 포함된 데이터의 타입입니다.
    */
   interface APIResponse<T> {
-    code: string;
+    code: number;
     message: string;
     result: T;
   }

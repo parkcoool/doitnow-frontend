@@ -16,7 +16,8 @@ interface PasswordProps {
 export default function Password({ loginData, loginDataDispatch }: PasswordProps) {
   const navigate = useNavigate();
 
-  function handleSubmit() {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     navigate("./", { state: { step: LoginStep.Complete } });
   }
 

@@ -16,7 +16,8 @@ interface IdentifierProps {
 export default function Identifier({ loginData, loginDataDispatch }: IdentifierProps) {
   const navigate = useNavigate();
 
-  function handleSubmit() {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     navigate("./", { state: { step: LoginStep.Password } });
   }
 

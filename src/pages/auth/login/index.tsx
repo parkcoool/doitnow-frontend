@@ -3,13 +3,17 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 
+import getToken from "apis/getToken";
+
 import Identifier from "./Identifier";
 import Password from "./Password";
+import Complete from "./Complete";
 
 import type { AuthProvider } from "api";
 
 interface LoginLocationState {
   step: LoginStep;
+  message?: string;
 }
 
 export interface LoginData {
@@ -45,6 +49,7 @@ export default function Login() {
     <>
       {step === LoginStep.Identifier && <Identifier loginData={loginData} loginDataDispatch={loginDataDispatch} />}
       {step === LoginStep.Password && <Password loginData={loginData} loginDataDispatch={loginDataDispatch} />}
+      {step === LoginStep.Complete && <Complete loginData={loginData} loginDataDispatch={loginDataDispatch} />}
     </>
   );
 }
