@@ -1,25 +1,25 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-export enum Theme {
+export enum ThemeMode {
   Light = "light",
   Dark = "dark",
 }
 
 interface PreferenceValues {
-  theme: Theme;
+  themeMode: ThemeMode;
 }
 
 interface PreferenceMethods {
-  setTheme: (theme: Theme) => void;
+  setTheme: (theme: ThemeMode) => void;
 }
 
 const usePreferenceStore = create(
   persist<PreferenceValues & PreferenceMethods>(
     (set) => ({
-      theme: Theme.Light,
+      themeMode: ThemeMode.Light,
 
-      setTheme: (theme) => set({ theme }),
+      setTheme: (theme) => set({ themeMode: theme }),
     }),
     {
       name: "preference-store",

@@ -17,5 +17,5 @@
     "jsx": "react-jsx",
     "baseUrl": "./src"
   },
-  "include": ["src", "src/@types"]
+  "include": ["src", "src/@types", "src/@types/custom.d.ts"]
 }

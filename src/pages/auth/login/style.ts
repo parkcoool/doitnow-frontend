@@ -1,13 +1,21 @@
 import { css } from "@emotion/react";
 
-export const formContainerStyle = css({
-  width: "90%",
-  margin: "0 auto",
-  padding: "50px",
-  boxSizing: "border-box",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  border: "1px solid #000",
-  borderRadius: "10px",
-});
+import type { Theme } from "@mui/material";
+
+export const formContainerStyle = (theme: Theme) =>
+  css({
+    width: "90%",
+    display: "flex",
+    margin: "24px auto",
+    padding: "50px 30px",
+    border: `1px solid ${theme.palette.grey[300]}`,
+    borderRadius: "10px",
+  });
+
+export const formStyle = (theme: Theme) =>
+  css({ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" });
+
+export const inputStyle = (theme: Theme) =>
+  css({
+    width: "100%",
+  });

@@ -3,15 +3,17 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 
-import { css } from "@emotion/react";
-
 import getToken from "apis/getToken";
 
+import { inputStyle, formStyle } from "./style";
 import { LoginData, LoginStep } from "./";
+
+import type { Theme } from "@mui/material";
 
 interface CompleteProps {
   loginData: LoginData;
   loginDataDispatch: React.Dispatch<Partial<LoginData>>;
+  theme: Theme;
 }
 
 enum LoginResult {
@@ -21,7 +23,7 @@ enum LoginResult {
   Error = "error",
 }
 
-export default function Complete({ loginData, loginDataDispatch }: CompleteProps) {
+export default function Complete({ loginData, loginDataDispatch, theme }: CompleteProps) {
   const navigate = useNavigate();
 
   const [loginResult, setLoginResult] = React.useState<LoginResult>(LoginResult.Pending);
