@@ -1,6 +1,7 @@
 import axios from "axios";
 
-import type { APIResponse, AuthProvider } from "api";
+import type { APIResponse } from "api";
+import type { AuthProvider } from "auth";
 
 interface GetTokenBody {
   authProvider: AuthProvider;

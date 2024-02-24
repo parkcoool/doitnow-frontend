@@ -9,7 +9,7 @@ import Identifier from "./Identifier";
 import Password from "./Password";
 import Complete from "./Complete";
 
-import type { AuthProvider } from "api";
+import type { AuthProvider } from "auth";
 
 interface LoginLocationState {
   step: LoginStep;
