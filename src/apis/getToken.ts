@@ -22,7 +22,7 @@ interface GetTokenResponse {
 }
 
 /**
- * @path `GET /auth`
+ * @path `POST /auth`
  * @description 인가 코드를 이용하여 액세스 토큰과 리프레시 토큰을 발급받습니다.
  */
 export default async function getToken(body: GetTokenBody) {
