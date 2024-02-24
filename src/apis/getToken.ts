@@ -26,7 +26,7 @@ interface GetTokenResponse {
  * @description 인가 코드를 이용하여 액세스 토큰과 리프레시 토큰을 발급받습니다.
  */
 export default async function getToken(body: GetTokenBody) {
-  const response = await axios.post<APIResponse<GetTokenResponse>>("/auth", body);
+  const response = await axios.post<APIResponse<GetTokenResponse>>(`${process.env.REACT_APP_API_PATH}/auth`, body);
 
   return response.data;
 }
