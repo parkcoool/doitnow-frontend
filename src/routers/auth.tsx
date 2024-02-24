@@ -1,11 +1,11 @@
 import type { RouteObject } from "react-router";
 
-import Login from "pages/login";
+import Login from "pages/auth";
 
-const loginRoute: RouteObject = {
+const authRouter: RouteObject = {
   path: "login",
   element: <Login />,
   children: [],
 };
 
-export default loginRoute;
+export default authRouter;
