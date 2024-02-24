@@ -3,8 +3,6 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 
-import getToken from "apis/getToken";
-
 import Identifier from "./Identifier";
 import Password from "./Password";
 import Complete from "./Complete";
