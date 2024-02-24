@@ -52,11 +52,11 @@ export default function Complete({ loginData, loginDataDispatch }: CompleteProps
   }, []);
 
   return (
-    <div>
+    <>
       {loginResult === LoginResult.Pending && <p>로그인 중...</p>}
       {loginResult === LoginResult.Success && <p>로그인 성공</p>}
       {loginResult === LoginResult.Fail && <p>로그인 실패</p>}
       {loginResult === LoginResult.Error && <p>로그인 실패</p>}
-    </div>
+    </>
   );
 }

@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 import Identifier from "./Identifier";
 import Password from "./Password";
 import Complete from "./Complete";
+import { formContainerStyle } from "./style";
 
 import type { AuthProvider } from "auth";
 
@@ -45,9 +46,11 @@ export default function Login() {
   // step에 따라 해당하는 컴포넌트를 렌더링한다.
   return (
     <>
-      {step === LoginStep.Identifier && <Identifier loginData={loginData} loginDataDispatch={loginDataDispatch} />}
-      {step === LoginStep.Password && <Password loginData={loginData} loginDataDispatch={loginDataDispatch} />}
-      {step === LoginStep.Complete && <Complete loginData={loginData} loginDataDispatch={loginDataDispatch} />}
+      <div css={formContainerStyle}>
+        {step === LoginStep.Identifier && <Identifier loginData={loginData} loginDataDispatch={loginDataDispatch} />}
+        {step === LoginStep.Password && <Password loginData={loginData} loginDataDispatch={loginDataDispatch} />}
+        {step === LoginStep.Complete && <Complete loginData={loginData} loginDataDispatch={loginDataDispatch} />}
+      </div>
     </>
   );
 }

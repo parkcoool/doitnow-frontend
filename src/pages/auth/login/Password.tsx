@@ -22,22 +22,20 @@ export default function Password({ loginData, loginDataDispatch }: PasswordProps
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <input type="email" autoComplete="email" value={loginData.identifier} readOnly hidden />
+    <form onSubmit={handleSubmit}>
+      <input type="email" autoComplete="email" value={loginData.identifier} readOnly hidden />
 
-        <TextField
-          label="비밀번호"
-          type="password"
-          value={loginData.password}
-          autoComplete="current-password"
-          onChange={(e) => loginDataDispatch({ password: e.target.value })}
-        />
+      <TextField
+        label="비밀번호"
+        type="password"
+        value={loginData.password}
+        autoComplete="current-password"
+        onChange={(e) => loginDataDispatch({ password: e.target.value })}
+      />
 
-        <Button variant="contained" color="primary" type="submit">
-          로그인
-        </Button>
-      </form>
-    </div>
+      <Button variant="contained" color="primary" type="submit">
+        로그인
+      </Button>
+    </form>
   );
 }

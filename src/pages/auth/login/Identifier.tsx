@@ -22,20 +22,18 @@ export default function Identifier({ loginData, loginDataDispatch }: IdentifierP
   }
 
   return (
-    <div>
-      <form onSubmit={handleSubmit}>
-        <TextField
-          label="이메일"
-          type="email"
-          value={loginData.identifier}
-          autoComplete="email"
-          onChange={(e) => loginDataDispatch({ identifier: e.target.value })}
-        />
+    <form onSubmit={handleSubmit}>
+      <TextField
+        label="이메일"
+        type="email"
+        value={loginData.identifier}
+        autoComplete="email"
+        onChange={(e) => loginDataDispatch({ identifier: e.target.value })}
+      />
 
-        <Button variant="contained" color="primary" type="submit">
-          다음
-        </Button>
-      </form>
-    </div>
+      <Button variant="contained" color="primary" type="submit">
+        다음
+      </Button>
+    </form>
   );
 }
