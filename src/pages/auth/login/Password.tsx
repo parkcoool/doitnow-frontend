@@ -36,7 +36,7 @@ export default function Password({ loginData, loginDataDispatch, theme }: Passwo
       <Chip
         css={{ width: "fit-content" }}
         icon={<AlternateEmailRoundedIcon />}
-        label={loginData.identifier}
+        label={loginData.name}
         color="primary"
         variant="outlined"
         onClick={() => navigate(-1)}

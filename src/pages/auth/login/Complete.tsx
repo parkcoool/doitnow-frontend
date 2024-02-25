@@ -36,7 +36,7 @@ export default function Complete({ loginData, loginDataDispatch, theme }: Comple
       password: loginData.password,
     })
       .then((res) => {
-        if (res.code !== 200) {
+        if (res.code !== 1000) {
           setLoginResult(LoginResult.Fail);
           loginDataDispatch({ password: "" });
           navigate("./", { state: { step: LoginStep.Identifier, message: res.message } });

@@ -4,6 +4,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
 
+import getUserByIdentifier from "apis/getUserByIdentifier";
+
 import { inputStyle, formStyle } from "./style";
 import { LoginData, LoginStep } from "./";
 
@@ -18,9 +20,31 @@ interface IdentifierProps {
 export default function Identifier({ loginData, loginDataDispatch, theme }: IdentifierProps) {
   const navigate = useNavigate();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+  const [loading, setLoading] = React.useState(false);
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    navigate("./", { state: { step: LoginStep.Password } });
+
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      const res = await getUserByIdentifier({ identifier: loginData.identifier });
+      setLoading(false);
+
+      if (res.code !== 1000) {
+        loginDataDispatch({ password: "" });
+        navigate("./", { state: { step: LoginStep.Identifier, message: res.message } });
+      } else {
+        loginDataDispatch({ name: res.result.user?.name ?? "" });
+        navigate("./", { state: { step: LoginStep.Password } });
+      }
+    } catch (e) {
+      loginDataDispatch({ password: "" });
+      navigate("./", { state: { step: LoginStep.Identifier, message: e } });
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

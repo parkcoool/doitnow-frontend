@@ -22,6 +22,7 @@ interface LoginLocationState {
 
 export interface LoginData {
   identifier: string;
+  name?: string;
   password: string;
   authProvider: AuthProvider;
 }
@@ -76,14 +77,6 @@ export default function Login() {
             width: "100%",
           }}
         >
-          <LogoIcon
-            css={{
-              width: "48px",
-              height: "48px",
-              margin: "0.5rem 0",
-            }}
-          />
-
           <h1
             css={{
               fontSize: "1.5rem",
