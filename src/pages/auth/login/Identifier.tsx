@@ -125,7 +125,7 @@ export default function Identifier({ loginData, loginDataDispatch }: IdentifierP
         <Button
           variant="contained"
           disabled={loading || loginData.identifier === ""}
-          endIcon={loading ? <CircularProgress size="20px" color="inherit" /> : <NavigateNextRoundedIcon />}
+          endIcon={loading ? <CircularProgress size={16} color="inherit" /> : <NavigateNextRoundedIcon />}
           onClick={() => handleSubmit()}
           disableElevation
           css={{

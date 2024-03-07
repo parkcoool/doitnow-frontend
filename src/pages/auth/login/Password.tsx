@@ -142,7 +142,7 @@ export default function Password({ loginData, loginDataDispatch }: PasswordProps
         <Button
           variant="contained"
           disabled={loading || loginData.password === ""}
-          endIcon={loading ? <CircularProgress size="20px" color="inherit" /> : <NavigateNextRoundedIcon />}
+          endIcon={loading ? <CircularProgress size={16} color="inherit" /> : <NavigateNextRoundedIcon />}
           onClick={() => handleSubmit()}
           disableElevation
           css={{
@@ -151,7 +151,7 @@ export default function Password({ loginData, loginDataDispatch }: PasswordProps
             borderRadius: "18px",
           }}
         >
-          다음
+          로그인
         </Button>
       </div>
     </>
