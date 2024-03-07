@@ -3,157 +3,102 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button, Chip } from "@mui/material";
-import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
-import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
-import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
-import CircularProgress from "@mui/material/CircularProgress";
+import {
+  HelpOutlineRounded as HelpOutlineRoundedIcon,
+  AccountCircleRounded as AccountCircleRoundedIcon,
+} from "@mui/icons-material";
 
-import getToken from "apis/getToken";
-import Narrow from "components/layout/Narrow";
-import { LoginData, LoginStep } from "./";
+import type { LoginData } from "./";
 
 interface PasswordProps {
   loginData: LoginData;
   loginDataDispatch: React.Dispatch<Partial<LoginData>>;
   loading: boolean;
-  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  onSubmit: () => void;
 }
 
-export default function Password({ loginData, loginDataDispatch, loading, setLoading }: PasswordProps) {
+export default function Password({ loginData, loginDataDispatch, loading, onSubmit }: PasswordProps) {
   const navigate = useNavigate();
 
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
-    if (loading) return;
-
-    setLoading(true);
-
-    try {
-      const res = await getToken({
-        authProvider: loginData.authProvider,
-        identifier: loginData.identifier,
-        password: loginData.password,
-      });
-
-      if (res.code !== 1000) {
-        loginDataDispatch({ password: "" });
-        navigate("./", { state: { step: LoginStep.Identifier, message: res.message } });
-      } else {
-        navigate("/");
-      }
-    } catch (e) {
-      loginDataDispatch({ password: "" });
-      navigate("./", { state: { step: LoginStep.Password, message: e } });
-    } finally {
-      setLoading(false);
-    }
+    onSubmit();
   }
 
   return (
     <>
-      <Narrow>
-        {/* 설명 */}
-        <h1
-          css={{
-            fontFamily: `"Pretendard", sans-serif`,
-            fontSize: "24px",
-            fontWeight: 700,
-            margin: "16px 0 0 0",
-          }}
-        >
-          DoItNow 시작하기
-        </h1>
-        <h2
-          css={{
-            fontFamily: `"Pretendard", sans-serif`,
-            fontSize: "16px",
-            fontWeight: 500,
-            margin: "4px 0 0 0",
-          }}
-        >
-          비밀번호를 입력해주세요.
-        </h2>
+      {/* 설명 */}
+      <h1
+        css={{
+          fontFamily: `"Pretendard", sans-serif`,
+          fontSize: "24px",
+          fontWeight: 700,
+          margin: "16px 0 0 0",
+        }}
+      >
+        DoItNow 시작하기
+      </h1>
+      <h2
+        css={{
+          fontFamily: `"Pretendard", sans-serif`,
+          fontSize: "16px",
+          fontWeight: 500,
+          margin: "4px 0 0 0",
+        }}
+      >
+        비밀번호를 입력해주세요.
+      </h2>
 
-        <div
+      <div
+        css={{
+          display: "flex",
+          flexDirection: "row",
+          alignItems: "center",
+          justifyContent: "center",
+          margin: "32px 0 0 0",
+          gap: "8px",
+        }}
+      >
+        <Chip
+          avatar={<AccountCircleRoundedIcon />}
+          label={loginData.identifier}
+          variant="outlined"
+          onClick={() => navigate(-1)}
           css={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-            margin: "32px 0 0 0",
-            gap: "8px",
+            fontWeight: 600,
           }}
-        >
-          <Chip
-            avatar={<AccountCircleRoundedIcon />}
-            label={loginData.identifier}
-            variant="outlined"
-            onClick={() => navigate(-1)}
-            css={{
-              fontWeight: 600,
-            }}
-          />
-        </div>
+        />
+      </div>
 
-        {/* 폼 */}
-        <form
-          onSubmit={handleSubmit}
+      {/* 폼 */}
+      <form
+        onSubmit={handleSubmit}
+        css={{
+          margin: "16px 0 0 0",
+        }}
+      >
+        <TextField
+          disabled={loading}
+          label="비밀번호"
+          type="password"
+          autoComplete="password"
+          onChange={(e) => loginDataDispatch({ password: e.target.value })}
           css={{
-            margin: "16px 0 0 0",
+            width: "100%",
+            margin: "0",
           }}
-        >
-          <TextField
-            disabled={loading}
-            label="비밀번호"
-            type="password"
-            autoComplete="password"
-            onChange={(e) => loginDataDispatch({ password: e.target.value })}
-            css={{
-              width: "100%",
-              margin: "0",
-            }}
-          />
-        </form>
-
-        {/* 버튼 */}
-        <div
-          css={{
-            display: "flex",
-            flexDirection: "column",
-            margin: "16px 0 0 0",
-          }}
-        >
-          <Button startIcon={<HelpOutlineRoundedIcon />}>비밀번호를 잊어버렸어요.</Button>
-        </div>
-      </Narrow>
+        />
+      </form>
 
       {/* 버튼 */}
       <div
         css={{
-          width: "100%",
           display: "flex",
           flexDirection: "column",
-          alignItems: "center",
-          gap: "16px",
-          position: "absolute",
-          bottom: 0,
-          padding: "16px",
+          margin: "16px 0 0 0",
         }}
       >
-        <Button
-          variant="contained"
-          disabled={loading || loginData.password === ""}
-          endIcon={loading ? <CircularProgress size={16} color="inherit" /> : <NavigateNextRoundedIcon />}
-          onClick={() => handleSubmit()}
-          disableElevation
-          css={{
-            width: "100%",
-            height: "48px",
-            borderRadius: "18px",
-          }}
-        >
-          로그인
-        </Button>
+        <Button startIcon={<HelpOutlineRoundedIcon />}>비밀번호를 잊어버렸어요.</Button>
       </div>
     </>
   );
