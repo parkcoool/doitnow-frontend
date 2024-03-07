@@ -13,11 +13,12 @@ const layoutStyle = css({
 
 interface LayoutProps {
   children: React.ReactNode;
+  loading?: boolean;
   headerContent?: React.ReactNode;
   footerDisabled?: boolean;
 }
 
-export default function Layout({ children, headerContent, footerDisabled = false }: LayoutProps) {
+export default function Layout({ children, loading = false, headerContent, footerDisabled = false }: LayoutProps) {
   return (
     <div css={layoutStyle}>
       <div
@@ -26,7 +27,7 @@ export default function Layout({ children, headerContent, footerDisabled = false
           top: 0,
         }}
       >
-        <Header content={headerContent} />
+        <Header content={headerContent} loading={loading} />
       </div>
 
       <main>{children}</main>

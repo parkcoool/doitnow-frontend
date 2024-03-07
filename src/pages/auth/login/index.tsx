@@ -50,8 +50,11 @@ export default function Login() {
     authProvider: null,
   });
 
+  // loading 상태를 관리한다.
+  const [loading, setLoading] = React.useState(false);
+
   return (
-    <Layout headerContent={<>로그인</>} footerDisabled>
+    <Layout headerContent={<>로그인</>} loading={loading} footerDisabled>
       <div
         css={{
           overflowX: "hidden",
@@ -60,8 +63,22 @@ export default function Login() {
         {/* step에 따른 컴포넌트 렌더링 */}
         {/* TODO: transition 적용 */}
         <div ref={stepNodeRef}>
-          {step === LoginStep.Identifier && <Identifier loginData={loginData} loginDataDispatch={loginDataDispatch} />}
-          {step === LoginStep.Password && <Password loginData={loginData} loginDataDispatch={loginDataDispatch} />}
+          {step === LoginStep.Identifier && (
+            <Identifier
+              loginData={loginData}
+              loginDataDispatch={loginDataDispatch}
+              loading={loading}
+              setLoading={setLoading}
+            />
+          )}
+          {step === LoginStep.Password && (
+            <Password
+              loginData={loginData}
+              loginDataDispatch={loginDataDispatch}
+              loading={loading}
+              setLoading={setLoading}
+            />
+          )}
         </div>
       </div>
     </Layout>

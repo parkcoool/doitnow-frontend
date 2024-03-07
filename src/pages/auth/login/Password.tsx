@@ -2,7 +2,7 @@
 
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { TextField, Button, Link, Chip } from "@mui/material";
+import { TextField, Button, Chip } from "@mui/material";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
@@ -15,12 +15,12 @@ import { LoginData, LoginStep } from "./";
 interface PasswordProps {
   loginData: LoginData;
   loginDataDispatch: React.Dispatch<Partial<LoginData>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Password({ loginData, loginDataDispatch }: PasswordProps) {
+export default function Password({ loginData, loginDataDispatch, loading, setLoading }: PasswordProps) {
   const navigate = useNavigate();
-
-  const [loading, setLoading] = React.useState(false);
 
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
@@ -77,9 +77,11 @@ export default function Password({ loginData, loginDataDispatch }: PasswordProps
         <div
           css={{
             display: "flex",
-            flexDirection: "column",
+            flexDirection: "row",
             alignItems: "center",
-            margin: "16px 0 0 0",
+            justifyContent: "center",
+            margin: "32px 0 0 0",
+            gap: "8px",
           }}
         >
           <Chip
@@ -88,7 +90,6 @@ export default function Password({ loginData, loginDataDispatch }: PasswordProps
             variant="outlined"
             onClick={() => navigate(-1)}
             css={{
-              margin: "32px 0 0 0",
               fontWeight: 600,
             }}
           />

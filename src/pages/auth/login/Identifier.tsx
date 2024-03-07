@@ -4,7 +4,7 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
 import NavigateNextRoundedIcon from "@mui/icons-material/NavigateNextRounded";
-import PersonAddAlt1Icon from "@mui/icons-material/PersonAddAlt1";
+import PersonAddAltRoundedIcon from "@mui/icons-material/PersonAddAltRounded";
 import HelpOutlineRoundedIcon from "@mui/icons-material/HelpOutlineRounded";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -15,12 +15,12 @@ import { LoginData, LoginStep } from "./";
 interface IdentifierProps {
   loginData: LoginData;
   loginDataDispatch: React.Dispatch<Partial<LoginData>>;
+  loading: boolean;
+  setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-export default function Identifier({ loginData, loginDataDispatch }: IdentifierProps) {
+export default function Identifier({ loginData, loginDataDispatch, loading, setLoading }: IdentifierProps) {
   const navigate = useNavigate();
-
-  const [loading, setLoading] = React.useState(false);
 
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
@@ -84,7 +84,7 @@ export default function Identifier({ loginData, loginDataDispatch }: IdentifierP
             label="이메일 또는 아이디"
             type="email username"
             value={loginData.identifier}
-            autoComplete="email username"
+            autoComplete="email"
             onChange={(e) => loginDataDispatch({ identifier: e.target.value })}
             css={{
               width: "100%",
@@ -118,7 +118,7 @@ export default function Identifier({ loginData, loginDataDispatch }: IdentifierP
           padding: "16px",
         }}
       >
-        <Button startIcon={<PersonAddAlt1Icon />} size="small">
+        <Button startIcon={<PersonAddAltRoundedIcon />} size="small">
           새 계정 만들기
         </Button>
 
