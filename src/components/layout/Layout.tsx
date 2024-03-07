@@ -13,14 +13,24 @@ const layoutStyle = css({
 
 interface LayoutProps {
   children: React.ReactNode;
+  headerContent?: React.ReactNode;
+  footerDisabled?: boolean;
 }
 
-export default function Layout({ children }: LayoutProps) {
+export default function Layout({ children, headerContent, footerDisabled = false }: LayoutProps) {
   return (
     <div css={layoutStyle}>
-      <Header />
+      <div
+        css={{
+          position: "sticky",
+          top: 0,
+        }}
+      >
+        <Header content={headerContent} />
+      </div>
+
       <main>{children}</main>
-      <Footer />
+      {!footerDisabled && <Footer />}
     </div>
   );
 }

@@ -12,11 +12,3 @@ export const formContainerStyle = (theme: Theme) =>
     borderRadius: "10px",
     overflow: "hidden",
   });
-
-export const formStyle = (theme: Theme) =>
-  css({ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "24px" });
-
-export const inputStyle = (theme: Theme) =>
-  css({
-    width: "100%",
-  });
