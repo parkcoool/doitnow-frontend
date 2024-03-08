@@ -13,11 +13,12 @@ import type { LoginData } from "./";
 interface PasswordProps {
   loginData: LoginData;
   loginDataDispatch: React.Dispatch<Partial<LoginData>>;
+  errorMessage?: string;
   loading: boolean;
   onSubmit: () => void;
 }
 
-export default function Password({ loginData, loginDataDispatch, loading, onSubmit }: PasswordProps) {
+export default function Password({ loginData, loginDataDispatch, errorMessage, loading, onSubmit }: PasswordProps) {
   const navigate = useNavigate();
 
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
@@ -36,7 +37,7 @@ export default function Password({ loginData, loginDataDispatch, loading, onSubm
           margin: "16px 0 0 0",
         }}
       >
-        DoItNow 시작하기
+        Sign in Now!
       </h1>
       <h2
         css={{
@@ -63,7 +64,13 @@ export default function Password({ loginData, loginDataDispatch, loading, onSubm
           avatar={<AccountCircleRoundedIcon />}
           label={loginData.identifier}
           variant="outlined"
-          onClick={() => navigate(-1)}
+          onClick={() =>
+            navigate("./", {
+              state: {
+                step: "identifier",
+              },
+            })
+          }
           css={{
             fontWeight: 600,
           }}
@@ -77,11 +84,15 @@ export default function Password({ loginData, loginDataDispatch, loading, onSubm
           margin: "16px 0 0 0",
         }}
       >
+        <input type="text" name="email" value={loginData.identifier} autoComplete="username email" readOnly hidden />
         <TextField
           disabled={loading}
+          error={errorMessage !== undefined}
+          helperText={errorMessage}
           label="비밀번호"
           type="password"
-          autoComplete="password"
+          value={loginData.password}
+          autoComplete="current-password"
           onChange={(e) => loginDataDispatch({ password: e.target.value })}
           css={{
             width: "100%",

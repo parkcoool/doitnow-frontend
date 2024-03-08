@@ -9,11 +9,12 @@ import type { LoginData } from "./";
 interface IdentifierProps {
   loginData: LoginData;
   loginDataDispatch: React.Dispatch<Partial<LoginData>>;
+  errorMessage?: string;
   loading: boolean;
   onSubmit: () => void;
 }
 
-export default function Identifier({ loginData, loginDataDispatch, loading, onSubmit }: IdentifierProps) {
+export default function Identifier({ loginData, loginDataDispatch, errorMessage, loading, onSubmit }: IdentifierProps) {
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
     onSubmit();
@@ -30,7 +31,7 @@ export default function Identifier({ loginData, loginDataDispatch, loading, onSu
           margin: "16px 0 0 0",
         }}
       >
-        DoItNow 시작하기
+        Sign in Now!
       </h1>
       <h2
         css={{
@@ -52,6 +53,8 @@ export default function Identifier({ loginData, loginDataDispatch, loading, onSu
       >
         <TextField
           disabled={loading}
+          error={errorMessage !== undefined}
+          helperText={errorMessage}
           label="이메일 또는 아이디"
           type="email username"
           value={loginData.identifier}

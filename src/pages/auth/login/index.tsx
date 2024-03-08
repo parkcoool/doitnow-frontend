@@ -20,7 +20,6 @@ import type { AuthProvider } from "auth";
 
 interface LoginLocationState {
   step: LoginStep;
-  message?: string;
 }
 
 export interface LoginData {
@@ -55,16 +54,22 @@ export default function Login() {
     authProvider: null,
   });
 
-  // loading 상태를 관리한다.
+  // 로딩 여부 및 에러 메시지 상태를 관리한다.
   const [loading, setLoading] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string>();
+
+  // 값 수정이 감지되면 에러 메시지를 초기화한다.
+  React.useEffect(() => {
+    setErrorMessage(undefined);
+  }, [loginData.identifier, loginData.password]);
 
   function submitIdentifier() {
     handleIdentifierSubmit({
       identifier: loginData.identifier,
       navigate,
+      setErrorMessage,
       loading,
       setLoading,
-      loginDataDispatch,
     });
   }
 
@@ -73,9 +78,9 @@ export default function Login() {
       identifier: loginData.identifier,
       password: loginData.password,
       navigate,
+      setErrorMessage,
       loading,
       setLoading,
-      loginDataDispatch,
     });
   }
 
@@ -88,6 +93,7 @@ export default function Login() {
           <Identifier
             loginData={loginData}
             loginDataDispatch={loginDataDispatch}
+            errorMessage={errorMessage}
             loading={loading}
             onSubmit={submitIdentifier}
           />
@@ -96,6 +102,7 @@ export default function Login() {
           <Password
             loginData={loginData}
             loginDataDispatch={loginDataDispatch}
+            errorMessage={errorMessage}
             loading={loading}
             onSubmit={submitPassword}
           />
@@ -113,11 +120,18 @@ export default function Login() {
       >
         <BottomButton
           primaryText="다음"
-          secondaryText={step === LoginStep.Identifier ? "계정 생성하기" : undefined}
+          secondaryText="계정 생성하기"
           primaryButtonProps={{
             variant: "contained",
-            disabled: loading || loginData.identifier === "",
-            endIcon: loading ? <CircularProgress size={16} color="inherit" /> : <NavigateNextRoundedIcon />,
+            disabled:
+              loading ||
+              (step === LoginStep.Identifier && loginData.identifier === "") ||
+              (step === LoginStep.Password && loginData.password === ""),
+            endIcon: loading ? (
+              <CircularProgress size={16} color="inherit" />
+            ) : (
+              <NavigateNextRoundedIcon color="inherit" />
+            ),
             onClick: step === LoginStep.Identifier ? submitIdentifier : submitPassword,
             disableElevation: true,
           }}
