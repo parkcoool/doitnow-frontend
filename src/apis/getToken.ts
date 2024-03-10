@@ -13,11 +13,11 @@ interface GetTokenBody {
 interface GetTokenResponse {
   accessToken: {
     token: string;
-    expiresAt: string;
+    expiresIn: string;
   };
   refreshToken: {
     token: string;
-    expiresAt: string;
+    expiresIn: string;
   };
 }
 

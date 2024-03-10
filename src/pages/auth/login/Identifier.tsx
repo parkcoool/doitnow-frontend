@@ -31,7 +31,7 @@ export default function Identifier({ loginData, loginDataDispatch, errorMessage,
           margin: "16px 0 0 0",
         }}
       >
-        Sign in Now!
+        Sign in Now
       </h1>
       <h2
         css={{
@@ -52,6 +52,7 @@ export default function Identifier({ loginData, loginDataDispatch, errorMessage,
         }}
       >
         <TextField
+          autoFocus
           disabled={loading}
           error={errorMessage !== undefined}
           helperText={errorMessage}

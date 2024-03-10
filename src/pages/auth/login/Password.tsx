@@ -37,7 +37,7 @@ export default function Password({ loginData, loginDataDispatch, errorMessage, l
           margin: "16px 0 0 0",
         }}
       >
-        Sign in Now!
+        Sign in Now
       </h1>
       <h2
         css={{
@@ -84,8 +84,8 @@ export default function Password({ loginData, loginDataDispatch, errorMessage, l
           margin: "16px 0 0 0",
         }}
       >
-        <input type="text" name="email" value={loginData.identifier} autoComplete="username email" readOnly hidden />
         <TextField
+          autoFocus
           disabled={loading}
           error={errorMessage !== undefined}
           helperText={errorMessage}
