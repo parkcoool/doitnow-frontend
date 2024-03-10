@@ -12,10 +12,11 @@ import Layout from "components/layout/Layout";
 
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
+
 import Identifier from "./Identifier";
 import Password from "./Password";
-
 import { handleIdentifierSubmit, handlePasswordSubmit } from "./handleSubmit";
+
 import type { LocationState } from "location";
 import type { AuthProvider } from "auth";
 

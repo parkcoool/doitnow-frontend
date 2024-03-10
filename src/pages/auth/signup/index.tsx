@@ -9,6 +9,9 @@ import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
+import Email from "./Email";
+import { handleEmailSubmit } from "./handleSubmit";
+
 import type { LocationState } from "location";
 
 interface SignupLocationState extends LocationState {
@@ -17,7 +20,7 @@ interface SignupLocationState extends LocationState {
 
 export interface SignupData {
   email: string;
-  emailToken: string;
+  emailToken?: string;
   name: string;
   password: string;
 }
@@ -51,39 +54,51 @@ export default function Signup() {
     password: "",
   });
 
-  // 로딩 여부 및 단계 상태를 관리한다.
+  // 로딩 여부 및 에러 메시지 상태를 관리한다.
   const [loading, setLoading] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState<string>();
+
+  // 값 수정이 감지되면 에러 메시지를 초기화한다.
+  React.useEffect(() => {
+    setErrorMessage(undefined);
+  }, [signupData.email, signupData.name, signupData.password]);
 
   // 다음 단계로 이동하는 함수
   function handleNextStepClick() {
-    let nextStep;
     switch (step) {
       case SignupStep.Email:
-        nextStep = SignupStep.Verify;
+        submitEmail();
         break;
       case SignupStep.Verify:
-        nextStep = SignupStep.Name;
         break;
       case SignupStep.Name:
-        nextStep = SignupStep.Password;
         break;
       default:
-        nextStep = SignupStep.Email;
         break;
     }
-
-    navigate("./", {
-      state: {
-        step: nextStep,
-        sourceLocation,
-      },
-    });
   }
 
   // 이전 단계로 이동하는 함수
   function handleBackStepClick() {
     if (step === SignupStep.Email) return;
     navigate(-1);
+  }
+
+  function submitEmail() {
+    return handleEmailSubmit({
+      email: signupData.email,
+      onSuccess: () => {
+        navigate("./", {
+          state: {
+            step: SignupStep.Verify,
+            sourceLocation,
+          },
+        });
+      },
+      setErrorMessage,
+      loading,
+      setLoading,
+    });
   }
 
   return (
@@ -114,7 +129,17 @@ export default function Signup() {
           marginTop: "24px",
         }}
       >
-        <Narrow>d</Narrow>
+        <Narrow>
+          {step === SignupStep.Email && (
+            <Email
+              signupData={signupData}
+              signupDataDispatch={signupDataDispatch}
+              errorMessage={errorMessage}
+              loading={loading}
+              onSubmit={submitEmail}
+            />
+          )}
+        </Narrow>
       </div>
 
       {/* 하단 버튼 */}

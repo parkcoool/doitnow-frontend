@@ -41,7 +41,7 @@ export default function Identifier({ loginData, loginDataDispatch, errorMessage,
           margin: "4px 0 0 0",
         }}
       >
-        이메일 또는 아이디를 입력해주세요.
+        이메일 주소 또는 아이디를 입력해주세요.
       </h2>
 
       {/* 폼 */}
