@@ -10,9 +10,11 @@ import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
 import Email from "./Email";
-import { handleEmailSubmit } from "./handleSubmit";
+import { handleEmailSubmit, handleNameSubmit } from "./handleSubmit";
 
 import Verify from "./Verify";
+import Name from "./Name";
+import Password from "./Password";
 import type { LocationState } from "location";
 
 interface SignupLocationState extends LocationState {
@@ -25,6 +27,7 @@ export interface SignupData {
   emailExpiresAt?: Date;
   name: string;
   password: string;
+  passwordConfirm?: string;
 }
 
 function signupDataReducer(state: SignupData, action: Partial<SignupData>): SignupData {
@@ -54,6 +57,7 @@ export default function Signup() {
     emailCode: "",
     name: "",
     password: "",
+    passwordConfirm: "",
   });
 
   // 로딩 여부 및 에러 메시지 상태를 관리한다.
@@ -67,10 +71,14 @@ export default function Signup() {
 
   // 다음 단계로 이동하는 함수
   function handleNextStepClick() {
+    setErrorMessage(undefined);
+
     switch (step) {
       case SignupStep.Name:
+        submitName();
         break;
       case SignupStep.Password:
+        submitPassword();
         break;
       case SignupStep.Email:
         submitEmail();
@@ -85,27 +93,68 @@ export default function Signup() {
   // 이전 단계로 이동하는 함수
   function handleBackStepClick() {
     if (step === SignupStep.Name) return;
+    setErrorMessage(undefined);
     navigate(-1);
   }
 
-  function submitEmail() {
-    return handleEmailSubmit({
-      email: signupData.email,
-      onSuccess: (res) => {
-        // 이메일 주소와 만료 시간을 상태에 저장한다.
-        signupDataDispatch({ email: res.result.email, emailExpiresAt: new Date(res.result.expiresAt) });
-
-        // 다음 단계로 이동한다.
-        navigate("./", {
-          state: {
-            step: SignupStep.Verify,
-            sourceLocation,
-          },
-        });
-      },
+  async function submitName() {
+    const res = await handleNameSubmit({
+      name: signupData.name,
       setErrorMessage,
       loading,
       setLoading,
+    });
+
+    if (!res) return;
+
+    // 다음 단계로 이동한다.
+    navigate("./", {
+      state: {
+        step: SignupStep.Password,
+        sourceLocation,
+      },
+    });
+  }
+
+  function submitPassword() {
+    if (signupData.password !== signupData.passwordConfirm) {
+      setErrorMessage("비밀번호가 일치하지 않아요.");
+      return;
+    }
+
+    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,20}$/.test(signupData.password)) {
+      setErrorMessage("영어, 숫자를 조합하여 8자 이상, 20자 이하여야 해요.");
+      return;
+    }
+
+    // 다음 단계로 이동한다.
+    navigate("./", {
+      state: {
+        step: SignupStep.Email,
+        sourceLocation,
+      },
+    });
+  }
+
+  async function submitEmail() {
+    const res = await handleEmailSubmit({
+      email: signupData.email,
+      setErrorMessage,
+      loading,
+      setLoading,
+    });
+
+    if (!res) return;
+
+    // 이메일 주소와 만료 시간을 상태에 저장한다.
+    signupDataDispatch({ email: res.email, emailExpiresAt: new Date(res.expiresAt) });
+
+    // 다음 단계로 이동한다.
+    navigate("./", {
+      state: {
+        step: SignupStep.Verify,
+        sourceLocation,
+      },
     });
   }
 
@@ -142,6 +191,26 @@ export default function Signup() {
         }}
       >
         <Narrow>
+          {step === SignupStep.Name && (
+            <Name
+              signupData={signupData}
+              signupDataDispatch={signupDataDispatch}
+              errorMessage={errorMessage}
+              loading={loading}
+              onSubmit={submitName}
+            />
+          )}
+
+          {step === SignupStep.Password && (
+            <Password
+              signupData={signupData}
+              signupDataDispatch={signupDataDispatch}
+              errorMessage={errorMessage}
+              loading={loading}
+              onSubmit={submitPassword}
+            />
+          )}
+
           {step === SignupStep.Email && (
             <Email
               signupData={signupData}
@@ -181,6 +250,7 @@ export default function Signup() {
             onClick: handleNextStepClick,
             disabled:
               loading ||
+              (step === SignupStep.Name && signupData.name === "") ||
               (step === SignupStep.Email && signupData.email === "") ||
               (step === SignupStep.Verify && signupData.emailCode === ""),
             endIcon: loading ? (

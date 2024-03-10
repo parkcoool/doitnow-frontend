@@ -3,7 +3,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import {
-  HelpOutlineRounded as HelpOutlineRoundedIcon,
+  ErrorOutlineRounded as ErrorOutlineRoundedIcon,
   AccessTimeRounded as AccessTimeRoundedIcon,
 } from "@mui/icons-material";
 import { Chip, TextField, Button } from "@mui/material";
@@ -124,8 +124,8 @@ export default function Verify({ signupData, signupDataDispatch, errorMessage, l
           margin: "16px 0 0 0",
         }}
       >
-        <Button startIcon={<HelpOutlineRoundedIcon />} onClick={() => navigate(-1)}>
-          이메일 주소를 잘못 입력했어요.
+        <Button startIcon={<ErrorOutlineRoundedIcon />} onClick={() => navigate(-1)}>
+          이메일 주소를 다시 입력할래요.
         </Button>
       </div>
     </>

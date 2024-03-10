@@ -84,6 +84,8 @@ export default function Password({ loginData, loginDataDispatch, errorMessage, l
           margin: "16px 0 0 0",
         }}
       >
+        <input type="email" name="email" hidden />
+
         <TextField
           autoFocus
           disabled={loading}
@@ -99,6 +101,8 @@ export default function Password({ loginData, loginDataDispatch, errorMessage, l
             margin: "0",
           }}
         />
+
+        <input type="submit" hidden />
       </form>
 
       {/* 버튼 */}

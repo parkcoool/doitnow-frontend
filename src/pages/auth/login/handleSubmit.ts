@@ -1,3 +1,5 @@
+// TODO: navigate 함수 사용하지 않기
+
 import type { NavigateFunction } from "react-router-dom";
 import getUserByIdentifier from "apis/getUserByIdentifier";
 import getToken from "apis/getToken";
