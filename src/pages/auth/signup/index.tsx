@@ -20,7 +20,8 @@ interface SignupLocationState extends LocationState {
 
 export interface SignupData {
   email: string;
-  emailToken?: string;
+  emailCode?: string;
+  emailExpiresAt?: Date;
   name: string;
   password: string;
 }
@@ -49,7 +50,7 @@ export default function Signup() {
   // signupData를 관리하는 signupDataReducer를 생성한다.
   const [signupData, signupDataDispatch] = React.useReducer(signupDataReducer, {
     email: "",
-    emailToken: "",
+    emailCode: "",
     name: "",
     password: "",
   });
@@ -87,7 +88,9 @@ export default function Signup() {
   function submitEmail() {
     return handleEmailSubmit({
       email: signupData.email,
-      onSuccess: () => {
+      onSuccess: (res) => {
+        signupDataDispatch({ emailExpiresAt: new Date(res.result.expiresAt) });
+
         navigate("./", {
           state: {
             step: SignupStep.Verify,

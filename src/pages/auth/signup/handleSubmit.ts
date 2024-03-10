@@ -1,7 +1,8 @@
-import verifyEmail from "apis/verifyEmail";
+import verifyEmail, { SendEmailResponse } from "apis/sendEmail";
+import type { APIResponse } from "api";
 
 interface HandleSubmitProps {
-  onSuccess: () => void;
+  onSuccess: (res: APIResponse<SendEmailResponse>) => void;
   setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -27,7 +28,7 @@ export async function handleEmailSubmit({
     if (res.code !== 1000) throw new Error(res.message);
 
     setErrorMessage(undefined);
-    onSuccess();
+    onSuccess(res);
   } catch (error) {
     if (error instanceof Error) {
       setErrorMessage(error.message);
