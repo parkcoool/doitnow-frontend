@@ -12,6 +12,7 @@ import BottomButton from "components/common/BottomButton";
 import Email from "./Email";
 import { handleEmailSubmit } from "./handleSubmit";
 
+import Verify from "./Verify";
 import type { LocationState } from "location";
 
 interface SignupLocationState extends LocationState {
@@ -31,20 +32,20 @@ function signupDataReducer(state: SignupData, action: Partial<SignupData>): Sign
 }
 
 export enum SignupStep {
-  Email = 0,
-  Verify = 1,
-  Name = 2,
-  Password = 3,
+  Name = 0,
+  Password = 1,
+  Email = 2,
+  Verify = 3,
 }
 
-const stepLabels = ["이메일", "인증", "이름", "비밀번호"];
+const stepLabels = ["이름", "비밀번호", "이메일", "인증"];
 
 export default function Signup() {
   const navigate = useNavigate();
   const location = useLocation();
 
   // location.state로부터 step과 sourceLocation을 가져온다.
-  const step = (location.state as SignupLocationState)?.step ?? SignupStep.Email;
+  const step = (location.state as SignupLocationState)?.step ?? SignupStep.Name;
   const sourceLocation = (location.state as SignupLocationState)?.sourceLocation;
 
   // signupData를 관리하는 signupDataReducer를 생성한다.
@@ -67,12 +68,14 @@ export default function Signup() {
   // 다음 단계로 이동하는 함수
   function handleNextStepClick() {
     switch (step) {
+      case SignupStep.Name:
+        break;
+      case SignupStep.Password:
+        break;
       case SignupStep.Email:
         submitEmail();
         break;
       case SignupStep.Verify:
-        break;
-      case SignupStep.Name:
         break;
       default:
         break;
@@ -81,7 +84,7 @@ export default function Signup() {
 
   // 이전 단계로 이동하는 함수
   function handleBackStepClick() {
-    if (step === SignupStep.Email) return;
+    if (step === SignupStep.Name) return;
     navigate(-1);
   }
 
@@ -89,8 +92,10 @@ export default function Signup() {
     return handleEmailSubmit({
       email: signupData.email,
       onSuccess: (res) => {
-        signupDataDispatch({ emailExpiresAt: new Date(res.result.expiresAt) });
+        // 이메일 주소와 만료 시간을 상태에 저장한다.
+        signupDataDispatch({ email: res.result.email, emailExpiresAt: new Date(res.result.expiresAt) });
 
+        // 다음 단계로 이동한다.
         navigate("./", {
           state: {
             step: SignupStep.Verify,
@@ -102,6 +107,10 @@ export default function Signup() {
       loading,
       setLoading,
     });
+  }
+
+  function submitVerify() {
+    1;
   }
 
   return (
@@ -142,6 +151,16 @@ export default function Signup() {
               onSubmit={submitEmail}
             />
           )}
+
+          {step === SignupStep.Verify && (
+            <Verify
+              signupData={signupData}
+              signupDataDispatch={signupDataDispatch}
+              errorMessage={errorMessage}
+              loading={loading}
+              onSubmit={submitVerify}
+            />
+          )}
         </Narrow>
       </div>
 
@@ -156,11 +175,14 @@ export default function Signup() {
       >
         <BottomButton
           primaryText="다음"
-          secondaryText={step !== SignupStep.Email ? "이전" : undefined}
+          secondaryText={step !== SignupStep.Name ? "이전" : undefined}
           primaryButtonProps={{
             variant: "contained",
             onClick: handleNextStepClick,
-            disabled: loading,
+            disabled:
+              loading ||
+              (step === SignupStep.Email && signupData.email === "") ||
+              (step === SignupStep.Verify && signupData.emailCode === ""),
             endIcon: loading ? (
               <CircularProgress size={16} color="inherit" />
             ) : (

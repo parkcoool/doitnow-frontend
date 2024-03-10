@@ -56,7 +56,7 @@ export default function Identifier({ loginData, loginDataDispatch, errorMessage,
           disabled={loading}
           error={errorMessage !== undefined}
           helperText={errorMessage}
-          label="이메일 또는 아이디"
+          label="이메일 주소 또는 아이디"
           type="email username"
           value={loginData.identifier}
           autoComplete="email"
@@ -72,11 +72,12 @@ export default function Identifier({ loginData, loginDataDispatch, errorMessage,
       <div
         css={{
           display: "flex",
-          flexDirection: "column",
+          width: "100%",
+          justifyContent: "center",
           margin: "16px 0 0 0",
         }}
       >
-        <Button startIcon={<HelpOutlineRoundedIcon />}>이메일을 잊어버렸어요.</Button>
+        <Button startIcon={<HelpOutlineRoundedIcon />}>이메일 주소를 잊어버렸어요.</Button>
       </div>
     </>
   );

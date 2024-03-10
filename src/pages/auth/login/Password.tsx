@@ -105,7 +105,8 @@ export default function Password({ loginData, loginDataDispatch, errorMessage, l
       <div
         css={{
           display: "flex",
-          flexDirection: "column",
+          width: "100%",
+          justifyContent: "center",
           margin: "16px 0 0 0",
         }}
       >
