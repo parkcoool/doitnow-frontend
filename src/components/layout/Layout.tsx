@@ -16,9 +16,16 @@ interface LayoutProps {
   loading?: boolean;
   headerContent?: React.ReactNode;
   footerDisabled?: boolean;
+  onBack?: () => void;
 }
 
-export default function Layout({ children, loading = false, headerContent, footerDisabled = false }: LayoutProps) {
+export default function Layout({
+  children,
+  loading = false,
+  headerContent,
+  footerDisabled = false,
+  onBack,
+}: LayoutProps) {
   return (
     <div css={layoutStyle}>
       <div
@@ -27,7 +34,7 @@ export default function Layout({ children, loading = false, headerContent, foote
           top: 0,
         }}
       >
-        <Header content={headerContent} loading={loading} />
+        <Header content={headerContent} loading={loading} onBack={onBack} />
       </div>
 
       <main>{children}</main>

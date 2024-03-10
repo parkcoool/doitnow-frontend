@@ -8,10 +8,19 @@ import LinearProgress from "@mui/material/LinearProgress";
 interface HeaderProps {
   content?: React.ReactNode;
   loading?: boolean;
+  onBack?: () => void;
 }
 
-export default function Header({ content, loading = false }: HeaderProps) {
+export default function Header({ content, loading = false, onBack }: HeaderProps) {
   const navigate = useNavigate();
+
+  function handleBackClick() {
+    if (onBack) {
+      onBack();
+    } else {
+      navigate(-1);
+    }
+  }
 
   return (
     <header>
@@ -34,7 +43,7 @@ export default function Header({ content, loading = false }: HeaderProps) {
             alignItems: "center",
           }}
         >
-          <IconButton onClick={() => navigate(-1)}>
+          <IconButton onClick={handleBackClick}>
             <ArrowBackRoundedIcon htmlColor="black" />
           </IconButton>
         </span>

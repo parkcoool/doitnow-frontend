@@ -16,9 +16,10 @@ import Identifier from "./Identifier";
 import Password from "./Password";
 
 import { handleIdentifierSubmit, handlePasswordSubmit } from "./handleSubmit";
+import type { LocationState } from "location";
 import type { AuthProvider } from "auth";
 
-interface LoginLocationState {
+interface LoginLocationState extends LocationState {
   step: LoginStep;
 }
 
@@ -40,10 +41,10 @@ export enum LoginStep {
 
 export default function Login() {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  // useLocation().state로부터 step을 가져온다.
-  // 만약 state가 없다면 step은 LoginStep.Identifier이다.
-  const { step } = (useLocation().state ?? {
+  // location.state로부터 step과 sourceLocation을 가져온다.
+  const { step, sourceLocation } = (location.state ?? {
     step: LoginStep.Identifier,
   }) as LoginLocationState;
 
@@ -85,7 +86,12 @@ export default function Login() {
   }
 
   return (
-    <Layout headerContent={<>로그인</>} loading={loading} footerDisabled>
+    <Layout
+      headerContent="로그인"
+      loading={loading}
+      onBack={sourceLocation ? () => navigate(sourceLocation.pathname, { state: sourceLocation.state }) : undefined}
+      footerDisabled
+    >
       {/* step에 따른 컴포넌트 렌더링 */}
       {/* TODO: transition 적용 */}
       <Narrow>
@@ -137,6 +143,14 @@ export default function Login() {
           }}
           secondaryButtonProps={{
             startIcon: <PersonAddAltRoundedIcon />,
+            onClick: () =>
+              navigate("/auth/signup", {
+                state: {
+                  sourceLocation: {
+                    pathname: location.pathname,
+                  },
+                },
+              }),
           }}
         />
       </div>
