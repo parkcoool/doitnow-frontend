@@ -15,6 +15,7 @@ import { handleEmailSubmit, handleNameSubmit, handleVerifySubmit } from "./handl
 import Verify from "./Verify";
 import Name from "./Name";
 import Password from "./Password";
+import Complete from "./Complete";
 import type { LocationState } from "location";
 
 interface SignupLocationState extends LocationState {
@@ -89,6 +90,7 @@ export default function Signup() {
         submitVerify();
         break;
       default:
+        backToSource();
         break;
     }
   }
@@ -184,13 +186,12 @@ export default function Signup() {
     });
   }
 
+  function backToSource() {
+    sourceLocation && (() => navigate(sourceLocation.pathname, { state: sourceLocation.state }));
+  }
+
   return (
-    <Layout
-      headerContent="계정 생성"
-      loading={loading}
-      onBack={sourceLocation && (() => navigate(sourceLocation.pathname, { state: sourceLocation.state }))}
-      footerDisabled
-    >
+    <Layout headerContent="계정 생성" loading={loading} onBack={backToSource} footerDisabled>
       {/* Stepper 컴포넌트를 사용하여 단계 표시 */}
       <div
         css={{
@@ -252,6 +253,8 @@ export default function Signup() {
               onSubmit={submitVerify}
             />
           )}
+
+          {step === SignupStep.Complete && <Complete />}
         </Narrow>
       </div>
 
@@ -265,8 +268,8 @@ export default function Signup() {
         }}
       >
         <BottomButton
-          primaryText="다음"
-          secondaryText={step !== SignupStep.Name ? "이전" : undefined}
+          primaryText={step !== SignupStep.Complete ? "다음" : "완료"}
+          secondaryText={step !== SignupStep.Name && step !== SignupStep.Complete ? "이전" : undefined}
           primaryButtonProps={{
             variant: "contained",
             onClick: handleNextStepClick,
