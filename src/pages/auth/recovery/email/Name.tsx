@@ -6,14 +6,14 @@ import { TextField } from "@mui/material";
 import type { EmailData } from "./";
 
 interface NameProps {
-  signupData: EmailData;
-  signupDataDispatch: React.Dispatch<Partial<EmailData>>;
+  emailData: EmailData;
+  emailDataDispatch: React.Dispatch<Partial<EmailData>>;
   errorMessage?: string;
   loading: boolean;
   onSubmit: () => void;
 }
 
-export default function Name({ signupData, signupDataDispatch, errorMessage, loading, onSubmit }: NameProps) {
+export default function Name({ emailData, emailDataDispatch, errorMessage, loading, onSubmit }: NameProps) {
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
     onSubmit();
@@ -66,10 +66,10 @@ export default function Name({ signupData, signupDataDispatch, errorMessage, loa
           helperText={errorMessage}
           label="아이디"
           type="text"
-          value={signupData.name}
+          value={emailData.name}
           autoComplete="username"
           variant="standard"
-          onChange={(e) => signupDataDispatch({ name: e.target.value })}
+          onChange={(e) => emailDataDispatch({ name: e.target.value })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

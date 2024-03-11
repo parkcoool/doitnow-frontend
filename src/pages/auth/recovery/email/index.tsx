@@ -10,6 +10,7 @@ import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
 import Name from "./Name";
+import Complete from "./Complete";
 import type { LocationState } from "location";
 
 interface EmailLocationState extends LocationState {
@@ -30,7 +31,7 @@ export enum EmailStep {
   Complete = 1,
 }
 
-const stepLabels = ["아이디", "이메일 확인"];
+const stepLabels = ["아이디", "확인"];
 
 export default function Email() {
   const navigate = useNavigate();
@@ -57,6 +58,8 @@ export default function Email() {
 
   async function submitName() {
     // TODO: 실제 API 적용
+    setLoading(true);
+
     const res = await new Promise<{
       email?: string;
     }>((resolve) => {
@@ -67,7 +70,10 @@ export default function Email() {
       }, 1000);
     });
 
+    setLoading(false);
     if (!res?.email) return;
+
+    emailDataDispatch({ email: res.email });
 
     // 다음 단계로 이동한다.
     navigate("./", {
@@ -112,15 +118,15 @@ export default function Email() {
         <Narrow>
           {step === EmailStep.Name && (
             <Name
-              signupData={emailData}
-              signupDataDispatch={emailDataDispatch}
+              emailData={emailData}
+              emailDataDispatch={emailDataDispatch}
               errorMessage={errorMessage}
               loading={loading}
               onSubmit={submitName}
             />
           )}
 
-          {step === EmailStep.Complete && <div />}
+          {step === EmailStep.Complete && <Complete emailData={emailData} />}
         </Narrow>
       </div>
 
@@ -137,7 +143,7 @@ export default function Email() {
           primaryText={step !== EmailStep.Complete ? "다음" : "완료"}
           primaryButtonProps={{
             variant: "contained",
-            onClick: submitName,
+            onClick: step === EmailStep.Name ? submitName : backToSource,
             disabled: loading || (step === EmailStep.Name && emailData.name === ""),
             endIcon: loading ? (
               <CircularProgress size={16} color="inherit" />

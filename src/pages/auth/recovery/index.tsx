@@ -54,10 +54,16 @@ export default function Recovery() {
             marginTop: "32px",
           }}
         >
-          <RecoveryButton startIcon={<AlternateEmailRoundedIcon />} onClick={() => navigate("./email")}>
+          <RecoveryButton
+            startIcon={<AlternateEmailRoundedIcon />}
+            onClick={() => navigate("./email", { state: { sourceLocation } })}
+          >
             이메일 주소를 잊어버렸어요.
           </RecoveryButton>
-          <RecoveryButton startIcon={<KeyRoundedIcon />} onClick={() => navigate("./password")}>
+          <RecoveryButton
+            startIcon={<KeyRoundedIcon />}
+            onClick={() => navigate("./password", { state: { sourceLocation } })}
+          >
             비밀번호를 잊어버렸어요.
           </RecoveryButton>
         </div>
