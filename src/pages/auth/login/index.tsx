@@ -75,7 +75,9 @@ export default function Login() {
       setLoading,
     });
 
-    if (!res) return;
+    if (!res?.user) return;
+
+    loginDataDispatch({ name: res.user.name });
 
     navigate("./", {
       state: {

@@ -44,7 +44,7 @@ export enum SignupStep {
   Complete = 4,
 }
 
-const stepLabels = ["이름", "비밀번호", "이메일", "인증"];
+const stepLabels = ["아이디", "비밀번호", "이메일", "인증"];
 
 export default function Signup() {
   const navigate = useNavigate();

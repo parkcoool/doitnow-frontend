@@ -37,7 +37,7 @@ export default function Password({ loginData, loginDataDispatch, errorMessage, l
           margin: "16px 0 0 0",
         }}
       >
-        Sign in Now
+        {loginData.name ? `${loginData.name}님, 안녕하세요.` : "환영합니다."}
       </h1>
       <h2
         css={{
@@ -114,7 +114,21 @@ export default function Password({ loginData, loginDataDispatch, errorMessage, l
           margin: "16px 0 0 0",
         }}
       >
-        <Button startIcon={<HelpOutlineRoundedIcon />}>비밀번호를 잊어버렸어요.</Button>
+        <Button
+          startIcon={<HelpOutlineRoundedIcon />}
+          onClick={() =>
+            navigate("/auth/recovery", {
+              state: {
+                sourceLocation: {
+                  pathname: location.pathname,
+                },
+              },
+              replace: true,
+            })
+          }
+        >
+          도움이 필요해요.
+        </Button>
       </div>
     </>
   );

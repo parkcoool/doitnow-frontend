@@ -1,6 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
 import { HelpOutlineRounded as HelpOutlineRoundedIcon } from "@mui/icons-material";
 
@@ -15,6 +16,8 @@ interface IdentifierProps {
 }
 
 export default function Identifier({ loginData, loginDataDispatch, errorMessage, loading, onSubmit }: IdentifierProps) {
+  const navigate = useNavigate();
+
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
     onSubmit();
@@ -31,7 +34,7 @@ export default function Identifier({ loginData, loginDataDispatch, errorMessage,
           margin: "16px 0 0 0",
         }}
       >
-        Sign in Now
+        시작하기
       </h1>
       <h2
         css={{
@@ -77,7 +80,20 @@ export default function Identifier({ loginData, loginDataDispatch, errorMessage,
           margin: "16px 0 0 0",
         }}
       >
-        <Button startIcon={<HelpOutlineRoundedIcon />}>이메일 주소를 잊어버렸어요.</Button>
+        <Button
+          startIcon={<HelpOutlineRoundedIcon />}
+          onClick={() =>
+            navigate("/auth/recovery", {
+              state: {
+                sourceLocation: {
+                  pathname: location.pathname,
+                },
+              },
+            })
+          }
+        >
+          도움이 필요해요.
+        </Button>
       </div>
     </>
   );

@@ -17,7 +17,7 @@ export async function handleIdentifierSubmit({
   loading,
   setLoading,
 }: HandleIdentifierSubmitProps) {
-  if (loading) return false;
+  if (loading) return;
   setLoading(true);
 
   try {
@@ -28,7 +28,7 @@ export async function handleIdentifierSubmit({
     if (res.code !== 1000) throw new Error(res.message);
 
     setErrorMessage(undefined);
-    return true;
+    return res.result;
   } catch (error) {
     if (error instanceof Error) {
       setErrorMessage(error.message);
@@ -36,8 +36,6 @@ export async function handleIdentifierSubmit({
   } finally {
     setLoading(false);
   }
-
-  return false;
 }
 
 type HandlePasswordSubmitProps = HandleSubmitProps & {
