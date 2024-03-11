@@ -187,7 +187,11 @@ export default function Signup() {
   }
 
   function backToSource() {
-    sourceLocation && (() => navigate(sourceLocation.pathname, { state: sourceLocation.state }));
+    if (sourceLocation) {
+      navigate(sourceLocation.pathname, { state: sourceLocation.state });
+    } else {
+      navigate(-1);
+    }
   }
 
   return (
