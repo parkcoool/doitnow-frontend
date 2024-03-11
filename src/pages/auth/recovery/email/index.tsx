@@ -9,6 +9,7 @@ import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
+import Name from "./Name";
 import type { LocationState } from "location";
 
 interface EmailLocationState extends LocationState {
@@ -109,7 +110,15 @@ export default function Email() {
         }}
       >
         <Narrow>
-          {step === EmailStep.Name && <div />}
+          {step === EmailStep.Name && (
+            <Name
+              signupData={emailData}
+              signupDataDispatch={emailDataDispatch}
+              errorMessage={errorMessage}
+              loading={loading}
+              onSubmit={submitName}
+            />
+          )}
 
           {step === EmailStep.Complete && <div />}
         </Narrow>
