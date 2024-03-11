@@ -179,6 +179,7 @@ export default function Login() {
                     pathname: location.pathname,
                   },
                 },
+                replace: true,
               }),
           }}
         />

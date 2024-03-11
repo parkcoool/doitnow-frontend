@@ -9,8 +9,10 @@ import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
+import Email from "./Email";
+import NewPassword from "./NewPassword";
+import Verify from "./Verify";
 import Complete from "./Complete";
-
 import type { LocationState } from "location";
 
 interface PasswordLocationState extends LocationState {
@@ -92,6 +94,8 @@ export default function Password() {
   }
 
   async function submitEmail() {
+    setLoading(true);
+
     // TODO: 실제 API 적용
     const res = await new Promise<{
       email: string;
@@ -104,6 +108,8 @@ export default function Password() {
         });
       }, 1000);
     });
+
+    setLoading(false);
 
     if (!res) return;
 
@@ -120,6 +126,8 @@ export default function Password() {
   }
 
   async function submitVerify() {
+    setLoading(true);
+
     // 토큰 발급
 
     // TODO: 실제 API 적용
@@ -133,30 +141,36 @@ export default function Password() {
       }, 1000);
     });
 
+    setLoading(false);
+
     if (!verifyRes?.token) return;
 
     // 토큰을 상태에 저장한다.
     passwordDataDispatch({ emailVerifyToken: verifyRes.token });
 
     // 계정 생성 요청
+    setLoading(true);
+
     const finalRes = await new Promise<boolean>((resolve) => {
       setTimeout(() => {
         resolve(true);
       }, 1000);
     });
 
+    setLoading(false);
+
     if (!finalRes) return;
 
     // 다음 단계로 이동한다.
     navigate("./", {
       state: {
-        step: PasswordStep.Complete,
+        step: PasswordStep.NewPassword,
         sourceLocation,
       },
     });
   }
 
-  function submitNewPassword() {
+  async function submitNewPassword() {
     if (passwordData.password !== passwordData.passwordConfirm) {
       setErrorMessage("비밀번호가 일치하지 않아요.");
       return;
@@ -167,10 +181,21 @@ export default function Password() {
       return;
     }
 
+    setLoading(true);
+
+    const res = await new Promise<boolean>((resolve) => {
+      setTimeout(() => {
+        resolve(true);
+      }, 1000);
+    });
+
+    setLoading(false);
+    if (!res) return;
+
     // 다음 단계로 이동한다.
     navigate("./", {
       state: {
-        step: PasswordStep.Email,
+        step: PasswordStep.Complete,
         sourceLocation,
       },
     });
@@ -207,7 +232,39 @@ export default function Password() {
           marginTop: "24px",
         }}
       >
-        <Narrow>{step === PasswordStep.Complete && <Complete />}</Narrow>
+        <Narrow>
+          {step === PasswordStep.Email && (
+            <Email
+              passwordData={passwordData}
+              passwordDataDispatch={passwordDataDispatch}
+              errorMessage={errorMessage}
+              loading={loading}
+              onSubmit={submitEmail}
+            />
+          )}
+
+          {step === PasswordStep.Verify && (
+            <Verify
+              passwordData={passwordData}
+              passwordDataDispatch={passwordDataDispatch}
+              errorMessage={errorMessage}
+              loading={loading}
+              onSubmit={submitVerify}
+            />
+          )}
+
+          {step === PasswordStep.NewPassword && (
+            <NewPassword
+              passwordData={passwordData}
+              passwordDataDispatch={passwordDataDispatch}
+              errorMessage={errorMessage}
+              loading={loading}
+              onSubmit={submitNewPassword}
+            />
+          )}
+
+          {step === PasswordStep.Complete && <Complete />}
+        </Narrow>
       </div>
 
       {/* 하단 버튼 */}
