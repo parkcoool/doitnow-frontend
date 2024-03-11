@@ -4,6 +4,7 @@ import Login from "pages/auth/login";
 import Signup from "pages/auth/signup";
 import Recovery from "pages/auth/recovery";
 import EmailRecovery from "pages/auth/recovery/email";
+import PasswordRecovery from "pages/auth/recovery/password";
 import Auth from "pages/auth";
 
 const authRouter: RouteObject = {
@@ -23,6 +24,7 @@ const authRouter: RouteObject = {
       children: [
         { index: true, element: <Recovery /> },
         { path: "email", element: <EmailRecovery /> },
+        { path: "password", element: <PasswordRecovery /> },
       ],
     },
   ],

@@ -10,12 +10,12 @@ import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
 import Email from "./Email";
-import { handleEmailSubmit, handleFinalSubmit, handleNameSubmit, handleVerifySubmit } from "./handleSubmit";
-
 import Verify from "./Verify";
 import Name from "./Name";
 import Password from "./Password";
 import Complete from "./Complete";
+import { handleEmailSubmit, handleFinalSubmit, handleNameSubmit, handleVerifySubmit } from "./handleSubmit";
+
 import type { LocationState } from "location";
 
 interface SignupLocationState extends LocationState {
@@ -295,7 +295,9 @@ export default function Signup() {
               loading ||
               (step === SignupStep.Name && signupData.name === "") ||
               (step === SignupStep.Email && signupData.email === "") ||
-              (step === SignupStep.Verify && signupData.emailCode === ""),
+              (step === SignupStep.Verify && signupData.emailCode === "") ||
+              (step === SignupStep.Password && signupData.password === ""),
+
             endIcon: loading ? (
               <CircularProgress size={16} color="inherit" />
             ) : (
