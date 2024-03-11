@@ -9,7 +9,6 @@ import {
   PersonAddAltRounded as PersonAddAltRoundedIcon,
 } from "@mui/icons-material";
 import Layout from "components/layout/Layout";
-
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 

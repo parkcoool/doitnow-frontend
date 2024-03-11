@@ -24,3 +24,5 @@ yarn-error.log*
 
 .env.development
 .env.production
+
+/src/config
