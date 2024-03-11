@@ -6,7 +6,16 @@ import {
   ErrorOutlineRounded as ErrorOutlineRoundedIcon,
   AccessTimeRounded as AccessTimeRoundedIcon,
 } from "@mui/icons-material";
-import { Chip, TextField, Button } from "@mui/material";
+import {
+  Chip,
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from "@mui/material";
 
 import type { SignupData } from "./";
 
@@ -21,8 +30,20 @@ interface VerifyProps {
 export default function Verify({ signupData, signupDataDispatch, errorMessage, loading, onSubmit }: VerifyProps) {
   const navigate = useNavigate();
 
-  // 남은 시간을 관리한다.
+  // 남은 시간과 다이얼로그를 관리한다.
   const [leftSeconds, setLeftSeconds] = React.useState<number | undefined>(undefined);
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+
+  function handleDialogClose() {
+    setDialogOpen(false);
+    navigate(-1);
+  }
+
+  // 남은 시간이 0 이하인 경우
+  function handleTimeout() {
+    setLeftSeconds(0);
+    setDialogOpen(true);
+  }
 
   // 남은 시간을 1초마다 업데이트한다.
   React.useEffect(() => {
@@ -30,7 +51,14 @@ export default function Verify({ signupData, signupDataDispatch, errorMessage, l
 
     function updateLeftSeconds() {
       const leftMilliseconds = (signupData.emailExpiresAt as Date).getTime() - new Date().getTime();
-      setLeftSeconds(Math.floor(((signupData.emailExpiresAt as Date).getTime() - new Date().getTime()) / 1000));
+
+      // 남은 시간이 0 이하인 경우
+      if (leftMilliseconds <= 0) {
+        handleTimeout();
+        return;
+      }
+
+      setLeftSeconds(Math.floor(leftMilliseconds / 1000));
     }
     updateLeftSeconds();
 
@@ -78,7 +106,7 @@ export default function Verify({ signupData, signupDataDispatch, errorMessage, l
       </h2>
 
       {/* 남은 시간 */}
-      {leftSeconds && (
+      {leftSeconds !== undefined && (
         <div
           css={{
             margin: "32px 0 0 0",
@@ -128,6 +156,33 @@ export default function Verify({ signupData, signupDataDispatch, errorMessage, l
           이메일 주소를 다시 입력할래요.
         </Button>
       </div>
+
+      {/* 다이얼로그 */}
+      <Dialog open={dialogOpen} onClose={handleDialogClose}>
+        <DialogTitle
+          css={{
+            fontSize: "20px",
+            fontWeight: 600,
+          }}
+        >
+          인증 코드 유효 시간이 만료되었어요.
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText
+            css={{
+              fontSize: "14px",
+              fontWeight: 500,
+            }}
+          >
+            인증 코드 유효 시간이 만료되었어요. 이메일 주소를 다시 입력해주세요.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} autoFocus>
+            확인
+          </Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 }

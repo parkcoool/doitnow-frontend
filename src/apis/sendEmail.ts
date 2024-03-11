@@ -12,7 +12,7 @@ export interface SendEmailResponse {
 }
 
 /**
- * @path `GET /auth/sendEmail`
+ * @path `POST /auth/sendEmail`
  * @description 이메일 주소로 인증 코드 발송을 요청합니다.
  */
 export default async function sendEmail(body: SendEmailBody) {

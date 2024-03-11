@@ -1,6 +1,6 @@
-import sendEmail, { SendEmailResponse } from "apis/sendEmail";
+import sendEmail from "apis/sendEmail";
 import getUserByIdentifier from "apis/getUserByIdentifier";
-import type { APIResponse } from "api";
+import verifyEmail from "apis/verifyEmail";
 
 interface HandleSubmitProps {
   setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>;
@@ -80,4 +80,39 @@ export async function handleNameSubmit({ name, setErrorMessage, loading, setLoad
   }
 
   return false;
+}
+
+type handleVerifySubmitProps = HandleSubmitProps & {
+  email: string;
+  code: string;
+};
+
+export async function handleVerifySubmit({
+  email,
+  code,
+  setErrorMessage,
+  loading,
+  setLoading,
+}: handleVerifySubmitProps) {
+  if (loading) return;
+  setLoading(true);
+
+  try {
+    // 이메일 인증 코드 확인
+    const verifyEmailRes = await verifyEmail({
+      email,
+      code,
+    });
+
+    if (verifyEmailRes.code !== 1000) throw new Error(verifyEmailRes.message);
+
+    setErrorMessage(undefined);
+    return verifyEmailRes.result;
+  } catch (error) {
+    if (error instanceof Error) {
+      setErrorMessage(error.message);
+    }
+  } finally {
+    setLoading(false);
+  }
 }

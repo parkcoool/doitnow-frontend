@@ -10,7 +10,7 @@ import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
 import Email from "./Email";
-import { handleEmailSubmit, handleNameSubmit } from "./handleSubmit";
+import { handleEmailSubmit, handleNameSubmit, handleVerifySubmit } from "./handleSubmit";
 
 import Verify from "./Verify";
 import Name from "./Name";
@@ -23,8 +23,9 @@ interface SignupLocationState extends LocationState {
 
 export interface SignupData {
   email: string;
-  emailCode?: string;
+  emailCode: string;
   emailExpiresAt?: Date;
+  emailVerifyToken?: string;
   name: string;
   password: string;
   passwordConfirm?: string;
@@ -39,6 +40,7 @@ export enum SignupStep {
   Password = 1,
   Email = 2,
   Verify = 3,
+  Complete = 4,
 }
 
 const stepLabels = ["이름", "비밀번호", "이메일", "인증"];
@@ -84,6 +86,7 @@ export default function Signup() {
         submitEmail();
         break;
       case SignupStep.Verify:
+        submitVerify();
         break;
       default:
         break;
@@ -158,8 +161,27 @@ export default function Signup() {
     });
   }
 
-  function submitVerify() {
-    1;
+  async function submitVerify() {
+    const res = await handleVerifySubmit({
+      email: signupData.email,
+      code: signupData.emailCode,
+      setErrorMessage,
+      loading,
+      setLoading,
+    });
+
+    if (!res?.token) return;
+
+    // 토큰을 상태에 저장한다.
+    signupDataDispatch({ emailVerifyToken: res.token });
+
+    // 다음 단계로 이동한다.
+    navigate("./", {
+      state: {
+        step: SignupStep.Complete,
+        sourceLocation,
+      },
+    });
   }
 
   return (
