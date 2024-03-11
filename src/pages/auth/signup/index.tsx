@@ -10,7 +10,7 @@ import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
 import Email from "./Email";
-import { handleEmailSubmit, handleNameSubmit, handleVerifySubmit } from "./handleSubmit";
+import { handleEmailSubmit, handleFinalSubmit, handleNameSubmit, handleVerifySubmit } from "./handleSubmit";
 
 import Verify from "./Verify";
 import Name from "./Name";
@@ -164,7 +164,8 @@ export default function Signup() {
   }
 
   async function submitVerify() {
-    const res = await handleVerifySubmit({
+    // 토큰 발급
+    const verifyRes = await handleVerifySubmit({
       email: signupData.email,
       code: signupData.emailCode,
       setErrorMessage,
@@ -172,10 +173,23 @@ export default function Signup() {
       setLoading,
     });
 
-    if (!res?.token) return;
+    if (!verifyRes?.token) return;
 
     // 토큰을 상태에 저장한다.
-    signupDataDispatch({ emailVerifyToken: res.token });
+    signupDataDispatch({ emailVerifyToken: verifyRes.token });
+
+    // 계정 생성 요청
+    const finalRes = await handleFinalSubmit({
+      email: signupData.email,
+      name: signupData.name,
+      password: signupData.password,
+      emailToken: verifyRes.token,
+      setErrorMessage,
+      loading,
+      setLoading,
+    });
+
+    if (!finalRes) return;
 
     // 다음 단계로 이동한다.
     navigate("./", {

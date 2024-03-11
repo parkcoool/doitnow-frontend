@@ -1,3 +1,4 @@
+import createUser from "apis/createUser";
 import sendEmail from "apis/sendEmail";
 import getUserByIdentifier from "apis/getUserByIdentifier";
 import verifyEmail from "apis/verifyEmail";
@@ -98,7 +99,7 @@ export async function handleVerifySubmit({
   setLoading(true);
 
   try {
-    // 이메일 인증 코드 확인
+    // 이메일 인증 코드 확인 및 토큰 발급
     const verifyEmailRes = await verifyEmail({
       email,
       code,
@@ -106,7 +107,6 @@ export async function handleVerifySubmit({
 
     if (verifyEmailRes.code !== 1000) throw new Error(verifyEmailRes.message);
 
-    setErrorMessage(undefined);
     return verifyEmailRes.result;
   } catch (error) {
     if (error instanceof Error) {
@@ -115,4 +115,46 @@ export async function handleVerifySubmit({
   } finally {
     setLoading(false);
   }
+}
+
+type handleFinalSubmitProps = HandleSubmitProps & {
+  email: string;
+  name: string;
+  password: string;
+  emailToken: string;
+};
+
+export async function handleFinalSubmit({
+  email,
+  name,
+  password,
+  emailToken,
+  setErrorMessage,
+  loading,
+  setLoading,
+}: handleFinalSubmitProps) {
+  if (loading) return false;
+  setLoading(true);
+
+  try {
+    // 회원가입
+    const signupRes = await createUser({
+      email,
+      name,
+      password,
+      emailToken,
+    });
+
+    if (signupRes.code !== 1000) throw new Error(signupRes.message);
+
+    return true;
+  } catch (error) {
+    if (error instanceof Error) {
+      setErrorMessage(error.message);
+    }
+  } finally {
+    setLoading(false);
+  }
+
+  return false;
 }
