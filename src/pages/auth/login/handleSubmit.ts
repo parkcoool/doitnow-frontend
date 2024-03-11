@@ -1,12 +1,7 @@
-// TODO: navigate 함수 사용하지 않기
-
-import type { NavigateFunction } from "react-router-dom";
 import getUserByIdentifier from "apis/getUserByIdentifier";
 import getToken from "apis/getToken";
-import { LoginStep } from "./";
 
 interface HandleSubmitProps {
-  navigate: NavigateFunction;
   setErrorMessage: React.Dispatch<React.SetStateAction<string | undefined>>;
   loading: boolean;
   setLoading: React.Dispatch<React.SetStateAction<boolean>>;
@@ -18,12 +13,11 @@ type HandleIdentifierSubmitProps = HandleSubmitProps & {
 
 export async function handleIdentifierSubmit({
   identifier,
-  navigate,
   setErrorMessage,
   loading,
   setLoading,
 }: HandleIdentifierSubmitProps) {
-  if (loading) return;
+  if (loading) return false;
   setLoading(true);
 
   try {
@@ -34,11 +28,7 @@ export async function handleIdentifierSubmit({
     if (res.code !== 1000) throw new Error(res.message);
 
     setErrorMessage(undefined);
-    navigate("./", {
-      state: {
-        step: LoginStep.Password,
-      },
-    });
+    return true;
   } catch (error) {
     if (error instanceof Error) {
       setErrorMessage(error.message);
@@ -46,6 +36,8 @@ export async function handleIdentifierSubmit({
   } finally {
     setLoading(false);
   }
+
+  return false;
 }
 
 type HandlePasswordSubmitProps = HandleSubmitProps & {
@@ -56,7 +48,6 @@ type HandlePasswordSubmitProps = HandleSubmitProps & {
 export async function handlePasswordSubmit({
   identifier,
   password,
-  navigate,
   setErrorMessage,
   loading,
   setLoading,
@@ -74,7 +65,7 @@ export async function handlePasswordSubmit({
     if (res.code !== 1000) throw new Error(res.message);
 
     setErrorMessage(undefined);
-    navigate("/");
+    return res.result;
   } catch (error) {
     if (error instanceof Error) {
       setErrorMessage(error.message);
@@ -82,4 +73,6 @@ export async function handlePasswordSubmit({
   } finally {
     setLoading(false);
   }
+
+  return;
 }

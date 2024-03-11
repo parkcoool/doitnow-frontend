@@ -11,14 +11,16 @@ interface GetTokenBody {
 }
 
 interface GetTokenResponse {
-  accessToken: {
-    token: string;
-    expiresIn: string;
-  };
-  refreshToken: {
-    token: string;
-    expiresIn: string;
-  };
+  token: {
+    accessToken: {
+      token: string;
+      expiresIn: number;
+    };
+    refreshToken: {
+      token: string;
+      expiresIn: number;
+    };
+  } | null;
 }
 
 /**

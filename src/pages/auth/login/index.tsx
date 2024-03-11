@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import { CircularProgress } from "@mui/material";
 import {
@@ -11,6 +12,7 @@ import {
 import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
+import useSessionStore from "contexts/useSessionStore";
 
 import Identifier from "./Identifier";
 import Password from "./Password";
@@ -42,6 +44,7 @@ export enum LoginStep {
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
+  const sessionStore = useSessionStore();
 
   // location.state로부터 step과 sourceLocation을 가져온다.
   const { step, sourceLocation } = (location.state ?? {
@@ -64,25 +67,49 @@ export default function Login() {
     setErrorMessage(undefined);
   }, [loginData.identifier, loginData.password]);
 
-  function submitIdentifier() {
-    handleIdentifierSubmit({
+  async function submitIdentifier() {
+    const res = await handleIdentifierSubmit({
       identifier: loginData.identifier,
-      navigate,
       setErrorMessage,
       loading,
       setLoading,
+    });
+
+    if (!res) return;
+
+    navigate("./", {
+      state: {
+        step: LoginStep.Password,
+        sourceLocation: {
+          pathname: location.pathname,
+        },
+      },
     });
   }
 
-  function submitPassword() {
-    handlePasswordSubmit({
+  async function submitPassword() {
+    const res = await handlePasswordSubmit({
       identifier: loginData.identifier,
       password: loginData.password,
-      navigate,
       setErrorMessage,
       loading,
       setLoading,
     });
+
+    if (!res?.token) return;
+    const { token } = res;
+
+    // 토큰 저장
+    sessionStore.setAccessToken({
+      token: token.accessToken.token,
+      expiresAt: new Date(new Date().getTime() + token.accessToken.expiresIn * 24 * 60 * 60 * 1000),
+    });
+    Cookies.set("refreshToken", token.refreshToken.token, {
+      expires: token.refreshToken.expiresIn,
+      secure: true,
+    });
+
+    navigate("/", { replace: true });
   }
 
   return (

@@ -2,14 +2,19 @@ import { create } from "zustand";
 
 import type { User } from "user";
 
+interface Token {
+  token: string;
+  expiresAt: Date;
+}
+
 interface SessionValues {
   user: User | null;
-  accessToken: string | null;
+  accessToken: Token | null;
 }
 
 interface SessionMethods {
   setUser: (user: User | null) => void;
-  setAccessToken: (accessToken: string | null) => void;
+  setAccessToken: (accessToken: Token | null) => void;
 }
 
 const useSessionStore = create<SessionValues & SessionMethods>((set) => ({
