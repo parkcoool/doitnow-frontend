@@ -210,7 +210,7 @@ export default function Password() {
   }
 
   return (
-    <Layout headerContent="계정 생성" loading={loading} onBack={backToSource} footerDisabled>
+    <Layout headerContent="계정 복구" loading={loading} onBack={backToSource} footerDisabled>
       {/* Stepper 컴포넌트를 사용하여 단계 표시 */}
       <div
         css={{

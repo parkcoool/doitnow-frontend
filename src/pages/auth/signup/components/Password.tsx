@@ -3,7 +3,7 @@
 import React from "react";
 import { TextField } from "@mui/material";
 
-import type { SignupData } from "./";
+import type { SignupData } from "..";
 
 interface PasswordProps {
   signupData: SignupData;

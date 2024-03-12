@@ -9,12 +9,16 @@ import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
-import Email from "./Email";
-import Verify from "./Verify";
-import Name from "./Name";
-import Password from "./Password";
-import Complete from "./Complete";
-import { handleEmailSubmit, handleFinalSubmit, handleNameSubmit, handleVerifySubmit } from "./handleSubmit";
+import Email from "./components/Email";
+import Verify from "./components/Verify";
+import Name from "./components/Name";
+import Password from "./components/Password";
+import Complete from "./components/Complete";
+
+import handleEmailSubmit from "./utils/handleEmailSubmit";
+import handleNameSubmit from "./utils/handleNameSubmit";
+import handlePasswordSubmit from "./utils/handlePasswordSubmit";
+import handleVerifySubmit from "./utils/handleVerifySubmit";
 
 import type { LocationState } from "location";
 
@@ -26,10 +30,9 @@ export interface SignupData {
   email: string;
   emailCode: string;
   emailExpiresAt?: Date;
-  emailVerifyToken?: string;
   name: string;
   password: string;
-  passwordConfirm?: string;
+  passwordConfirm: string;
 }
 
 function signupDataReducer(state: SignupData, action: Partial<SignupData>): SignupData {
@@ -70,28 +73,47 @@ export default function Signup() {
   // 값 수정이 감지되면 에러 메시지를 초기화한다.
   React.useEffect(() => {
     setErrorMessage(undefined);
-  }, [signupData.email, signupData.name, signupData.password]);
+  }, [signupData.email, signupData.name, signupData.password, signupData.passwordConfirm, signupData.emailCode]);
 
   // 다음 단계로 이동하는 함수
-  function handleNextStepClick() {
-    setErrorMessage(undefined);
+  async function handleNextStep(step: SignupStep) {
+    let newErrorMessage: string | undefined = undefined;
+    let partialSignupData: Partial<SignupData> | undefined = undefined;
+    let nextStep: SignupStep | undefined = undefined;
+    setLoading(true);
 
-    switch (step) {
-      case SignupStep.Name:
-        submitName();
-        break;
-      case SignupStep.Password:
-        submitPassword();
-        break;
-      case SignupStep.Email:
-        submitEmail();
-        break;
-      case SignupStep.Verify:
-        submitVerify();
-        break;
-      default:
-        backToSource();
-        break;
+    try {
+      switch (step) {
+        case SignupStep.Name:
+          partialSignupData = await handleNameSubmit(signupData.name);
+          nextStep = SignupStep.Password;
+          break;
+        case SignupStep.Password:
+          partialSignupData = handlePasswordSubmit(signupData.password, signupData.passwordConfirm);
+          nextStep = SignupStep.Email;
+          break;
+        case SignupStep.Email:
+          partialSignupData = await handleEmailSubmit(signupData.email);
+          nextStep = SignupStep.Verify;
+          break;
+        case SignupStep.Verify: {
+          partialSignupData = await handleVerifySubmit(signupData.email, signupData.emailCode, signupData);
+          nextStep = SignupStep.Complete;
+          break;
+        }
+        default:
+          backToSource();
+          break;
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        newErrorMessage = error.message;
+      }
+    } finally {
+      setErrorMessage(newErrorMessage);
+      if (partialSignupData) signupDataDispatch(partialSignupData);
+      if (nextStep) navigate("./", { state: { step: nextStep, sourceLocation } });
+      setLoading(false);
     }
   }
 
@@ -102,110 +124,21 @@ export default function Signup() {
     navigate(-1);
   }
 
-  async function submitName() {
-    const res = await handleNameSubmit({
-      name: signupData.name,
-      setErrorMessage,
-      loading,
-      setLoading,
-    });
-
-    if (!res) return;
-
-    // 다음 단계로 이동한다.
-    navigate("./", {
-      state: {
-        step: SignupStep.Password,
-        sourceLocation,
-      },
-    });
-  }
-
-  function submitPassword() {
-    if (signupData.password !== signupData.passwordConfirm) {
-      setErrorMessage("비밀번호가 일치하지 않아요.");
-      return;
-    }
-
-    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,20}$/.test(signupData.password)) {
-      setErrorMessage("영어, 숫자를 조합하여 8자 이상, 20자 이하여야 해요.");
-      return;
-    }
-
-    // 다음 단계로 이동한다.
-    navigate("./", {
-      state: {
-        step: SignupStep.Email,
-        sourceLocation,
-      },
-    });
-  }
-
-  async function submitEmail() {
-    const res = await handleEmailSubmit({
-      email: signupData.email,
-      setErrorMessage,
-      loading,
-      setLoading,
-    });
-
-    if (!res) return;
-
-    // 이메일 주소와 만료 시간을 상태에 저장한다.
-    signupDataDispatch({ email: res.email, emailExpiresAt: new Date(res.expiresAt) });
-
-    // 다음 단계로 이동한다.
-    navigate("./", {
-      state: {
-        step: SignupStep.Verify,
-        sourceLocation,
-      },
-    });
-  }
-
-  async function submitVerify() {
-    // 토큰 발급
-    const verifyRes = await handleVerifySubmit({
-      email: signupData.email,
-      code: signupData.emailCode,
-      setErrorMessage,
-      loading,
-      setLoading,
-    });
-
-    if (!verifyRes?.token) return;
-
-    // 토큰을 상태에 저장한다.
-    signupDataDispatch({ emailVerifyToken: verifyRes.token });
-
-    // 계정 생성 요청
-    const finalRes = await handleFinalSubmit({
-      email: signupData.email,
-      name: signupData.name,
-      password: signupData.password,
-      emailToken: verifyRes.token,
-      setErrorMessage,
-      loading,
-      setLoading,
-    });
-
-    if (!finalRes) return;
-
-    // 다음 단계로 이동한다.
-    navigate("./", {
-      state: {
-        step: SignupStep.Complete,
-        sourceLocation,
-      },
-    });
-  }
-
+  // 원래 페이지로 돌아가는 함수
   function backToSource() {
     if (sourceLocation) {
       navigate(sourceLocation.pathname, { state: sourceLocation.state });
     } else {
       navigate(-1);
     }
+  }
+
+  function nextStepButtonDisabled() {
+    if (step === SignupStep.Name) return !signupData.name;
+    if (step === SignupStep.Password) return !signupData.password || !signupData.passwordConfirm;
+    if (step === SignupStep.Email) return !signupData.email;
+    if (step === SignupStep.Verify) return !signupData.emailCode;
+    return false;
   }
 
   return (
@@ -238,7 +171,7 @@ export default function Signup() {
               signupDataDispatch={signupDataDispatch}
               errorMessage={errorMessage}
               loading={loading}
-              onSubmit={submitName}
+              onSubmit={() => handleNextStep(SignupStep.Name)}
             />
           )}
 
@@ -248,7 +181,7 @@ export default function Signup() {
               signupDataDispatch={signupDataDispatch}
               errorMessage={errorMessage}
               loading={loading}
-              onSubmit={submitPassword}
+              onSubmit={() => handleNextStep(SignupStep.Password)}
             />
           )}
 
@@ -258,7 +191,7 @@ export default function Signup() {
               signupDataDispatch={signupDataDispatch}
               errorMessage={errorMessage}
               loading={loading}
-              onSubmit={submitEmail}
+              onSubmit={() => handleNextStep(SignupStep.Email)}
             />
           )}
 
@@ -268,7 +201,7 @@ export default function Signup() {
               signupDataDispatch={signupDataDispatch}
               errorMessage={errorMessage}
               loading={loading}
-              onSubmit={submitVerify}
+              onSubmit={() => handleNextStep(SignupStep.Verify)}
             />
           )}
 
@@ -290,14 +223,8 @@ export default function Signup() {
           secondaryText={step !== SignupStep.Name && step !== SignupStep.Complete ? "이전" : undefined}
           primaryButtonProps={{
             variant: "contained",
-            onClick: handleNextStepClick,
-            disabled:
-              loading ||
-              (step === SignupStep.Name && signupData.name === "") ||
-              (step === SignupStep.Email && signupData.email === "") ||
-              (step === SignupStep.Verify && signupData.emailCode === "") ||
-              (step === SignupStep.Password && signupData.password === ""),
-
+            onClick: () => handleNextStep(step),
+            disabled: nextStepButtonDisabled(),
             endIcon: loading ? (
               <CircularProgress size={16} color="inherit" />
             ) : (
