@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import type { APIResponse } from "api";
+import type { Token } from "auth";
 
 interface VerifyEmailBody {
   email: string;
@@ -8,7 +9,7 @@ interface VerifyEmailBody {
 }
 
 export interface VerifyEmailResponse {
-  token: string | null;
+  token: Token | null;
 }
 
 /**

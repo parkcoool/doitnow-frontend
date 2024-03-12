@@ -3,17 +3,17 @@
 import React from "react";
 import { TextField } from "@mui/material";
 
-import type { SignupData } from "..";
+import type { SubmitData, ReceivedData } from "..";
 
 interface PasswordProps {
-  signupData: SignupData;
-  signupDataDispatch: React.Dispatch<Partial<SignupData>>;
-  errorMessage?: string;
+  submitData: SubmitData;
+  submitDataDispatch: React.Dispatch<Partial<SubmitData>>;
+  receivedData: ReceivedData;
   loading: boolean;
   onSubmit: () => void;
 }
 
-export default function Password({ signupData, signupDataDispatch, errorMessage, loading, onSubmit }: PasswordProps) {
+export default function Password({ submitData, submitDataDispatch, receivedData, loading, onSubmit }: PasswordProps) {
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
     onSubmit();
@@ -55,13 +55,14 @@ export default function Password({ signupData, signupDataDispatch, errorMessage,
         <TextField
           autoFocus
           disabled={loading}
-          error={errorMessage !== undefined}
+          error={receivedData.errorMessage !== undefined}
+          helperText={receivedData.errorMessage}
           label="비밀번호"
           type="password"
-          value={signupData.password}
+          value={submitData.password}
           autoComplete="new-password"
           variant="standard"
-          onChange={(e) => signupDataDispatch({ password: e.target.value })}
+          onChange={(e) => submitDataDispatch({ password: e.target.value })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",
@@ -70,14 +71,14 @@ export default function Password({ signupData, signupDataDispatch, errorMessage,
 
         <TextField
           disabled={loading}
-          error={errorMessage !== undefined}
-          helperText={errorMessage}
+          error={receivedData.errorMessage !== undefined}
+          helperText={receivedData.errorMessage}
           label="비밀번호 확인"
           type="password"
-          value={signupData.passwordConfirm}
+          value={submitData.passwordConfirm}
           autoComplete="new-password"
           variant="standard"
-          onChange={(e) => signupDataDispatch({ passwordConfirm: e.target.value })}
+          onChange={(e) => submitDataDispatch({ passwordConfirm: e.target.value })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

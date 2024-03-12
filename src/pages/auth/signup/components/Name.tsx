@@ -3,17 +3,17 @@
 import React from "react";
 import { TextField } from "@mui/material";
 
-import type { SignupData } from "..";
+import type { SubmitData, ReceivedData } from "..";
 
 interface NameProps {
-  signupData: SignupData;
-  signupDataDispatch: React.Dispatch<Partial<SignupData>>;
-  errorMessage?: string;
+  submitData: SubmitData;
+  submitDataDispatch: React.Dispatch<Partial<SubmitData>>;
+  receivedData: ReceivedData;
   loading: boolean;
   onSubmit: () => void;
 }
 
-export default function Name({ signupData, signupDataDispatch, errorMessage, loading, onSubmit }: NameProps) {
+export default function Name({ submitData, submitDataDispatch, receivedData, loading, onSubmit }: NameProps) {
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
     onSubmit();
@@ -55,14 +55,14 @@ export default function Name({ signupData, signupDataDispatch, errorMessage, loa
         <TextField
           autoFocus
           disabled={loading}
-          error={errorMessage !== undefined}
-          helperText={errorMessage}
+          error={receivedData.errorMessage !== undefined}
+          helperText={receivedData.errorMessage}
           label="아이디"
           type="text"
-          value={signupData.name}
+          value={submitData.name}
           autoComplete="username"
           variant="standard"
-          onChange={(e) => signupDataDispatch({ name: e.target.value })}
+          onChange={(e) => submitDataDispatch({ name: e.target.value })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

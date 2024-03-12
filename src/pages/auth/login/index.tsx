@@ -67,7 +67,7 @@ export default function Login() {
   const receivedDataReducer = getReducer<ReceivedData>();
   const [receivedData, receivedDataDispatch] = React.useReducer(receivedDataReducer, {});
 
-  // 로딩 여부 및 에러 메시지 상태를 관리한다.
+  // 로딩 여부 상태를 관리한다.
   const [loading, setLoading] = React.useState(false);
 
   // 값 수정이 감지되면 에러 메시지를 초기화한다.
@@ -93,6 +93,10 @@ export default function Login() {
           const partialReceivedData = await handlePasswordSubmit(submitData);
           receivedDataDispatch(partialReceivedData);
           storeToken(sessionStore, partialReceivedData.token?.accessToken, partialReceivedData.token?.refreshToken);
+          backToSource();
+          break;
+        }
+        default: {
           backToSource();
           break;
         }

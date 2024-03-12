@@ -1,17 +1,14 @@
 import createUser from "apis/createUser";
 
-interface SubmitSignupProps {
-  email: string;
-  name: string;
-  password: string;
-  emailToken: string;
-}
+import type { SubmitData } from "..";
 
-export default async function submitSignup({ email, name, password, emailToken }: SubmitSignupProps) {
+export default async function submitSignup(submitData: SubmitData) {
+  if (!submitData.emailVerifyToken) throw new Error("이메일 인증에 실패했어요.");
+
   return await createUser({
-    email,
-    name,
-    password,
-    emailToken,
+    email: submitData.email,
+    name: submitData.name,
+    password: submitData.password,
+    emailToken: submitData.emailVerifyToken.token,
   });
 }

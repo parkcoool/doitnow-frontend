@@ -1,9 +1,9 @@
 import sendEmail from "apis/sendEmail";
 import getUserByIdentifier from "apis/getUserByIdentifier";
 
-import type { SignupData } from "../";
+import type { ReceivedData } from "../";
 
-export default async function handleEmailSubmit(email: string): Promise<Partial<SignupData>> {
+export default async function handleEmailSubmit(email: string): Promise<Partial<ReceivedData>> {
   // 이메일 중복 확인
   const getUserByIndentifierRes = await getUserByIdentifier({
     identifier: email,
@@ -17,5 +17,5 @@ export default async function handleEmailSubmit(email: string): Promise<Partial<
 
   if (sendEmailRes.code !== 1000) throw new Error(sendEmailRes.message);
 
-  return { email: sendEmailRes.result.email, emailExpiresAt: new Date(sendEmailRes.result.expiresAt) };
+  return { emailCodeExpiresAt: new Date(sendEmailRes.result.expiresAt) };
 }
