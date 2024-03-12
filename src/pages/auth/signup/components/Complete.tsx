@@ -19,7 +19,6 @@ export default function Complete() {
         css={{
           width: "100px",
           height: "100px",
-          margin: "0 auto",
           "> svg": {
             transform: "unset !important",
           },

@@ -8,17 +8,19 @@ import {
   AccountCircleRounded as AccountCircleRoundedIcon,
 } from "@mui/icons-material";
 
-import type { LoginData } from "./";
+import { LoginStep } from "..";
+
+import type { SubmitData, ReceivedData } from "..";
 
 interface PasswordProps {
-  loginData: LoginData;
-  loginDataDispatch: React.Dispatch<Partial<LoginData>>;
-  errorMessage?: string;
+  submitData: SubmitData;
+  submitDataDispatch: React.Dispatch<Partial<SubmitData>>;
+  receivedData: ReceivedData;
   loading: boolean;
   onSubmit: () => void;
 }
 
-export default function Password({ loginData, loginDataDispatch, errorMessage, loading, onSubmit }: PasswordProps) {
+export default function Password({ submitData, submitDataDispatch, receivedData, loading, onSubmit }: PasswordProps) {
   const navigate = useNavigate();
 
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
@@ -37,7 +39,7 @@ export default function Password({ loginData, loginDataDispatch, errorMessage, l
           margin: "16px 0 0 0",
         }}
       >
-        {loginData.name ? `${loginData.name}님, 안녕하세요.` : "환영합니다."}
+        {receivedData.name ? `${receivedData.name}님, 안녕하세요.` : "환영합니다."}
       </h1>
       <h2
         css={{
@@ -62,12 +64,12 @@ export default function Password({ loginData, loginDataDispatch, errorMessage, l
       >
         <Chip
           avatar={<AccountCircleRoundedIcon />}
-          label={loginData.identifier}
+          label={submitData.identifier}
           variant="outlined"
           onClick={() =>
             navigate("./", {
               state: {
-                step: "identifier",
+                step: LoginStep.Identifier,
               },
             })
           }
@@ -89,13 +91,13 @@ export default function Password({ loginData, loginDataDispatch, errorMessage, l
         <TextField
           autoFocus
           disabled={loading}
-          error={errorMessage !== undefined}
-          helperText={errorMessage}
+          error={receivedData.errorMessage !== undefined}
+          helperText={receivedData.errorMessage}
           label="비밀번호"
           type="password"
-          value={loginData.password}
+          value={submitData.password}
           autoComplete="current-password"
-          onChange={(e) => loginDataDispatch({ password: e.target.value })}
+          onChange={(e) => submitDataDispatch({ password: e.target.value })}
           css={{
             width: "100%",
             margin: "0",

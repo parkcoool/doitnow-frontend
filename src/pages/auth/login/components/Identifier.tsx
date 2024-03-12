@@ -5,17 +5,23 @@ import { useNavigate } from "react-router-dom";
 import { TextField, Button } from "@mui/material";
 import { HelpOutlineRounded as HelpOutlineRoundedIcon } from "@mui/icons-material";
 
-import type { LoginData } from "./";
+import type { ReceivedData, SubmitData } from "..";
 
 interface IdentifierProps {
-  loginData: LoginData;
-  loginDataDispatch: React.Dispatch<Partial<LoginData>>;
-  errorMessage?: string;
+  submitData: SubmitData;
+  submitDataDispatch: React.Dispatch<Partial<SubmitData>>;
+  receivedData: ReceivedData;
   loading: boolean;
   onSubmit: () => void;
 }
 
-export default function Identifier({ loginData, loginDataDispatch, errorMessage, loading, onSubmit }: IdentifierProps) {
+export default function Identifier({
+  submitData,
+  submitDataDispatch,
+  receivedData,
+  loading,
+  onSubmit,
+}: IdentifierProps) {
   const navigate = useNavigate();
 
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
@@ -57,13 +63,13 @@ export default function Identifier({ loginData, loginDataDispatch, errorMessage,
         <TextField
           autoFocus
           disabled={loading}
-          error={errorMessage !== undefined}
-          helperText={errorMessage}
+          error={receivedData.errorMessage !== undefined}
+          helperText={receivedData.errorMessage}
           label="이메일 주소 또는 아이디"
           type="email username"
-          value={loginData.identifier}
+          value={submitData.identifier}
           autoComplete="email"
-          onChange={(e) => loginDataDispatch({ identifier: e.target.value })}
+          onChange={(e) => submitDataDispatch({ identifier: e.target.value })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

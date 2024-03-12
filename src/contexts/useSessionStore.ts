@@ -1,18 +1,14 @@
 import { create } from "zustand";
 
 import type { User } from "user";
+import type { Token } from "auth";
 
-interface Token {
-  token: string;
-  expiresAt: Date;
-}
-
-interface SessionValues {
+export interface SessionValues {
   user: User | null;
   accessToken: Token | null;
 }
 
-interface SessionMethods {
+export interface SessionMethods {
   setUser: (user: User | null) => void;
   setAccessToken: (accessToken: Token | null) => void;
 }

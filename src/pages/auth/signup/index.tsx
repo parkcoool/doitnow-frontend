@@ -26,6 +26,7 @@ interface SignupLocationState extends LocationState {
   step: SignupStep;
 }
 
+// TODO: SignupData를 서버에 보낼 정보로만 구성하기
 export interface SignupData {
   email: string;
   emailCode: string;
@@ -76,14 +77,14 @@ export default function Signup() {
   }, [signupData.email, signupData.name, signupData.password, signupData.passwordConfirm, signupData.emailCode]);
 
   // 다음 단계로 이동하는 함수
-  async function handleNextStep(step: SignupStep) {
+  async function handleNextStep(currentStep: SignupStep) {
     let newErrorMessage: string | undefined = undefined;
     let partialSignupData: Partial<SignupData> | undefined = undefined;
     let nextStep: SignupStep | undefined = undefined;
     setLoading(true);
 
     try {
-      switch (step) {
+      switch (currentStep) {
         case SignupStep.Name:
           partialSignupData = await handleNameSubmit(signupData.name);
           nextStep = SignupStep.Password;
@@ -119,7 +120,6 @@ export default function Signup() {
 
   // 이전 단계로 이동하는 함수
   function handleBackStepClick() {
-    if (step === SignupStep.Name) return;
     setErrorMessage(undefined);
     navigate(-1);
   }
