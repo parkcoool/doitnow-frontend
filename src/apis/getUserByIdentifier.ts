@@ -8,7 +8,7 @@ interface GetUserByIdentifierParams {
 }
 
 interface GetUserByIdentifierResponse {
-  user: User | null;
+  user: (User & Required<Pick<User, "email">>) | null;
 }
 
 /**

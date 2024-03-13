@@ -4,19 +4,19 @@ import React from "react";
 import { IconButton, Paper, Typography, Snackbar, Tooltip } from "@mui/material";
 import { ContentPasteRounded as ContentPasteRoundedIcon, Close as CloseIcon } from "@mui/icons-material";
 
-import type { EmailData } from "./";
+import type { ReceivedData } from "..";
 
 interface CompleteProps {
-  emailData: EmailData;
+  receivedData: ReceivedData;
 }
 
-export default function Complete({ emailData }: CompleteProps) {
+export default function Complete({ receivedData }: CompleteProps) {
   const [snackbarOpen, setSnackbarOpen] = React.useState(false);
 
   function handleEmailCopy() {
-    if (!emailData.email) return;
+    if (!receivedData.email) return;
 
-    navigator.clipboard.writeText(emailData.email);
+    navigator.clipboard.writeText(receivedData.email);
     setSnackbarOpen(true);
   }
 
@@ -70,7 +70,7 @@ export default function Complete({ emailData }: CompleteProps) {
             fontWeight: 600,
           }}
         >
-          {emailData.email}
+          {receivedData.email}
         </Typography>
 
         <Tooltip title="이메일 주소 복사">

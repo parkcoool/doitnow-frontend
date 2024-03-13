@@ -5,5 +5,6 @@ declare module "user" {
   interface User {
     id: string;
     name: string;
+    email?: string;
   }
 }

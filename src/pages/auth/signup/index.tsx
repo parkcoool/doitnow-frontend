@@ -8,8 +8,8 @@ import { NavigateNextRounded as NavigateNextRoundedIcon } from "@mui/icons-mater
 import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
-
 import getReducer from "utils/getReducer";
+
 import Email from "./components/Email";
 import Verify from "./components/Verify";
 import Name from "./components/Name";

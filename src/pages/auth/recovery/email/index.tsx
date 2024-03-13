@@ -8,22 +8,26 @@ import { NavigateNextRounded as NavigateNextRoundedIcon } from "@mui/icons-mater
 import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
+import getReducer from "utils/getReducer";
 
-import Name from "./Name";
-import Complete from "./Complete";
+import Name from "./components/Name";
+import Complete from "./components/Complete";
+
+import handleNameSubmit from "./utils/handleNameSubmit";
+
 import type { LocationState } from "location";
 
 interface EmailLocationState extends LocationState {
   step: EmailStep;
 }
 
-export interface EmailData {
+export interface SubmitData {
   name: string;
-  email?: string;
 }
 
-function emailDataReducer(state: EmailData, action: Partial<EmailData>): EmailData {
-  return { ...state, ...action };
+export interface ReceivedData {
+  email?: string;
+  errorMessage?: string;
 }
 
 export enum EmailStep {
@@ -41,55 +45,65 @@ export default function Email() {
   const step = (location.state as EmailLocationState)?.step ?? EmailStep.Name;
   const sourceLocation = (location.state as EmailLocationState)?.sourceLocation;
 
-  // emailData를 관리하는 emailDataReducer를 생성한다.
-  const [emailData, emailDataDispatch] = React.useReducer(emailDataReducer, {
+  // submitData를 관리하는 reducer를 생성한다.
+  const submitDataReducer = getReducer<SubmitData>();
+  const [submitData, submitDataDispatch] = React.useReducer(submitDataReducer, {
     name: "",
-    email: "",
   });
 
-  // 로딩 여부 및 에러 메시지 상태를 관리한다.
+  // receivedData를 관리하는 reducer를 생성한다.
+  const receivedDataReducer = getReducer<ReceivedData>();
+  const [receivedData, receivedDataDispatch] = React.useReducer(receivedDataReducer, {});
+
+  // 로딩 여부 상태를 관리한다.
   const [loading, setLoading] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState<string>();
 
   // 값 수정이 감지되면 에러 메시지를 초기화한다.
   React.useEffect(() => {
-    setErrorMessage(undefined);
-  }, [emailData.name]);
+    receivedDataDispatch({ errorMessage: undefined });
+  }, [submitData]);
 
-  async function submitName() {
-    // TODO: 실제 API 적용
+  // 다음 단계로 이동하는 함수
+  async function handleNextStep(currentStep: EmailStep) {
+    let newErrorMessage: string | undefined = undefined;
+    let nextStep: EmailStep | undefined = undefined;
     setLoading(true);
 
-    const res = await new Promise<{
-      email?: string;
-    }>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          email: "example@example.com",
-        });
-      }, 1000);
-    });
-
-    setLoading(false);
-    if (!res?.email) return;
-
-    emailDataDispatch({ email: res.email });
-
-    // 다음 단계로 이동한다.
-    navigate("./", {
-      state: {
-        step: EmailStep.Complete,
-        sourceLocation,
-      },
-    });
+    try {
+      switch (currentStep) {
+        case EmailStep.Name: {
+          const partialReceivedData = await handleNameSubmit(submitData.name);
+          receivedDataDispatch(partialReceivedData);
+          nextStep = EmailStep.Complete;
+          break;
+        }
+        default: {
+          backToSource();
+          break;
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        newErrorMessage = error.message;
+      }
+    } finally {
+      receivedDataDispatch({ errorMessage: newErrorMessage });
+      if (nextStep) navigate("./", { state: { step: nextStep, sourceLocation } });
+      setLoading(false);
+    }
   }
 
+  // 원래 페이지로 돌아가는 함수
   function backToSource() {
     if (sourceLocation) {
       navigate(sourceLocation.pathname, { state: sourceLocation.state });
     } else {
       navigate(-1);
     }
+  }
+
+  function nextStepButtonDisabled() {
+    return loading || (step === EmailStep.Name && submitData.name.length === 0);
   }
 
   return (
@@ -118,15 +132,15 @@ export default function Email() {
         <Narrow>
           {step === EmailStep.Name && (
             <Name
-              emailData={emailData}
-              emailDataDispatch={emailDataDispatch}
-              errorMessage={errorMessage}
+              submitData={submitData}
+              submitDataDispatch={submitDataDispatch}
+              receivedData={receivedData}
               loading={loading}
-              onSubmit={submitName}
+              onSubmit={() => handleNextStep(EmailStep.Name)}
             />
           )}
 
-          {step === EmailStep.Complete && <Complete emailData={emailData} />}
+          {step === EmailStep.Complete && <Complete receivedData={receivedData} />}
         </Narrow>
       </div>
 
@@ -143,8 +157,8 @@ export default function Email() {
           primaryText={step !== EmailStep.Complete ? "다음" : "완료"}
           primaryButtonProps={{
             variant: "contained",
-            onClick: step === EmailStep.Name ? submitName : backToSource,
-            disabled: loading || (step === EmailStep.Name && emailData.name === ""),
+            onClick: () => handleNextStep(step),
+            disabled: nextStepButtonDisabled(),
             endIcon: loading ? (
               <CircularProgress size={16} color="inherit" />
             ) : (
