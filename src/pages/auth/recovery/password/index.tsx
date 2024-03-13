@@ -7,12 +7,12 @@ import { NavigateNextRounded as NavigateNextRoundedIcon } from "@mui/icons-mater
 
 import handlePasswordSubmit from "utils/handlers/handlePasswordSubmit";
 import handleVerifySubmit from "utils/handlers/handleVerifySubmit";
-import handleEmailSubmit from "utils/handlers/handleEmailSubmit";
 import getReducer from "utils/common/getReducer";
 
 import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
+import handleEmailSubmit from "./utils/handleEmailSubmit";
 
 import Email from "./components/Email";
 import NewPassword from "./components/NewPassword";
@@ -29,6 +29,7 @@ interface PasswordLocationState extends LocationState {
 }
 
 export interface SubmitData {
+  id?: number;
   email: string;
   emailCode: string;
   password: string;
@@ -90,7 +91,8 @@ export default function Password() {
       switch (currentStep) {
         case PasswordStep.Email: {
           const partialReceivedData = await handleEmailSubmit(submitData.email);
-          receivedDataDispatch(partialReceivedData);
+          receivedDataDispatch({ emailCodeExpiresAt: partialReceivedData.emailCodeExpiresAt });
+          submitDataDispatch({ id: partialReceivedData.id });
           nextStep = PasswordStep.Verify;
           break;
         }
@@ -104,7 +106,7 @@ export default function Password() {
         case PasswordStep.NewPassword: {
           const partialReceivedData = handlePasswordSubmit(submitData.password, submitData.passwordConfirm);
           receivedDataDispatch(partialReceivedData);
-          await submitRecovery({ ...submitData, password: partialReceivedData.password });
+          await submitRecovery(submitData);
           nextStep = PasswordStep.Complete;
           break;
         }

@@ -10,17 +10,16 @@ import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
 import getReducer from "utils/common/getReducer";
-import handleEmailSubmit from "utils/handlers/handleEmailSubmit";
-import handleNameSubmit from "utils/handlers/handleNameSubmit";
+import handleEmailSubmit from "pages/auth/signup/utils/handleEmailSubmit";
+import handleNameSubmit from "pages/auth/signup/utils/handleNameSubmit";
 import handleVerifySubmit from "utils/handlers/handleVerifySubmit";
+import handlePasswordSubmit from "utils/handlers/handlePasswordSubmit";
 
-import handlePasswordSubmit from "../../../utils/handlers/handlePasswordSubmit";
 import Email from "./components/Email";
 import Verify from "./components/Verify";
 import Name from "./components/Name";
 import Password from "./components/Password";
 import Complete from "./components/Complete";
-
 import submitSignup from "./utils/submitSignup";
 
 import type { Token } from "auth";

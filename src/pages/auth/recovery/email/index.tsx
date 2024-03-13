@@ -5,7 +5,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Stepper, Step, StepLabel, CircularProgress } from "@mui/material";
 import { NavigateNextRounded as NavigateNextRoundedIcon } from "@mui/icons-material";
 
-import handleNameSubmit from "utils/handlers/handleNameSubmit";
 import getReducer from "utils/common/getReducer";
 
 import Layout from "components/layout/Layout";
@@ -14,6 +13,7 @@ import BottomButton from "components/common/BottomButton";
 
 import Name from "./components/Name";
 import Complete from "./components/Complete";
+import handleNameSubmit from "./utils/handleNameSubmit";
 
 import type { LocationState } from "location";
 

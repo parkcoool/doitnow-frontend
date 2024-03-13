@@ -1,14 +1,17 @@
 import axios from "axios";
 
 import type { APIResponse } from "api";
-import type { User } from "user";
 
 interface GetUserByIdentifierParams {
   identifier: string;
 }
 
 interface GetUserByIdentifierResponse {
-  user: (User & Required<Pick<User, "email">>) | null;
+  user: {
+    id: number;
+    email: string;
+    name: string;
+  } | null;
 }
 
 /**
