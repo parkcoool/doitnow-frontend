@@ -39,18 +39,18 @@ export default function Verify({ submitData, submitDataDispatch, receivedData, l
     navigate(-1);
   }
 
-  // 남은 시간을 업데이트하는 함수
+  // 남은 시간이 0 이하인 경우
+  function handleTimeout() {
+    if (loading) return;
+
+    setLeftSeconds(0);
+    setDialogOpen(true);
+  }
+
   function updateLeftSeconds() {
     if (receivedData.emailCodeExpiresAt === undefined) return;
 
     const leftMilliseconds = receivedData.emailCodeExpiresAt.getTime() - new Date().getTime();
-
-    // 남은 시간이 0 이하인 경우
-    if (leftMilliseconds <= 0) {
-      setLeftSeconds(0);
-      setDialogOpen(true);
-      return;
-    }
 
     setLeftSeconds(Math.floor(leftMilliseconds / 1000));
   }
@@ -59,7 +59,19 @@ export default function Verify({ submitData, submitDataDispatch, receivedData, l
   React.useEffect(() => {
     if (receivedData.emailCodeExpiresAt === undefined) return;
 
+    function updateLeftSeconds() {
+      const leftMilliseconds = (receivedData.emailCodeExpiresAt as Date).getTime() - new Date().getTime();
+
+      // 남은 시간이 0 이하인 경우
+      if (leftMilliseconds <= 0) {
+        handleTimeout();
+        return;
+      }
+
+      setLeftSeconds(Math.floor(leftMilliseconds / 1000));
+    }
     updateLeftSeconds();
+
     const interval = setInterval(updateLeftSeconds, 1000);
 
     return () => clearInterval(interval);

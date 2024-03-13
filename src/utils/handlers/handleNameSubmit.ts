@@ -1,8 +1,6 @@
 import getUserByIdentifier from "apis/getUserByIdentifier";
 
-import type { ReceivedData } from "../";
-
-export default async function handleNameSubmit(name: string): Promise<Partial<ReceivedData>> {
+export default async function handleNameSubmit(name: string) {
   // 아이디 유효성 검사
   if (/\W/.test(name) === true) throw new Error("영어, 숫자, 밑줄(_)만 쓸 수 있어요.");
   if (name.length < 3 || name.length > 20) throw new Error("3자 이상 20자 이하여야 해요.");

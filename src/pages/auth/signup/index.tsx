@@ -8,18 +8,19 @@ import { NavigateNextRounded as NavigateNextRoundedIcon } from "@mui/icons-mater
 import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
-import getReducer from "utils/getReducer";
 
+import getReducer from "utils/common/getReducer";
+import handleEmailSubmit from "utils/handlers/handleEmailSubmit";
+import handleNameSubmit from "utils/handlers/handleNameSubmit";
+import handleVerifySubmit from "utils/handlers/handleVerifySubmit";
+
+import handlePasswordSubmit from "../../../utils/handlers/handlePasswordSubmit";
 import Email from "./components/Email";
 import Verify from "./components/Verify";
 import Name from "./components/Name";
 import Password from "./components/Password";
 import Complete from "./components/Complete";
 
-import handleEmailSubmit from "./utils/handleEmailSubmit";
-import handleNameSubmit from "./utils/handleNameSubmit";
-import handlePasswordSubmit from "./utils/handlePasswordSubmit";
-import handleVerifySubmit from "./utils/handleVerifySubmit";
 import submitSignup from "./utils/submitSignup";
 
 import type { Token } from "auth";
@@ -93,8 +94,7 @@ export default function Signup() {
     try {
       switch (currentStep) {
         case SignupStep.Name: {
-          const partialReceivedData = await handleNameSubmit(submitData.name);
-          receivedDataDispatch(partialReceivedData);
+          await handleNameSubmit(submitData.name);
           nextStep = SignupStep.Password;
           break;
         }
@@ -113,7 +113,7 @@ export default function Signup() {
         case SignupStep.Verify: {
           const partialReceivedData = await handleVerifySubmit(submitData.email, submitData.emailCode);
           receivedDataDispatch(partialReceivedData);
-          submitSignup({ ...submitData, emailVerifyToken: partialReceivedData.emailVerifyToken });
+          await submitSignup({ ...submitData, emailVerifyToken: partialReceivedData.emailVerifyToken });
           nextStep = SignupStep.Complete;
           break;
         }

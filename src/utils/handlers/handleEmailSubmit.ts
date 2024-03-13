@@ -1,9 +1,7 @@
 import sendEmail from "apis/sendEmail";
 import getUserByIdentifier from "apis/getUserByIdentifier";
 
-import type { ReceivedData } from "../";
-
-export default async function handleEmailSubmit(email: string): Promise<Partial<ReceivedData>> {
+export default async function handleEmailSubmit(email: string) {
   // 이메일 중복 확인
   const getUserByIndentifierRes = await getUserByIdentifier({
     identifier: email,

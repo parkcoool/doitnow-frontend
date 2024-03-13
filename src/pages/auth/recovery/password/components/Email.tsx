@@ -3,17 +3,17 @@
 import React from "react";
 import { TextField } from "@mui/material";
 
-import type { PasswordData } from "./";
+import type { SubmitData, ReceivedData } from "..";
 
 interface EmailProps {
-  passwordData: PasswordData;
-  passwordDataDispatch: React.Dispatch<Partial<PasswordData>>;
-  errorMessage?: string;
+  submitData: SubmitData;
+  submitDataDispatch: React.Dispatch<Partial<SubmitData>>;
+  receivedData: ReceivedData;
   loading: boolean;
   onSubmit: () => void;
 }
 
-export default function Email({ passwordData, passwordDataDispatch, errorMessage, loading, onSubmit }: EmailProps) {
+export default function Email({ submitData, submitDataDispatch, receivedData, loading, onSubmit }: EmailProps) {
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
     onSubmit();
@@ -43,14 +43,14 @@ export default function Email({ passwordData, passwordDataDispatch, errorMessage
         <TextField
           autoFocus
           disabled={loading}
-          error={errorMessage !== undefined}
-          helperText={errorMessage}
+          error={receivedData.errorMessage !== undefined}
+          helperText={receivedData.errorMessage}
           label="이메일"
           type="email"
-          value={passwordData.email}
+          value={submitData.email}
           autoComplete="email"
           variant="standard"
-          onChange={(e) => passwordDataDispatch({ email: e.target.value })}
+          onChange={(e) => submitDataDispatch({ email: e.target.value })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

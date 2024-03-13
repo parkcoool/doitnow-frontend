@@ -17,17 +17,17 @@ import {
   DialogTitle,
 } from "@mui/material";
 
-import type { PasswordData } from "./";
+import type { SubmitData, ReceivedData } from "..";
 
 interface VerifyProps {
-  passwordData: PasswordData;
-  passwordDataDispatch: React.Dispatch<Partial<PasswordData>>;
-  errorMessage?: string;
+  submitData: SubmitData;
+  submitDataDispatch: React.Dispatch<Partial<SubmitData>>;
+  receivedData: ReceivedData;
   loading: boolean;
   onSubmit: () => void;
 }
 
-export default function Verify({ passwordData, passwordDataDispatch, errorMessage, loading, onSubmit }: VerifyProps) {
+export default function Verify({ submitData, submitDataDispatch, receivedData, loading, onSubmit }: VerifyProps) {
   const navigate = useNavigate();
 
   // 남은 시간과 다이얼로그를 관리한다.
@@ -41,16 +41,18 @@ export default function Verify({ passwordData, passwordDataDispatch, errorMessag
 
   // 남은 시간이 0 이하인 경우
   function handleTimeout() {
+    if (loading) return;
+
     setLeftSeconds(0);
     setDialogOpen(true);
   }
 
   // 남은 시간을 1초마다 업데이트한다.
   React.useEffect(() => {
-    if (passwordData.emailExpiresAt === undefined) return;
+    if (receivedData.emailCodeExpiresAt === undefined) return;
 
     function updateLeftSeconds() {
-      const leftMilliseconds = (passwordData.emailExpiresAt as Date).getTime() - new Date().getTime();
+      const leftMilliseconds = (receivedData.emailCodeExpiresAt as Date).getTime() - new Date().getTime();
 
       // 남은 시간이 0 이하인 경우
       if (leftMilliseconds <= 0) {
@@ -65,7 +67,7 @@ export default function Verify({ passwordData, passwordDataDispatch, errorMessag
     const interval = setInterval(updateLeftSeconds, 1000);
 
     return () => clearInterval(interval);
-  }, [passwordData.emailExpiresAt]);
+  }, [receivedData.emailCodeExpiresAt]);
 
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
@@ -100,7 +102,7 @@ export default function Verify({ passwordData, passwordDataDispatch, errorMessag
             fontWeight: 600,
           }}
         >
-          {passwordData.email}
+          {submitData.email}
         </span>
         (으)로 보냈어요.
       </h2>
@@ -128,14 +130,14 @@ export default function Verify({ passwordData, passwordDataDispatch, errorMessag
         <TextField
           autoFocus
           disabled={loading}
-          error={errorMessage !== undefined}
-          helperText={errorMessage}
+          error={receivedData.errorMessage !== undefined}
+          helperText={receivedData.errorMessage}
           label="인증 코드"
           type="text"
-          value={passwordData.emailCode ?? ""}
+          value={submitData.emailCode}
           autoComplete="one-time-code"
           variant="standard"
-          onChange={(e) => passwordDataDispatch({ emailCode: e.target.value })}
+          onChange={(e) => submitDataDispatch({ emailCode: e.target.value })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

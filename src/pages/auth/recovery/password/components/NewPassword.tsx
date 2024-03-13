@@ -3,20 +3,20 @@
 import React from "react";
 import { TextField } from "@mui/material";
 
-import type { PasswordData } from "./";
+import type { SubmitData, ReceivedData } from "..";
 
 interface NewPasswordProps {
-  passwordData: PasswordData;
-  passwordDataDispatch: React.Dispatch<Partial<PasswordData>>;
-  errorMessage?: string;
+  submitData: SubmitData;
+  submitDataDispatch: React.Dispatch<Partial<SubmitData>>;
+  receivedData: ReceivedData;
   loading: boolean;
   onSubmit: () => void;
 }
 
 export default function NewPassword({
-  passwordData,
-  passwordDataDispatch,
-  errorMessage,
+  submitData,
+  submitDataDispatch,
+  receivedData,
   loading,
   onSubmit,
 }: NewPasswordProps) {
@@ -61,13 +61,13 @@ export default function NewPassword({
         <TextField
           autoFocus
           disabled={loading}
-          error={errorMessage !== undefined}
+          error={receivedData.errorMessage !== undefined}
           label="새 비밀번호"
           type="password"
-          value={passwordData.password}
+          value={submitData.password}
           autoComplete="new-password"
           variant="standard"
-          onChange={(e) => passwordDataDispatch({ password: e.target.value })}
+          onChange={(e) => submitDataDispatch({ password: e.target.value })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",
@@ -76,14 +76,14 @@ export default function NewPassword({
 
         <TextField
           disabled={loading}
-          error={errorMessage !== undefined}
-          helperText={errorMessage}
+          error={receivedData.errorMessage !== undefined}
+          helperText={receivedData.errorMessage}
           label="새 비밀번호 확인"
           type="password"
-          value={passwordData.passwordConfirm}
+          value={submitData.passwordConfirm}
           autoComplete="new-password"
           variant="standard"
-          onChange={(e) => passwordDataDispatch({ passwordConfirm: e.target.value })}
+          onChange={(e) => submitDataDispatch({ passwordConfirm: e.target.value })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

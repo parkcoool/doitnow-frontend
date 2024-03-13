@@ -5,31 +5,41 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Stepper, Step, StepLabel, CircularProgress } from "@mui/material";
 import { NavigateNextRounded as NavigateNextRoundedIcon } from "@mui/icons-material";
 
+import handlePasswordSubmit from "utils/handlers/handlePasswordSubmit";
+import handleVerifySubmit from "utils/handlers/handleVerifySubmit";
+import handleEmailSubmit from "utils/handlers/handleEmailSubmit";
+import getReducer from "utils/common/getReducer";
+
 import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
 
-import Email from "./Email";
-import NewPassword from "./NewPassword";
-import Verify from "./Verify";
-import Complete from "./Complete";
+import Email from "./components/Email";
+import NewPassword from "./components/NewPassword";
+import Verify from "./components/Verify";
+import Complete from "./components/Complete";
+
+import submitRecovery from "./utils/submitRecovery";
+
+import type { Token } from "auth";
 import type { LocationState } from "location";
 
 interface PasswordLocationState extends LocationState {
   step: PasswordStep;
 }
 
-export interface PasswordData {
+export interface SubmitData {
   email: string;
   emailCode: string;
-  emailExpiresAt?: Date;
-  emailVerifyToken?: string;
   password: string;
-  passwordConfirm?: string;
+  passwordConfirm: string;
+  emailVerifyToken?: Token;
 }
 
-function passwordDataReducer(state: PasswordData, action: Partial<PasswordData>): PasswordData {
-  return { ...state, ...action };
+export interface ReceivedData {
+  emailCodeExpiresAt?: Date;
+  emailVerifyToken?: Token;
+  errorMessage?: string;
 }
 
 export enum PasswordStep {
@@ -49,164 +59,87 @@ export default function Password() {
   const step = (location.state as PasswordLocationState)?.step ?? PasswordStep.Email;
   const sourceLocation = (location.state as PasswordLocationState)?.sourceLocation;
 
-  // passwordData를 관리하는 passwordDataReducer를 생성한다.
-  const [passwordData, passwordDataDispatch] = React.useReducer(passwordDataReducer, {
+  // submitData를 관리하는 reducer를 생성한다.
+  const submitDataReducer = getReducer<SubmitData>();
+  const [submitData, submitDataDispatch] = React.useReducer(submitDataReducer, {
     email: "",
     emailCode: "",
     password: "",
     passwordConfirm: "",
   });
 
-  // 로딩 여부 및 에러 메시지 상태를 관리한다.
+  // receivedData를 관리하는 reducer를 생성한다.
+  const receivedDataReducer = getReducer<ReceivedData>();
+  const [receivedData, receivedDataDispatch] = React.useReducer(receivedDataReducer, {});
+
+  // 로딩 여부 상태를 관리한다.
   const [loading, setLoading] = React.useState(false);
-  const [errorMessage, setErrorMessage] = React.useState<string>();
 
   // 값 수정이 감지되면 에러 메시지를 초기화한다.
   React.useEffect(() => {
-    setErrorMessage(undefined);
-  }, [passwordData.email, passwordData.password, passwordData.passwordConfirm, passwordData.emailCode]);
+    receivedDataDispatch({ errorMessage: undefined });
+  }, [submitData]);
 
   // 다음 단계로 이동하는 함수
-  function handleNextStepClick() {
-    setErrorMessage(undefined);
+  async function handleNextStep(currentStep: PasswordStep) {
+    let newErrorMessage: string | undefined = undefined;
+    let nextStep: PasswordStep | undefined = undefined;
+    setLoading(true);
 
-    switch (step) {
-      case PasswordStep.Email:
-        submitEmail();
-        break;
-      case PasswordStep.Verify:
-        submitVerify();
-        break;
-      case PasswordStep.NewPassword:
-        submitNewPassword();
-        break;
-      default:
-        backToSource();
-        break;
+    try {
+      switch (currentStep) {
+        case PasswordStep.Email: {
+          const partialReceivedData = await handleEmailSubmit(submitData.email);
+          receivedDataDispatch(partialReceivedData);
+          nextStep = PasswordStep.Verify;
+          break;
+        }
+        case PasswordStep.Verify: {
+          const partialReceivedData = await handleVerifySubmit(submitData.email, submitData.emailCode);
+          receivedDataDispatch(partialReceivedData);
+          submitDataDispatch({ emailVerifyToken: partialReceivedData.emailVerifyToken });
+          nextStep = PasswordStep.NewPassword;
+          break;
+        }
+        case PasswordStep.NewPassword: {
+          const partialReceivedData = handlePasswordSubmit(submitData.password, submitData.passwordConfirm);
+          receivedDataDispatch(partialReceivedData);
+          await submitRecovery({ ...submitData, password: partialReceivedData.password });
+          nextStep = PasswordStep.Complete;
+          break;
+        }
+        default: {
+          backToSource();
+          break;
+        }
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        newErrorMessage = error.message;
+      }
+    } finally {
+      receivedDataDispatch({ errorMessage: newErrorMessage });
+      if (nextStep) navigate("./", { state: { step: nextStep, sourceLocation } });
+      setLoading(false);
     }
   }
 
-  // 이전 단계로 이동하는 함수
-  function handleBackStepClick() {
-    if (step === PasswordStep.Email) return;
-    setErrorMessage(undefined);
-    navigate(-1);
-  }
-
-  async function submitEmail() {
-    setLoading(true);
-
-    // TODO: 실제 API 적용
-    const res = await new Promise<{
-      email: string;
-      expiresAt: string;
-    }>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          email: "example@example.com",
-          expiresAt: new Date(Date.now() + 1000 * 60 * 5).toISOString(),
-        });
-      }, 1000);
-    });
-
-    setLoading(false);
-
-    if (!res) return;
-
-    // 이메일 주소와 만료 시간을 상태에 저장한다.
-    passwordDataDispatch({ email: res.email, emailExpiresAt: new Date(res.expiresAt) });
-
-    // 다음 단계로 이동한다.
-    navigate("./", {
-      state: {
-        step: PasswordStep.Verify,
-        sourceLocation,
-      },
-    });
-  }
-
-  async function submitVerify() {
-    setLoading(true);
-
-    // 토큰 발급
-
-    // TODO: 실제 API 적용
-    const verifyRes = await new Promise<{
-      token: string | null;
-    }>((resolve) => {
-      setTimeout(() => {
-        resolve({
-          token: "123456",
-        });
-      }, 1000);
-    });
-
-    setLoading(false);
-
-    if (!verifyRes?.token) return;
-
-    // 토큰을 상태에 저장한다.
-    passwordDataDispatch({ emailVerifyToken: verifyRes.token });
-
-    // 계정 생성 요청
-    setLoading(true);
-
-    const finalRes = await new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 1000);
-    });
-
-    setLoading(false);
-
-    if (!finalRes) return;
-
-    // 다음 단계로 이동한다.
-    navigate("./", {
-      state: {
-        step: PasswordStep.NewPassword,
-        sourceLocation,
-      },
-    });
-  }
-
-  async function submitNewPassword() {
-    if (passwordData.password !== passwordData.passwordConfirm) {
-      setErrorMessage("비밀번호가 일치하지 않아요.");
-      return;
-    }
-
-    if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*]{8,20}$/.test(passwordData.password)) {
-      setErrorMessage("영어, 숫자를 조합하여 8자 이상, 20자 이하여야 해요.");
-      return;
-    }
-
-    setLoading(true);
-
-    const res = await new Promise<boolean>((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 1000);
-    });
-
-    setLoading(false);
-    if (!res) return;
-
-    // 다음 단계로 이동한다.
-    navigate("./", {
-      state: {
-        step: PasswordStep.Complete,
-        sourceLocation,
-      },
-    });
-  }
-
+  // 원래 페이지로 돌아가는 함수
   function backToSource() {
     if (sourceLocation) {
       navigate(sourceLocation.pathname, { state: sourceLocation.state });
     } else {
       navigate(-1);
     }
+  }
+
+  function nextStepButtonDisabled() {
+    return (
+      loading ||
+      (step === PasswordStep.Email && submitData.email === "") ||
+      (step === PasswordStep.Verify && submitData.emailCode === "") ||
+      (step === PasswordStep.NewPassword && submitData.password === "")
+    );
   }
 
   return (
@@ -235,31 +168,31 @@ export default function Password() {
         <Narrow>
           {step === PasswordStep.Email && (
             <Email
-              passwordData={passwordData}
-              passwordDataDispatch={passwordDataDispatch}
-              errorMessage={errorMessage}
+              submitData={submitData}
+              submitDataDispatch={submitDataDispatch}
+              receivedData={receivedData}
               loading={loading}
-              onSubmit={submitEmail}
+              onSubmit={() => handleNextStep(PasswordStep.Email)}
             />
           )}
 
           {step === PasswordStep.Verify && (
             <Verify
-              passwordData={passwordData}
-              passwordDataDispatch={passwordDataDispatch}
-              errorMessage={errorMessage}
+              submitData={submitData}
+              submitDataDispatch={submitDataDispatch}
+              receivedData={receivedData}
               loading={loading}
-              onSubmit={submitVerify}
+              onSubmit={() => handleNextStep(PasswordStep.Verify)}
             />
           )}
 
           {step === PasswordStep.NewPassword && (
             <NewPassword
-              passwordData={passwordData}
-              passwordDataDispatch={passwordDataDispatch}
-              errorMessage={errorMessage}
+              submitData={submitData}
+              submitDataDispatch={submitDataDispatch}
+              receivedData={receivedData}
               loading={loading}
-              onSubmit={submitNewPassword}
+              onSubmit={() => handleNextStep(PasswordStep.NewPassword)}
             />
           )}
 
@@ -281,12 +214,8 @@ export default function Password() {
           secondaryText={step !== PasswordStep.Email && step !== PasswordStep.Complete ? "이전" : undefined}
           primaryButtonProps={{
             variant: "contained",
-            onClick: handleNextStepClick,
-            disabled:
-              loading ||
-              (step === PasswordStep.Email && passwordData.email === "") ||
-              (step === PasswordStep.Verify && passwordData.emailCode === "") ||
-              (step === PasswordStep.NewPassword && passwordData.password === ""),
+            onClick: () => handleNextStep(step),
+            disabled: nextStepButtonDisabled(),
             endIcon: loading ? (
               <CircularProgress size={16} color="inherit" />
             ) : (
@@ -295,7 +224,7 @@ export default function Password() {
             disableElevation: true,
           }}
           secondaryButtonProps={{
-            onClick: handleBackStepClick,
+            onClick: () => navigate(-1),
           }}
         />
       </div>

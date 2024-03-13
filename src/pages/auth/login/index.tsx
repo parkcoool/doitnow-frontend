@@ -12,7 +12,7 @@ import {
 import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 import BottomButton from "components/common/BottomButton";
-import getReducer from "utils/getReducer";
+import getReducer from "utils/common/getReducer";
 
 import useSessionStore from "contexts/useSessionStore";
 import Identifier from "./components/Identifier";

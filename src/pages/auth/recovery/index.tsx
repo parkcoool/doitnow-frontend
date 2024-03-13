@@ -1,24 +1,14 @@
 /** @jsxImportSource @emotion/react */
 
 import { useNavigate, useLocation } from "react-router-dom";
-import { styled } from "@mui/material/styles";
-import { Button } from "@mui/material";
 import { AlternateEmailRounded as AlternateEmailRoundedIcon, KeyRounded as KeyRoundedIcon } from "@mui/icons-material";
 
 import Layout from "components/layout/Layout";
 import Narrow from "components/layout/Narrow";
 
-import type { ButtonProps } from "@mui/material";
-import type { LocationState } from "location";
+import RecoveryButton from "./components/RecoveryButton";
 
-const RecoveryButton = styled(Button)<ButtonProps>(({ theme }) => ({
-  boxShadow: "0px 2px 4px rgba(0, 0, 0, 0.1)",
-  padding: "16px",
-  fontSize: "16px",
-  fontWeight: 500,
-  justifyContent: "flex-start",
-  color: theme.palette.text.primary,
-}));
+import type { LocationState } from "location";
 
 type RecoveryLocationState = LocationState;
 
