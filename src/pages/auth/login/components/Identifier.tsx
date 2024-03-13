@@ -66,9 +66,9 @@ export default function Identifier({
           error={receivedData.errorMessage !== undefined}
           helperText={receivedData.errorMessage}
           label="이메일 주소 또는 아이디"
-          type="email username"
+          type="text"
           value={submitData.identifier}
-          autoComplete="email"
+          autoComplete="username"
           onChange={(e) => submitDataDispatch({ identifier: e.target.value })}
           css={{
             width: "100%",

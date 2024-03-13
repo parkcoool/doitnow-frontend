@@ -86,7 +86,15 @@ export default function Password({ submitData, submitDataDispatch, receivedData,
           margin: "16px 0 0 0",
         }}
       >
-        <input type="email" name="email" hidden />
+        <input
+          type="text"
+          autoComplete="username"
+          value={submitData.identifier}
+          readOnly
+          css={{
+            display: "none",
+          }}
+        />
 
         <TextField
           autoFocus
