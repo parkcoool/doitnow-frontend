@@ -133,7 +133,7 @@ export default function Verify({ passwordData, passwordDataDispatch, errorMessag
           label="인증 코드"
           type="text"
           value={passwordData.emailCode ?? ""}
-          autoComplete="off"
+          autoComplete="one-time-code"
           variant="standard"
           onChange={(e) => passwordDataDispatch({ emailCode: e.target.value })}
           css={{

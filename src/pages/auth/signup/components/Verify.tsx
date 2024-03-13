@@ -131,7 +131,7 @@ export default function Verify({ submitData, submitDataDispatch, receivedData, l
           label="인증 코드"
           type="text"
           value={submitData.emailCode}
-          autoComplete="off"
+          autoComplete="one-time-code"
           variant="standard"
           onChange={(e) => submitDataDispatch({ emailCode: e.target.value })}
           css={{

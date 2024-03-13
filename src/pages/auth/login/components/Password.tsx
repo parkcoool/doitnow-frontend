@@ -88,6 +88,7 @@ export default function Password({ submitData, submitDataDispatch, receivedData,
       >
         <input
           type="text"
+          name="identifier"
           autoComplete="username"
           value={submitData.identifier}
           readOnly
