@@ -1,8 +1,25 @@
 /** @jsxImportSource @emotion/react */
 
-import { Avatar, Skeleton, Typography } from "@mui/material";
+import { Avatar, Paper, Skeleton, Typography } from "@mui/material";
+import styled from "@emotion/styled";
+import { DateRangeRounded as DateRangeRoundedIcon } from "@mui/icons-material";
 
+import type { TypographyProps } from "@mui/material/Typography";
 import type { Profile } from "user";
+
+const Detail = styled.div({
+  display: "flex",
+  justifyContent: "space-between",
+  alignContent: "center",
+  padding: "12px",
+});
+
+const DetailName = styled(Typography)<TypographyProps>({
+  display: "flex",
+  alignContent: "center",
+  gap: "4px",
+  fontWeight: 600,
+});
 
 interface ProfileProps {
   profile: Profile | undefined;
@@ -17,12 +34,16 @@ export default function Profile({ profile }: ProfileProps) {
         alignItems: "center",
       }}
     >
-      {/* 프로필 사진 */}
+      {/* 기본 정보 */}
       <div
         css={{
-          marginTop: "20px",
+          marginTop: "32px",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
+        {/* 프로필 이미지 */}
         {profile ? (
           <Avatar
             src={profile.profileImage ?? undefined}
@@ -34,32 +55,54 @@ export default function Profile({ profile }: ProfileProps) {
         ) : (
           <Skeleton variant="circular" width={80} height={80} animation="wave" />
         )}
+
+        {/* 이름 */}
+        <Typography
+          variant="h1"
+          css={{
+            fontSize: "28px",
+            fontWeight: 700,
+            marginTop: "18px",
+          }}
+        >
+          {profile ? profile.name : <Skeleton width={200} animation="wave" />}
+        </Typography>
+
+        {/* 소개 */}
+        <Typography
+          variant="h2"
+          css={{
+            fontSize: "16px",
+            marginTop: "8px",
+            fontWeight: 400,
+            color: "#818181",
+          }}
+        >
+          {profile ? profile.bio ?? "소개가 등록되지 않았어요." : <Skeleton width={200} animation="wave" />}
+        </Typography>
       </div>
 
-      {/* 이름 */}
-      <Typography
-        variant="h1"
+      {/* 세부 정보 */}
+      <Paper
         css={{
-          fontSize: "28px",
-          fontWeight: 700,
-          marginTop: "18px",
+          width: "100%",
+          marginTop: "24px",
         }}
       >
-        {profile ? profile.name : <Skeleton width={200} animation="wave" />}
-      </Typography>
-
-      {/* 소개 */}
-      <Typography
-        variant="h2"
-        css={{
-          fontSize: "16px",
-          marginTop: "8px",
-          fontWeight: 400,
-          color: "#818181",
-        }}
-      >
-        {profile ? profile.bio ?? "소개가 등록되지 않았어요." : <Skeleton width={200} animation="wave" />}
-      </Typography>
+        <Detail>
+          {profile ? (
+            <>
+              <DetailName>
+                <DateRangeRoundedIcon />
+                계정 생성
+              </DetailName>
+              <Typography>{profile.createdAt.toLocaleDateString()}</Typography>
+            </>
+          ) : (
+            <Skeleton width="100%" animation="wave" />
+          )}
+        </Detail>
+      </Paper>
     </div>
   );
 }

@@ -42,7 +42,7 @@ interface FooterProps {
   selectedTab?: Tab;
 }
 
-export default function Footer({ selectedTab = Tab.Home }: FooterProps) {
+export default function Footer({ selectedTab }: FooterProps) {
   const navigate = useNavigate();
 
   function getColor(tab: Tab) {

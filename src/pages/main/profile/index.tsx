@@ -3,8 +3,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 
+import Narrow from "components/layout/Narrow";
 import getUserById from "apis/getUserById";
-
 import ProfileView from "./components/Profile";
 
 import type { Profile } from "user";
@@ -22,5 +22,9 @@ export default function Profile() {
     });
   }, [userId]);
 
-  return <ProfileView profile={profile} />;
+  return (
+    <Narrow>
+      <ProfileView profile={profile} />
+    </Narrow>
+  );
 }

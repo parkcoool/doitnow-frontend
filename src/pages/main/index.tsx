@@ -54,7 +54,7 @@ export default function Main() {
   }, []);
 
   // 현재 경로에 따라 탭을 반환
-  function getTab(): Tab {
+  function getTab(): Tab | undefined {
     switch (location.pathname.split("/")[1]) {
       case "":
         return Tab.Home;
@@ -65,7 +65,7 @@ export default function Main() {
       case "my":
         return Tab.My;
       default:
-        return Tab.Home;
+        return undefined;
     }
   }
 

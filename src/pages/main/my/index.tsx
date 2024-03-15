@@ -59,7 +59,10 @@ export default function My() {
       <Narrow>
         {/* ===== 프로필 ===== */}
         <div css={{ marginTop: "32px" }}>
-          <Profile myProfilePreview={myProfilePreview} />
+          <Profile
+            myProfilePreview={myProfilePreview}
+            onMyProfileViewClick={() => session.user && navigate(`/profile/${session.user.id}`)}
+          />
         </div>
 
         {/* ===== 메뉴 ===== */}

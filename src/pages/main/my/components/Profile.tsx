@@ -1,10 +1,16 @@
 /** @jsxImportSource @emotion/react */
 
-import { Paper, Avatar, Skeleton, Typography } from "@mui/material";
+import { Paper, Avatar, Skeleton, Typography, IconButton, Tooltip } from "@mui/material";
+import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 
 import type { ProfilePreview } from "user";
 
-export default function Profile({ myProfilePreview }: { myProfilePreview?: ProfilePreview }) {
+interface ProfileProps {
+  myProfilePreview?: ProfilePreview;
+  onMyProfileViewClick: () => void;
+}
+
+export default function Profile({ myProfilePreview, onMyProfileViewClick }: ProfileProps) {
   return (
     <Paper
       css={{
@@ -45,6 +51,13 @@ export default function Profile({ myProfilePreview }: { myProfilePreview?: Profi
           {myProfilePreview ? myProfilePreview.bio ?? "소개가 등록되지 않았어요." : <Skeleton animation="wave" />}
         </Typography>
       </div>
+
+      {/* 버튼 */}
+      <Tooltip title="내 프로필 보기">
+        <IconButton onClick={onMyProfileViewClick}>
+          <ArrowForwardIosRoundedIcon fontSize="small" />
+        </IconButton>
+      </Tooltip>
     </Paper>
   );
 }
