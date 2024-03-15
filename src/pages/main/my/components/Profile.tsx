@@ -34,14 +34,14 @@ export default function Profile({ myData }: { myData?: MyData }) {
             fontWeight: 600,
           }}
         >
-          {myData ? myData.name : <Skeleton animation="wave" />}
+          {myData ? myData.name ?? "이름 없음" : <Skeleton animation="wave" />}
         </Typography>
         <Typography
           css={{
             fontSize: "14px",
           }}
         >
-          {myData ? myData.bio : <Skeleton animation="wave" />}
+          {myData ? myData.bio ?? "소개가 등록되지 않았어요." : <Skeleton animation="wave" />}
         </Typography>
       </div>
     </Paper>

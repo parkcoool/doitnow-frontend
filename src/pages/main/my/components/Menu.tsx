@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { Button, Typography } from "@mui/material";
+import { Button, Paper, Typography } from "@mui/material";
 import {
   LockRounded as LockRoundedIcon,
   PersonRemoveRounded as PersonRemoveRoundedIcon,

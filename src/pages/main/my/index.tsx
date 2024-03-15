@@ -14,7 +14,7 @@ import LogoutDialog from "./components/LogoutDialog";
 
 export interface MyData {
   profileImage?: string;
-  name: string;
+  name?: string;
   bio?: string;
 }
 
@@ -29,8 +29,8 @@ export default function My() {
     setTimeout(() => {
       setMyData({
         profileImage: undefined,
-        name: session.user?.name ?? "이름 없음",
-        bio: "프론트엔드 개발자",
+        name: session.user?.name,
+        bio: undefined,
       });
     }, 2000);
   }, []);
