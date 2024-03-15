@@ -22,10 +22,9 @@ import handleIdentifierSubmit from "./utils/handleIdentifierSubmit";
 import handlePasswordSubmit from "./utils/handlePasswordSubmit";
 import storeToken from "./utils/storeToken";
 
-import type { LocationState } from "location";
 import type { AuthProvider, Token } from "auth";
 
-interface LoginLocationState extends LocationState {
+interface LoginLocationState {
   step: LoginStep;
 }
 
@@ -51,9 +50,8 @@ export default function Login() {
   const location = useLocation();
   const sessionStore = useSessionStore();
 
-  // location.state로부터 step과 sourceLocation을 가져온다.
+  // location.state을 가져온다.
   const step = (location.state as LoginLocationState)?.step ?? LoginStep.Identifier;
-  const sourceLocation = (location.state as LoginLocationState)?.sourceLocation;
 
   // submitData를 관리하는 reducer를 생성한다.
   const submitDataReducer = getReducer<SubmitData>();
@@ -107,18 +105,14 @@ export default function Login() {
       }
     } finally {
       receivedDataDispatch({ errorMessage: newErrorMessage });
-      if (nextStep) navigate("./", { state: { step: nextStep, sourceLocation } });
+      if (nextStep) navigate("./", { state: { step: nextStep } });
       setLoading(false);
     }
   }
 
   // 원래 페이지로 돌아가는 함수
   function backToSource() {
-    if (sourceLocation) {
-      navigate(sourceLocation.pathname, { state: sourceLocation.state });
-    } else {
-      navigate("/", { replace: true });
-    }
+    navigate(-1 * (step + 1));
   }
 
   // 다음 버튼 비활성화 여부를 반환하는 함수
@@ -131,7 +125,7 @@ export default function Login() {
   }
 
   return (
-    <Layout headerContent="로그인" loading={loading} onBack={backToSource} footerDisabled>
+    <Layout headerContent="로그인" loading={loading} footerDisabled>
       {/* step에 따른 컴포넌트 렌더링 */}
       <Narrow>
         {step === LoginStep.Identifier && (
@@ -187,7 +181,6 @@ export default function Login() {
                     pathname: location.pathname,
                   },
                 },
-                replace: true,
               }),
           }}
         />

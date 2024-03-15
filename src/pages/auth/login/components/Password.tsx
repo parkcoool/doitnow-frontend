@@ -66,13 +66,7 @@ export default function Password({ submitData, submitDataDispatch, receivedData,
           avatar={<AccountCircleRoundedIcon />}
           label={submitData.identifier}
           variant="outlined"
-          onClick={() =>
-            navigate("./", {
-              state: {
-                step: LoginStep.Identifier,
-              },
-            })
-          }
+          onClick={() => navigate(-1)}
           css={{
             fontWeight: 600,
           }}
@@ -125,19 +119,7 @@ export default function Password({ submitData, submitDataDispatch, receivedData,
           margin: "16px 0 0 0",
         }}
       >
-        <Button
-          startIcon={<HelpOutlineRoundedIcon />}
-          onClick={() =>
-            navigate("/auth/recovery", {
-              state: {
-                sourceLocation: {
-                  pathname: location.pathname,
-                },
-              },
-              replace: true,
-            })
-          }
-        >
+        <Button startIcon={<HelpOutlineRoundedIcon />} onClick={() => navigate("/auth/recovery")}>
           도움이 필요해요.
         </Button>
       </div>

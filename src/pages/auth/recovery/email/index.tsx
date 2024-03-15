@@ -15,9 +15,7 @@ import Name from "./components/Name";
 import Complete from "./components/Complete";
 import handleNameSubmit from "./utils/handleNameSubmit";
 
-import type { LocationState } from "location";
-
-interface EmailLocationState extends LocationState {
+interface EmailLocationState {
   step: EmailStep;
 }
 
@@ -41,9 +39,8 @@ export default function Email() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // location.state로부터 step과 sourceLocation을 가져온다.
+  // location.state를 가져온다.
   const step = (location.state as EmailLocationState)?.step ?? EmailStep.Name;
-  const sourceLocation = (location.state as EmailLocationState)?.sourceLocation;
 
   // submitData를 관리하는 reducer를 생성한다.
   const submitDataReducer = getReducer<SubmitData>();
@@ -88,18 +85,14 @@ export default function Email() {
       }
     } finally {
       receivedDataDispatch({ errorMessage: newErrorMessage });
-      if (nextStep) navigate("./", { state: { step: nextStep, sourceLocation } });
+      if (nextStep) navigate("./", { state: { step: nextStep } });
       setLoading(false);
     }
   }
 
   // 원래 페이지로 돌아가는 함수
   function backToSource() {
-    if (sourceLocation) {
-      navigate(sourceLocation.pathname, { state: sourceLocation.state });
-    } else {
-      navigate(-1);
-    }
+    navigate(-1 * (step + 1));
   }
 
   function nextStepButtonDisabled() {
@@ -107,7 +100,7 @@ export default function Email() {
   }
 
   return (
-    <Layout headerContent="계정 복구" loading={loading} onBack={backToSource} footerDisabled>
+    <Layout headerContent="계정 복구" loading={loading} footerDisabled>
       {/* Stepper 컴포넌트를 사용하여 단계 표시 */}
       <div
         css={{

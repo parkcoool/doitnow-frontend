@@ -22,9 +22,8 @@ import Complete from "./components/Complete";
 import submitRecovery from "./utils/submitRecovery";
 
 import type { Token } from "auth";
-import type { LocationState } from "location";
 
-interface PasswordLocationState extends LocationState {
+interface PasswordLocationState {
   step: PasswordStep;
 }
 
@@ -56,9 +55,8 @@ export default function Password() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // location.state로부터 step과 sourceLocation을 가져온다.
+  // location.state를 가져온다.
   const step = (location.state as PasswordLocationState)?.step ?? PasswordStep.Email;
-  const sourceLocation = (location.state as PasswordLocationState)?.sourceLocation;
 
   // submitData를 관리하는 reducer를 생성한다.
   const submitDataReducer = getReducer<SubmitData>();
@@ -121,18 +119,14 @@ export default function Password() {
       }
     } finally {
       receivedDataDispatch({ errorMessage: newErrorMessage });
-      if (nextStep) navigate("./", { state: { step: nextStep, sourceLocation } });
+      if (nextStep) navigate("./", { state: { step: nextStep } });
       setLoading(false);
     }
   }
 
   // 원래 페이지로 돌아가는 함수
   function backToSource() {
-    if (sourceLocation) {
-      navigate(sourceLocation.pathname, { state: sourceLocation.state });
-    } else {
-      navigate(-1);
-    }
+    navigate(-1 * (step + 1));
   }
 
   function nextStepButtonDisabled() {
@@ -145,7 +139,7 @@ export default function Password() {
   }
 
   return (
-    <Layout headerContent="계정 복구" loading={loading} onBack={backToSource} footerDisabled>
+    <Layout headerContent="계정 복구" loading={loading} footerDisabled>
       {/* Stepper 컴포넌트를 사용하여 단계 표시 */}
       <div
         css={{

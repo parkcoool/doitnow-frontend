@@ -8,18 +8,13 @@ import LinearProgress from "@mui/material/LinearProgress";
 interface HeaderProps {
   content?: React.ReactNode;
   loading?: boolean;
-  onBack?: () => void;
 }
 
-export default function Header({ content, loading = false, onBack }: HeaderProps) {
+export default function Header({ content, loading = false }: HeaderProps) {
   const navigate = useNavigate();
 
   function handleBackClick() {
-    if (onBack) {
-      onBack();
-    } else {
-      navigate(-1);
-    }
+    navigate(-1);
   }
 
   return (

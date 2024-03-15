@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AlternateEmailRounded as AlternateEmailRoundedIcon, KeyRounded as KeyRoundedIcon } from "@mui/icons-material";
 
 import Layout from "components/layout/Layout";
@@ -8,22 +8,11 @@ import Narrow from "components/layout/Narrow";
 
 import RecoveryButton from "./components/RecoveryButton";
 
-import type { LocationState } from "location";
-
-type RecoveryLocationState = LocationState;
-
 export default function Recovery() {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const { sourceLocation } = (location.state ?? {}) as RecoveryLocationState;
 
   return (
-    <Layout
-      headerContent="계정 복구"
-      onBack={sourceLocation ? () => navigate(sourceLocation.pathname, { state: sourceLocation.state }) : undefined}
-      footerDisabled
-    >
+    <Layout headerContent="계정 복구" footerDisabled>
       <Narrow>
         <h1
           css={{
@@ -44,16 +33,10 @@ export default function Recovery() {
             marginTop: "32px",
           }}
         >
-          <RecoveryButton
-            startIcon={<AlternateEmailRoundedIcon />}
-            onClick={() => navigate("./email", { state: { sourceLocation } })}
-          >
+          <RecoveryButton startIcon={<AlternateEmailRoundedIcon />} onClick={() => navigate("./email")}>
             이메일 주소를 잊어버렸어요.
           </RecoveryButton>
-          <RecoveryButton
-            startIcon={<KeyRoundedIcon />}
-            onClick={() => navigate("./password", { state: { sourceLocation } })}
-          >
+          <RecoveryButton startIcon={<KeyRoundedIcon />} onClick={() => navigate("./password")}>
             비밀번호를 잊어버렸어요.
           </RecoveryButton>
         </div>

@@ -9,7 +9,10 @@ export default function Login() {
 
   // 로그인되어 있으면 홈 페이지로 이동
   React.useEffect(() => {
-    if (session.user !== null) navigate("/");
+    if (session.user !== null)
+      navigate("/", {
+        replace: true,
+      });
   }, [session]);
 
   return <Outlet />;

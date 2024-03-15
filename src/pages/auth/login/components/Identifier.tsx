@@ -86,18 +86,7 @@ export default function Identifier({
           margin: "16px 0 0 0",
         }}
       >
-        <Button
-          startIcon={<HelpOutlineRoundedIcon />}
-          onClick={() =>
-            navigate("/auth/recovery", {
-              state: {
-                sourceLocation: {
-                  pathname: location.pathname,
-                },
-              },
-            })
-          }
-        >
+        <Button startIcon={<HelpOutlineRoundedIcon />} onClick={() => navigate("/auth/recovery")}>
           도움이 필요해요.
         </Button>
       </div>
