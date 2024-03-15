@@ -35,6 +35,7 @@ export interface SubmitData {
 }
 
 export interface ReceivedData {
+  id?: number;
   token?: { accessToken: Token; refreshToken: Token };
   name?: string;
   errorMessage?: string;
@@ -48,7 +49,7 @@ export enum LoginStep {
 export default function Login() {
   const navigate = useNavigate();
   const location = useLocation();
-  const sessionStore = useSessionStore();
+  const session = useSessionStore();
 
   // location.state을 가져온다.
   const step = (location.state as LoginLocationState)?.step ?? LoginStep.Identifier;
@@ -90,7 +91,14 @@ export default function Login() {
         case LoginStep.Password: {
           const partialReceivedData = await handlePasswordSubmit(submitData);
           receivedDataDispatch(partialReceivedData);
-          storeToken(sessionStore, partialReceivedData.token?.accessToken, partialReceivedData.token?.refreshToken);
+
+          // 사용자 정보를 업데이트하고 토큰을 저장한다.
+          session.setUser({
+            id: receivedData.id ?? session.user?.id ?? 0,
+            name: receivedData.name ?? session.user?.name ?? "",
+          });
+          storeToken(session, partialReceivedData.token?.accessToken, partialReceivedData.token?.refreshToken);
+
           backToSource();
           break;
         }
