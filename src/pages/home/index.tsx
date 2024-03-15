@@ -1,14 +1,8 @@
-import { Outlet } from "react-router-dom";
-
 import useSessionStore from "contexts/useSessionStore";
+import Layout from "components/layout/Layout";
 
-export default function Auth() {
+export default function Home() {
   const session = useSessionStore();
 
-  return (
-    <>
-      <h1>{session.user?.name}님</h1>
-      <Outlet />
-    </>
-  );
+  return <Layout headerDisabled>{session.user?.name}</Layout>;
 }
