@@ -1,6 +1,6 @@
 import type { RouteObject } from "react-router";
 
-import Explore from "pages/explore";
+import Explore from "pages/main/explore";
 
 const exploreRouter: RouteObject = {
   path: "/explore",

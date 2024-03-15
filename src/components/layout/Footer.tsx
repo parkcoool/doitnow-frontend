@@ -64,22 +64,22 @@ export default function Footer({ selectedTab = Tab.Home }: FooterProps) {
         boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
       }}
     >
-      <FooterButton color={getColor(Tab.Home)} onClick={() => navigate("/")}>
+      <FooterButton color={getColor(Tab.Home)} onClick={() => navigate("/", { replace: true })}>
         {selectedTab === Tab.Home ? <HomeIcon color="inherit" /> : <HomeOutlinedIcon color="inherit" />}
         <FooterButtonTypography color="inherit">홈</FooterButtonTypography>
       </FooterButton>
 
-      <FooterButton color={getColor(Tab.Friend)} onClick={() => navigate("/friend")}>
+      <FooterButton color={getColor(Tab.Friend)} onClick={() => navigate("/friend", { replace: true })}>
         {selectedTab === Tab.Friend ? <PeopleIcon color="inherit" /> : <PeopleOutlineIcon color="inherit" />}
         <FooterButtonTypography color="inherit">친구</FooterButtonTypography>
       </FooterButton>
 
-      <FooterButton color={getColor(Tab.Explore)} onClick={() => navigate("/explore")}>
+      <FooterButton color={getColor(Tab.Explore)} onClick={() => navigate("/explore", { replace: true })}>
         {selectedTab === Tab.Explore ? <ExploreIcon color="inherit" /> : <ExploreOutlinedIcon color="inherit" />}
         <FooterButtonTypography color="inherit">탐색</FooterButtonTypography>
       </FooterButton>
 
-      <FooterButton color={getColor(Tab.My)} onClick={() => navigate("/my")}>
+      <FooterButton color={getColor(Tab.My)} onClick={() => navigate("/my", { replace: true })}>
         {selectedTab === Tab.My ? <AccountCircleIcon color="inherit" /> : <AccountCircleOutlinedIcon color="inherit" />}
         <FooterButtonTypography color="inherit">나</FooterButtonTypography>
       </FooterButton>

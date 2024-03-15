@@ -1,6 +1,6 @@
 import type { RouteObject } from "react-router";
 
-import My from "pages/my";
+import My from "pages/main/my";
 
 const myRouter: RouteObject = {
   path: "/my",
