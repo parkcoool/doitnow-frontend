@@ -1,4 +1,6 @@
 /** @jsxImportSource @emotion/react */
+import { useNavigate } from "react-router-dom";
+
 import Button from "@mui/material/Button";
 import styled from "@mui/system/styled";
 import Typography from "@mui/material/Typography";
@@ -41,6 +43,8 @@ interface FooterProps {
 }
 
 export default function Footer({ selectedTab = Tab.Home }: FooterProps) {
+  const navigate = useNavigate();
+
   function getColor(tab: Tab) {
     return selectedTab === tab ? "primary" : "inherit";
   }
@@ -60,22 +64,22 @@ export default function Footer({ selectedTab = Tab.Home }: FooterProps) {
         boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
       }}
     >
-      <FooterButton color={getColor(Tab.Home)}>
+      <FooterButton color={getColor(Tab.Home)} onClick={() => navigate("/")}>
         {selectedTab === Tab.Home ? <HomeIcon color="inherit" /> : <HomeOutlinedIcon color="inherit" />}
         <FooterButtonTypography color="inherit">홈</FooterButtonTypography>
       </FooterButton>
 
-      <FooterButton color={getColor(Tab.Friend)}>
+      <FooterButton color={getColor(Tab.Friend)} onClick={() => navigate("/friend")}>
         {selectedTab === Tab.Friend ? <PeopleIcon color="inherit" /> : <PeopleOutlineIcon color="inherit" />}
         <FooterButtonTypography color="inherit">친구</FooterButtonTypography>
       </FooterButton>
 
-      <FooterButton color={getColor(Tab.Explore)}>
+      <FooterButton color={getColor(Tab.Explore)} onClick={() => navigate("/explore")}>
         {selectedTab === Tab.Explore ? <ExploreIcon color="inherit" /> : <ExploreOutlinedIcon color="inherit" />}
         <FooterButtonTypography color="inherit">탐색</FooterButtonTypography>
       </FooterButton>
 
-      <FooterButton color={getColor(Tab.My)}>
+      <FooterButton color={getColor(Tab.My)} onClick={() => navigate("/my")}>
         {selectedTab === Tab.My ? <AccountCircleIcon color="inherit" /> : <AccountCircleOutlinedIcon color="inherit" />}
         <FooterButtonTypography color="inherit">나</FooterButtonTypography>
       </FooterButton>
