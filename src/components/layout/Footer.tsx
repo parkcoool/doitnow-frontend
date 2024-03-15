@@ -59,7 +59,7 @@ export default function Footer({ selectedTab = Tab.Home }: FooterProps) {
         justifyContent: "space-evenly",
         width: "100%",
         height: "64px",
-        gap: "8px",
+        padding: "0 8px",
         borderRadius: "16px 16px 0 0",
         boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
       }}
