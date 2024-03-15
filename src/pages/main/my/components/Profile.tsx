@@ -2,9 +2,9 @@
 
 import { Paper, Avatar, Skeleton, Typography } from "@mui/material";
 
-import type { MyData } from "..";
+import type { ProfilePreview } from "user";
 
-export default function Profile({ myData }: { myData?: MyData }) {
+export default function Profile({ myProfilePreview }: { myProfilePreview?: ProfilePreview }) {
   return (
     <Paper
       css={{
@@ -16,12 +16,13 @@ export default function Profile({ myData }: { myData?: MyData }) {
     >
       {/* 프로필 사진 */}
       <div>
-        {myData ? (
-          <Avatar src={myData.profileImage} />
+        {myProfilePreview ? (
+          <Avatar src={myProfilePreview.profileImage ?? undefined} />
         ) : (
           <Skeleton variant="circular" width={40} height={40} animation="wave" />
         )}
       </div>
+
       {/* 이름 및 소개 */}
       <div
         css={{
@@ -34,14 +35,14 @@ export default function Profile({ myData }: { myData?: MyData }) {
             fontWeight: 600,
           }}
         >
-          {myData ? myData.name ?? "이름 없음" : <Skeleton animation="wave" />}
+          {myProfilePreview ? myProfilePreview.name : <Skeleton animation="wave" />}
         </Typography>
         <Typography
           css={{
             fontSize: "14px",
           }}
         >
-          {myData ? myData.bio ?? "소개가 등록되지 않았어요." : <Skeleton animation="wave" />}
+          {myProfilePreview ? myProfilePreview.bio ?? "소개가 등록되지 않았어요." : <Skeleton animation="wave" />}
         </Typography>
       </div>
     </Paper>

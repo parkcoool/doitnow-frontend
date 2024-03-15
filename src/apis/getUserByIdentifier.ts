@@ -11,6 +11,9 @@ interface GetUserByIdentifierResponse {
     id: number;
     email: string;
     name: string;
+    bio: string | null;
+    createdAt: string;
+    profileImage: string | null;
   } | null;
 }
 

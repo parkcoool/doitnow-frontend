@@ -8,31 +8,31 @@ import Cookies from "js-cookie";
 import Narrow from "components/layout/Narrow";
 import useSessionStore from "contexts/useSessionStore";
 
+import getUserById from "apis/getUserById";
 import Profile from "./components/Profile";
 import Menu from "./components/Menu";
 import LogoutDialog from "./components/LogoutDialog";
 
-export interface MyData {
-  profileImage?: string;
-  name?: string;
-  bio?: string;
-}
+import type { ProfilePreview } from "user";
 
 export default function My() {
   const session = useSessionStore();
   const navigate = useNavigate();
 
-  // TODO: 데이터 가져오기
-  const [myData, setMyData] = React.useState<MyData>();
+  const [myProfilePreview, setMyProfilePreview] = React.useState<ProfilePreview>();
 
   React.useEffect(() => {
-    setTimeout(() => {
-      setMyData({
-        profileImage: undefined,
-        name: session.user?.name,
-        bio: undefined,
-      });
-    }, 2000);
+    const userId = session.user?.id;
+    if (userId === undefined) return;
+
+    getUserById({ id: userId }).then((res) => {
+      if (res.result.user)
+        setMyProfilePreview({
+          profileImage: res.result.user.profileImage,
+          name: res.result.user.name,
+          bio: res.result.user.bio,
+        });
+    });
   }, []);
 
   // 로그아웃 다이얼로그를 관리한다.
@@ -59,7 +59,7 @@ export default function My() {
       <Narrow>
         {/* ===== 프로필 ===== */}
         <div css={{ marginTop: "32px" }}>
-          <Profile myData={myData} />
+          <Profile myProfilePreview={myProfilePreview} />
         </div>
 
         {/* ===== 메뉴 ===== */}
