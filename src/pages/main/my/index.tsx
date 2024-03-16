@@ -9,17 +9,17 @@ import Narrow from "components/layout/Narrow";
 import useSessionStore from "contexts/useSessionStore";
 
 import getUserById from "apis/getUserById";
-import Profile from "./components/Profile";
+import ProfilePreview from "../../../components/common/ProfilePreview";
 import Menu from "./components/Menu";
 import LogoutDialog from "./components/LogoutDialog";
 
-import type { ProfilePreview } from "user";
+import type { SmallProfile } from "user";
 
 export default function My() {
   const session = useSessionStore();
   const navigate = useNavigate();
 
-  const [myProfilePreview, setMyProfilePreview] = React.useState<ProfilePreview>();
+  const [myProfilePreview, setMyProfilePreview] = React.useState<SmallProfile>();
 
   React.useEffect(() => {
     const userId = session.user?.id;
@@ -54,20 +54,24 @@ export default function My() {
     setIsLogoutDialogOpen(false);
   }
 
+  function handleProfileEdit() {
+    navigate("/my/edit");
+  }
+
   return (
     <>
       <Narrow>
         {/* ===== 프로필 ===== */}
         <div css={{ marginTop: "32px" }}>
-          <Profile
-            myProfilePreview={myProfilePreview}
-            onMyProfileViewClick={() => session.user && navigate(`/profile/${session.user.id}`)}
+          <ProfilePreview
+            profilePreview={myProfilePreview}
+            onClick={() => session.user && navigate(`/profile/${session.user.id}`)}
           />
         </div>
 
         {/* ===== 메뉴 ===== */}
         <div css={{ marginTop: "32px" }}>
-          <Menu onLogout={handleLogoutDialogOpen} />
+          <Menu onLogout={handleLogoutDialogOpen} onProfileEdit={handleProfileEdit} />
         </div>
       </Narrow>
 

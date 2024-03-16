@@ -35,6 +35,7 @@ export default function Layout({
           css={{
             position: "sticky",
             top: 0,
+            zIndex: 100,
           }}
         >
           <Header content={headerContent} loading={loading} />

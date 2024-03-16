@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 
-import { Button, Paper, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 import {
   LockRounded as LockRoundedIcon,
   PersonRemoveRounded as PersonRemoveRoundedIcon,
@@ -23,9 +23,10 @@ const ButtonIconStyle = {
 
 interface MenuProps {
   onLogout: () => void;
+  onProfileEdit: () => void;
 }
 
-export default function Menu({ onLogout }: MenuProps) {
+export default function Menu({ onLogout, onProfileEdit }: MenuProps) {
   return (
     <div>
       <Typography
@@ -46,7 +47,7 @@ export default function Menu({ onLogout }: MenuProps) {
           width: "100%",
         }}
       >
-        <MenuButton startIcon={<EditRoundedIcon css={ButtonIconStyle} />} color="inherit">
+        <MenuButton startIcon={<EditRoundedIcon css={ButtonIconStyle} />} color="inherit" onClick={onProfileEdit}>
           계정 정보 수정
         </MenuButton>
         <MenuButton startIcon={<LockRoundedIcon css={ButtonIconStyle} />} color="inherit" onClick={onLogout}>

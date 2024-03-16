@@ -10,12 +10,12 @@ import Layout from "components/layout/Layout";
 
 import ProfileView from "./components/Profile";
 
-import type { Profile } from "user";
+import type { PublicProfile } from "user";
 
 export default function Profile() {
   const { userId } = useParams();
 
-  const [profile, setProfile] = React.useState<Profile>();
+  const [profile, setProfile] = React.useState<PublicProfile>();
 
   React.useEffect(() => {
     if (userId === undefined) return;

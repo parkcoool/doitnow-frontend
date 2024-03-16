@@ -62,6 +62,8 @@ export default function Footer({ selectedTab }: FooterProps) {
         padding: "0 8px",
         borderRadius: "16px 16px 0 0",
         boxShadow: "0px -2px 4px rgba(0, 0, 0, 0.1)",
+        backgroundColor: "white",
+        zIndex: 100,
       }}
     >
       <FooterButton color={getColor(Tab.Home)} onClick={() => navigate("/", { replace: true })}>

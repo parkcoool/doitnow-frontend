@@ -1,11 +1,11 @@
 /** @jsxImportSource @emotion/react */
 
 import { Avatar, Paper, Skeleton, Typography } from "@mui/material";
-import styled from "@emotion/styled";
 import { DateRangeRounded as DateRangeRoundedIcon } from "@mui/icons-material";
+import styled from "@emotion/styled";
 
 import type { TypographyProps } from "@mui/material/Typography";
-import type { Profile } from "user";
+import type { PublicProfile } from "user";
 
 const Detail = styled.div({
   display: "flex",
@@ -22,7 +22,7 @@ const DetailName = styled(Typography)<TypographyProps>({
 });
 
 interface ProfileProps {
-  profile: Profile | undefined;
+  profile: PublicProfile | undefined;
 }
 
 export default function Profile({ profile }: ProfileProps) {
