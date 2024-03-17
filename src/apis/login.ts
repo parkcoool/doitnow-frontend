@@ -3,7 +3,9 @@ import axios from "axios";
 import type { APIResponse } from "api";
 
 interface ReqBody {
-  refreshToken: string;
+  email?: string;
+  name?: string;
+  password: string;
 }
 
 interface ResBody extends APIResponse {
@@ -17,7 +19,7 @@ interface ResBody extends APIResponse {
   };
 }
 
-export default async function refershToken(body: ReqBody) {
-  const response = await axios.post<ResBody>(`${process.env.REACT_APP_API_PATH}/auth/token`, body);
+export default async function login(body: ReqBody) {
+  const response = await axios.post<ResBody>(`${process.env.REACT_APP_API_PATH}/auth/login`, body);
   return response;
 }

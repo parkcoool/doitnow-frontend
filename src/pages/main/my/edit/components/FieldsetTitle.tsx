@@ -5,10 +5,9 @@ import { Typography } from "@mui/material";
 interface FieldsetTitleProps {
   icon?: React.ReactNode;
   title: React.ReactNode;
-  subtitle?: React.ReactNode;
 }
 
-export default function FieldsetTitle({ icon, title, subtitle }: FieldsetTitleProps) {
+export default function FieldsetTitle({ icon, title }: FieldsetTitleProps) {
   return (
     <div>
       <Typography
@@ -32,17 +31,6 @@ export default function FieldsetTitle({ icon, title, subtitle }: FieldsetTitlePr
         )}
         {title}
       </Typography>
-
-      {subtitle && (
-        <Typography
-          css={{
-            fontSize: "14px",
-            color: "var(--secondary-text)",
-          }}
-        >
-          {subtitle}
-        </Typography>
-      )}
 
       <hr />
     </div>

@@ -1,14 +1,18 @@
-import getToken from "apis/getToken";
+import login from "apis/login";
 
 import type { ReceivedData, SubmitData } from "../";
 
 export default async function handlePasswordSubmit(submitData: SubmitData): Promise<Partial<ReceivedData>> {
-  const res = await getToken(submitData);
+  const isIdentifierEmail = submitData.identifier.includes("@");
+  const reqBody = {
+    password: submitData.password,
+    ...(isIdentifierEmail ? { email: submitData.identifier } : { name: submitData.identifier }),
+  };
 
-  const { token } = res.result;
-  if (res.code !== 1000 || !token) throw new Error(res.message);
+  const res = await login(reqBody);
+  if (res.status !== 200) throw new Error(res.data.message);
 
   return {
-    token,
+    token: { accessToken: res.data.accessToken, refreshToken: res.data.refreshToken },
   };
 }

@@ -1,19 +1,15 @@
+import getPublicProfile from "apis/getPublicProfile";
 import sendEmail from "apis/sendEmail";
-import getUserByIdentifier from "apis/getUserByIdentifier";
 
 export default async function handleEmailSubmit(email: string) {
-  // 이메일 중복 확인
-  const getUserByIndentifierRes = await getUserByIdentifier({
-    identifier: email,
-  });
-
-  const { user } = getUserByIndentifierRes.result;
-
-  if (getUserByIndentifierRes.code !== 1000 || !user) throw new Error(getUserByIndentifierRes.message);
+  // 이메일이 존재하는지 확인
+  const getPublicProfileRes = await getPublicProfile({ email });
+  if (getPublicProfileRes.status !== 200) throw new Error(getPublicProfileRes.data.message);
+  const id = getPublicProfileRes.data.id;
 
   // 이메일 인증 메일 발송
   const sendEmailRes = await sendEmail({ email });
-  if (sendEmailRes.code !== 1000) throw new Error(sendEmailRes.message);
+  if (sendEmailRes.status !== 200) throw new Error(sendEmailRes.data.message);
 
-  return { emailCodeExpiresAt: new Date(sendEmailRes.result.expiresAt), id: user.id };
+  return { emailCodeExpiresAt: sendEmailRes.data.expiresAt, id };
 }

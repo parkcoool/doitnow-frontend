@@ -7,8 +7,7 @@ export default async function handleVerifySubmit(email: string, code: string) {
     code,
   });
 
-  const { token } = verifyEmailRes.result;
-  if (verifyEmailRes.code !== 1000 || !token) throw new Error(verifyEmailRes.message);
+  if (verifyEmailRes.status !== 200) throw new Error(verifyEmailRes.data.message);
 
-  return { emailVerifyToken: token };
+  return { emailVerifyToken: verifyEmailRes.data.token };
 }

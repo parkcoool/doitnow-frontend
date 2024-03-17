@@ -3,9 +3,9 @@
 import React from "react";
 import { TextField } from "@mui/material";
 
-import type { ReceivedData, SubmitData } from "..";
+import type { SubmitData, ReceivedData } from "..";
 
-interface NameProps {
+interface UsernameProps {
   submitData: SubmitData;
   submitDataDispatch: React.Dispatch<Partial<SubmitData>>;
   receivedData: ReceivedData;
@@ -13,7 +13,7 @@ interface NameProps {
   onSubmit: () => void;
 }
 
-export default function Name({ submitData, submitDataDispatch, receivedData, loading, onSubmit }: NameProps) {
+export default function Username({ submitData, submitDataDispatch, receivedData, loading, onSubmit }: UsernameProps) {
   async function handleSubmit(e?: React.FormEvent<HTMLFormElement>) {
     e?.preventDefault();
     onSubmit();
@@ -30,7 +30,7 @@ export default function Name({ submitData, submitDataDispatch, receivedData, loa
           margin: "4px 0 0 0",
         }}
       >
-        아이디를 입력해주세요.
+        사용자 이름을 입력해주세요.
       </h1>
 
       <h2
@@ -42,14 +42,7 @@ export default function Name({ submitData, submitDataDispatch, receivedData, loa
           color: "#666",
         }}
       >
-        영어, 숫자, 밑줄(_)로만 이루어졌어요.
-        <span
-          css={{
-            fontStyle: "italic",
-          }}
-        >
-          (예: doitnow123_)
-        </span>
+        한글과 영어만 사용할 수 있고, 2자 이상 20자 이하여야 해요.
       </h2>
 
       {/* 폼 */}
@@ -64,12 +57,12 @@ export default function Name({ submitData, submitDataDispatch, receivedData, loa
           disabled={loading}
           error={receivedData.errorMessage !== undefined}
           helperText={receivedData.errorMessage}
-          label="아이디"
+          label="사용자 이름"
           type="text"
-          value={submitData.name}
+          value={submitData.username}
           autoComplete="username"
           variant="standard"
-          onChange={(e) => submitDataDispatch({ name: e.target.value })}
+          onChange={(e) => submitDataDispatch({ username: e.target.value })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

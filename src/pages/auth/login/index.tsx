@@ -22,8 +22,6 @@ import handleIdentifierSubmit from "./utils/handleIdentifierSubmit";
 import handlePasswordSubmit from "./utils/handlePasswordSubmit";
 import storeToken from "./utils/storeToken";
 
-import type { AuthProvider, Token } from "auth";
-
 interface LoginLocationState {
   step: LoginStep;
 }
@@ -31,12 +29,12 @@ interface LoginLocationState {
 export interface SubmitData {
   identifier: string;
   password: string;
-  authProvider: AuthProvider | null;
 }
 
 export interface ReceivedData {
   id?: number;
-  token?: { accessToken: Token; refreshToken: Token };
+  token?: { accessToken: { token: string; expiresIn: number }; refreshToken: { token: string; expiresIn: number } };
+  username?: string;
   name?: string;
   errorMessage?: string;
 }
@@ -59,7 +57,6 @@ export default function Login() {
   const [submitData, submitDataDispatch] = React.useReducer(submitDataReducer, {
     identifier: "",
     password: "",
-    authProvider: null,
   });
 
   // receivedData를 관리하는 reducer를 생성한다.
@@ -92,12 +89,12 @@ export default function Login() {
           const partialReceivedData = await handlePasswordSubmit(submitData);
           receivedDataDispatch(partialReceivedData);
 
-          // 사용자 정보를 업데이트하고 토큰을 저장한다.
-          session.setUser({
-            id: receivedData.id ?? session.user?.id ?? 0,
-            name: receivedData.name ?? session.user?.name ?? "",
-          });
-          storeToken(session, partialReceivedData.token?.accessToken, partialReceivedData.token?.refreshToken);
+          // 토큰을 저장한다.
+          const { accessToken, refreshToken } = partialReceivedData.token ?? {};
+          if (!accessToken || !refreshToken) {
+            throw new Error("로그인에 실패했습니다.");
+          }
+          storeToken(session, accessToken, refreshToken);
 
           backToSource();
           break;

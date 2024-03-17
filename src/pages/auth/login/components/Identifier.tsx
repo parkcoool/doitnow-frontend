@@ -50,7 +50,7 @@ export default function Identifier({
           margin: "4px 0 0 0",
         }}
       >
-        이메일 주소 또는 아이디를 입력해주세요.
+        이메일 주소 또는 이름을 입력해주세요.
       </h2>
 
       {/* 폼 */}
@@ -65,7 +65,7 @@ export default function Identifier({
           disabled={loading}
           error={receivedData.errorMessage !== undefined}
           helperText={receivedData.errorMessage}
-          label="이메일 주소 또는 아이디"
+          label="이메일 주소 또는 이름"
           type="text"
           value={submitData.identifier}
           autoComplete="username"

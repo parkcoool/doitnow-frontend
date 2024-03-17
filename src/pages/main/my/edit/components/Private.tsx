@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
-import { Box, Skeleton, TextField } from "@mui/material";
+import { Box, Button, Skeleton, TextField } from "@mui/material";
 import { LockRounded as LockRoundedIcon } from "@mui/icons-material";
 
 import FieldsetTitle from "./FieldsetTitle";
@@ -11,20 +11,17 @@ import type { FullProfile } from "user";
 interface PrivateProps {
   profile: FullProfile | undefined;
   profileDispatch: React.Dispatch<Partial<FullProfile | undefined>>;
+  loading: boolean;
 }
 
-export default function Private({ profile, profileDispatch }: PrivateProps) {
+export default function Private({ profile, profileDispatch, loading }: PrivateProps) {
   return (
     <div
       css={{
         marginTop: "36px",
       }}
     >
-      <FieldsetTitle
-        icon={<LockRoundedIcon fontSize="inherit" />}
-        title="개인 정보"
-        subtitle="이 정보는 나만 볼 수 있어요."
-      />
+      <FieldsetTitle icon={<LockRoundedIcon fontSize="inherit" />} title="개인 정보" />
 
       <Box
         css={{
@@ -39,6 +36,7 @@ export default function Private({ profile, profileDispatch }: PrivateProps) {
             label="이메일"
             value={profile?.email}
             onChange={(e) => profileDispatch({ email: e.target.value })}
+            disabled={loading}
             fullWidth
             required
           />

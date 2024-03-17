@@ -1,16 +1,14 @@
-import getUserByIdentifier from "apis/getUserByIdentifier";
+import getPublicProfile from "apis/getPublicProfile";
 
 export default async function handleNameSubmit(name: string) {
-  // 아이디 유효성 검사
-  if (/\W/.test(name) === true) throw new Error("영어, 숫자, 밑줄(_)만 쓸 수 있어요.");
-  if (name.length < 3 || name.length > 20) throw new Error("3자 이상 20자 이하여야 해요.");
+  // 이름 유효성 검사
+  if (/^[a-zA-Z0-9_]{3,20}$/.test(name) === false)
+    throw new Error("영어, 숫자, 밑줄(_)만 쓸 수 있고, 3자 이상 20자 이하여야 해요.");
 
-  const getUserByIndentifierRes = await getUserByIdentifier({
-    identifier: name,
-  });
+  const getPublicProfileRes = await getPublicProfile({ name });
 
-  if (getUserByIndentifierRes.code === 1000) throw new Error("아이디가 이미 사용되고 있어요.");
-  else if (getUserByIndentifierRes.code !== 1001) throw new Error(getUserByIndentifierRes.message);
+  if (getPublicProfileRes.status === 200) throw new Error("이름이 이미 사용되고 있어요.");
+  else if (getPublicProfileRes.status !== 404) throw new Error(getPublicProfileRes.data.message);
 
   return {};
 }

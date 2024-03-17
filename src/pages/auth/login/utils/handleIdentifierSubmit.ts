@@ -1,16 +1,17 @@
-import getUserByIdentifier from "apis/getUserByIdentifier";
+import getPublicProfile from "apis/getPublicProfile";
 
 import type { ReceivedData } from "../";
 
 export default async function handleIdentifierSubmit(identifier: string): Promise<Partial<ReceivedData>> {
-  const res = await getUserByIdentifier({
-    identifier,
-  });
+  const isIdentifierEmail = identifier.includes("@");
+  const reqBody = isIdentifierEmail ? { email: identifier } : { name: identifier };
 
-  if (res.code !== 1000 || !res.result.user) throw new Error(res.message);
+  const res = await getPublicProfile(reqBody);
+  if (res.status !== 200) throw new Error(res.data.message);
 
   return {
-    id: res.result.user.id,
-    name: res.result.user.name,
+    id: res.data.id,
+    name: res.data.name,
+    username: res.data.username,
   };
 }

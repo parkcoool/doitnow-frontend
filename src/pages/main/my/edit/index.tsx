@@ -2,12 +2,12 @@
 
 import React from "react";
 
-import getUserById from "apis/getUserById";
+import getPrivateProfile from "apis/getPrivateProfile";
 import Layout from "components/layout/Layout";
-import useSessionStore from "contexts/useSessionStore";
-
-import getReducer from "utils/common/getReducer";
 import Narrow from "components/layout/Narrow";
+import useSessionStore from "contexts/useSessionStore";
+import getReducer from "utils/common/getReducer";
+
 import EditView from "./components/Edit";
 
 import type { FullProfile } from "user";
@@ -19,15 +19,15 @@ export default function Edit() {
   const [profile, profileDispatch] = React.useReducer(profileReducer, undefined);
 
   React.useEffect(() => {
-    const userId = session.user?.id;
-    if (userId === undefined) return;
+    const { accessToken } = session;
+    if (accessToken === null) return;
 
     // TODO: 이메일
-    getUserById({ id: userId }).then((res) => {
-      if (res.result.user)
-        profileDispatch({ ...res.result.user, createdAt: new Date(res.result.user.createdAt), email: "" });
+    getPrivateProfile(accessToken.token).then((res) => {
+      if (res.status !== 200) return;
+      profileDispatch({ ...res.data, createdAt: new Date(res.data.createdAt) });
     });
-  }, [session.user?.id]);
+  }, []);
 
   return (
     <Layout headerContent="계정 정보 수정" footerDisabled>

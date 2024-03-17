@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
-import { Avatar, Paper, Skeleton, Typography } from "@mui/material";
+import { Paper, Skeleton, Typography } from "@mui/material";
 import { DateRangeRounded as DateRangeRoundedIcon } from "@mui/icons-material";
 import styled from "@emotion/styled";
+
+import Avatar from "components/common/Avatar";
 
 import type { TypographyProps } from "@mui/material/Typography";
 import type { PublicProfile } from "user";
@@ -46,7 +48,9 @@ export default function Profile({ profile }: ProfileProps) {
         {/* 프로필 이미지 */}
         {profile ? (
           <Avatar
-            src={profile.profileImage ?? undefined}
+            name={profile.name}
+            username={profile.username}
+            profileImage={profile.profileImage}
             css={{
               width: "80px",
               height: "80px",
@@ -56,7 +60,7 @@ export default function Profile({ profile }: ProfileProps) {
           <Skeleton variant="circular" width={80} height={80} animation="wave" />
         )}
 
-        {/* 이름 */}
+        {/* 사용자 이름 */}
         <Typography
           variant="h1"
           css={{
@@ -65,7 +69,19 @@ export default function Profile({ profile }: ProfileProps) {
             marginTop: "18px",
           }}
         >
-          {profile ? profile.name : <Skeleton width={200} animation="wave" />}
+          {profile ? profile.username : <Skeleton width={200} animation="wave" />}
+        </Typography>
+
+        {/* 이름 */}
+        <Typography
+          variant="h2"
+          css={{
+            fontSize: "14px",
+            fontWeight: 500,
+            color: "#818181",
+          }}
+        >
+          {profile ? `@${profile.name}` : <Skeleton width={200} animation="wave" />}
         </Typography>
 
         {/* 소개 */}
@@ -73,7 +89,7 @@ export default function Profile({ profile }: ProfileProps) {
           variant="h2"
           css={{
             fontSize: "16px",
-            marginTop: "8px",
+            marginTop: "24px",
             fontWeight: 400,
             color: "#818181",
           }}

@@ -21,8 +21,6 @@ import Complete from "./components/Complete";
 
 import submitRecovery from "./utils/submitRecovery";
 
-import type { Token } from "auth";
-
 interface PasswordLocationState {
   step: PasswordStep;
 }
@@ -33,12 +31,18 @@ export interface SubmitData {
   emailCode: string;
   password: string;
   passwordConfirm: string;
-  emailVerifyToken?: Token;
+  emailVerifyToken?: {
+    token: string;
+    expiresIn: number;
+  };
 }
 
 export interface ReceivedData {
-  emailCodeExpiresAt?: Date;
-  emailVerifyToken?: Token;
+  emailCodeExpiresAt?: string;
+  emailVerifyToken?: {
+    token: string;
+    expiresIn: number;
+  };
   errorMessage?: string;
 }
 

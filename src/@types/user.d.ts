@@ -1,18 +1,10 @@
 declare module "user" {
   /**
-   * @description 사용자 정보입니다.
-   */
-  interface User {
-    id: number;
-    name: string;
-    email?: string;
-  }
-
-  /**
    * @description 프로필 미리보기 정보입니다.
    */
   interface SmallProfile {
     profileImage: string | null;
+    username: string;
     name: string;
     bio: string | null;
   }
@@ -21,7 +13,9 @@ declare module "user" {
    * @description 공개 프로필 정보입니다.
    */
   interface PublicProfile {
+    id: number;
     profileImage: string | null;
+    username: string;
     name: string;
     bio: string | null;
     createdAt: Date;
@@ -31,7 +25,9 @@ declare module "user" {
    * @description 개인 프로필 정보입니다.
    */
   interface FullProfile {
+    id: number;
     profileImage: string | null;
+    username: string;
     name: string;
     bio: string | null;
     createdAt: Date;

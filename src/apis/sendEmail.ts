@@ -2,24 +2,16 @@ import axios from "axios";
 
 import type { APIResponse } from "api";
 
-interface SendEmailBody {
+interface ReqBody {
   email: string;
 }
 
-export interface SendEmailResponse {
+interface ResBody extends APIResponse {
   email: string;
   expiresAt: string;
 }
 
-/**
- * @path `POST /auth/sendEmail`
- * @description 이메일 주소로 인증 코드 발송을 요청합니다.
- */
-export default async function sendEmail(body: SendEmailBody) {
-  const response = await axios.post<APIResponse<SendEmailResponse>>(
-    `${process.env.REACT_APP_API_PATH}/auth/sendEmail`,
-    body
-  );
-
-  return response.data;
+export default async function sendEmail(body: ReqBody) {
+  const response = await axios.post<ResBody>(`${process.env.REACT_APP_API_PATH}/auth/email/send`, body);
+  return response;
 }

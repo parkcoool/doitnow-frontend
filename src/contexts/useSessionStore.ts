@@ -1,15 +1,19 @@
 import { create } from "zustand";
 
-import type { User } from "user";
-import type { Token } from "auth";
+import type { FullProfile } from "user";
+
+interface Token {
+  token: string;
+  expiresIn: number;
+}
 
 export interface SessionValues {
-  user: User | null;
+  user: FullProfile | null;
   accessToken: Token | null;
 }
 
 export interface SessionMethods {
-  setUser: (user: User | null) => void;
+  setUser: (user: FullProfile | null) => void;
   setAccessToken: (accessToken: Token | null) => void;
 }
 

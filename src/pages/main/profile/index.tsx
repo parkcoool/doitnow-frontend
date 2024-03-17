@@ -2,9 +2,9 @@
 
 import React from "react";
 import { useParams } from "react-router-dom";
-
 import { Skeleton } from "@mui/material";
-import getUserById from "apis/getUserById";
+
+import getPublicProfile from "apis/getPublicProfile";
 import Narrow from "components/layout/Narrow";
 import Layout from "components/layout/Layout";
 
@@ -20,13 +20,14 @@ export default function Profile() {
   React.useEffect(() => {
     if (userId === undefined) return;
 
-    getUserById({ id: parseInt(userId) }).then((res) => {
-      if (res.result.user) setProfile({ ...res.result.user, createdAt: new Date(res.result.user.createdAt) });
+    getPublicProfile({ id: parseInt(userId) }).then((res) => {
+      if (res.status !== 200) return;
+      setProfile({ ...res.data, createdAt: new Date(res.data.createdAt) });
     });
   }, [userId]);
 
   return (
-    <Layout headerContent={profile?.name ?? <Skeleton width={100} />} footerDisabled>
+    <Layout headerContent={profile?.username ?? <Skeleton width={100} />} footerDisabled>
       <Narrow>
         <ProfileView profile={profile} />
       </Narrow>

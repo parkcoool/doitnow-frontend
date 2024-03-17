@@ -5,11 +5,11 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
+import getPublicProfile from "apis/getPublicProfile";
 import Narrow from "components/layout/Narrow";
+import ProfilePreview from "components/common/ProfilePreview";
 import useSessionStore from "contexts/useSessionStore";
 
-import getUserById from "apis/getUserById";
-import ProfilePreview from "../../../components/common/ProfilePreview";
 import Menu from "./components/Menu";
 import LogoutDialog from "./components/LogoutDialog";
 
@@ -25,13 +25,15 @@ export default function My() {
     const userId = session.user?.id;
     if (userId === undefined) return;
 
-    getUserById({ id: userId }).then((res) => {
-      if (res.result.user)
-        setMyProfilePreview({
-          profileImage: res.result.user.profileImage,
-          name: res.result.user.name,
-          bio: res.result.user.bio,
-        });
+    getPublicProfile({ id: userId }).then((res) => {
+      if (res.status !== 200) return;
+
+      setMyProfilePreview({
+        profileImage: res.data.profileImage,
+        username: res.data.username,
+        name: res.data.name,
+        bio: res.data.bio,
+      });
     });
   }, []);
 

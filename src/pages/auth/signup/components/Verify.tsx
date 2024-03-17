@@ -47,20 +47,13 @@ export default function Verify({ submitData, submitDataDispatch, receivedData, l
     setDialogOpen(true);
   }
 
-  function updateLeftSeconds() {
-    if (receivedData.emailCodeExpiresAt === undefined) return;
-
-    const leftMilliseconds = receivedData.emailCodeExpiresAt.getTime() - new Date().getTime();
-
-    setLeftSeconds(Math.floor(leftMilliseconds / 1000));
-  }
-
   // 남은 시간을 1초마다 업데이트한다.
   React.useEffect(() => {
-    if (receivedData.emailCodeExpiresAt === undefined) return;
-
     function updateLeftSeconds() {
-      const leftMilliseconds = (receivedData.emailCodeExpiresAt as Date).getTime() - new Date().getTime();
+      const { emailCodeExpiresAt } = receivedData;
+      if (emailCodeExpiresAt === undefined) return;
+
+      const leftMilliseconds = new Date(emailCodeExpiresAt).getTime() - new Date().getTime();
 
       // 남은 시간이 0 이하인 경우
       if (leftMilliseconds <= 0) {

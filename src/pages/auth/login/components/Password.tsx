@@ -8,8 +8,6 @@ import {
   AccountCircleRounded as AccountCircleRoundedIcon,
 } from "@mui/icons-material";
 
-import { LoginStep } from "..";
-
 import type { SubmitData, ReceivedData } from "..";
 
 interface PasswordProps {
@@ -39,7 +37,7 @@ export default function Password({ submitData, submitDataDispatch, receivedData,
           margin: "16px 0 0 0",
         }}
       >
-        {receivedData.name ? `${receivedData.name}님, 안녕하세요.` : "환영합니다."}
+        {receivedData.username ? `${receivedData.username}님, 안녕하세요.` : "환영합니다."}
       </h1>
       <h2
         css={{

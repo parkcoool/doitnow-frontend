@@ -1,8 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
-import { Paper, Avatar, Skeleton, Typography, IconButton, Tooltip } from "@mui/material";
+import { Paper, Skeleton, Typography, IconButton, Tooltip } from "@mui/material";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
-import stringToColor from "utils/common/stringToColor";
+
+import Avatar from "components/common/Avatar";
 
 import type { SmallProfile } from "user";
 
@@ -23,16 +24,11 @@ export default function ProfilePreview({ profilePreview, onClick }: ProfileProps
     >
       {/* 프로필 사진 */}
       <div>
-        {profilePreview ? (
-          <Avatar
-            src={profilePreview.profileImage ?? undefined}
-            css={{ backgroundColor: stringToColor(profilePreview.name) }}
-          >
-            {!profilePreview.profileImage && profilePreview.name.length >= 1 && profilePreview.name[0].toUpperCase()}
-          </Avatar>
-        ) : (
-          <Skeleton variant="circular" width={40} height={40} animation="wave" />
-        )}
+        <Avatar
+          profileImage={profilePreview?.profileImage}
+          name={profilePreview?.name}
+          username={profilePreview?.username}
+        />
       </div>
 
       {/* 이름 및 소개 */}
@@ -42,14 +38,32 @@ export default function ProfilePreview({ profilePreview, onClick }: ProfileProps
           overflow: "hidden",
         }}
       >
-        <Typography
+        <div
           css={{
-            fontSize: "18px",
-            fontWeight: 600,
+            display: "flex",
+            alignItems: "center",
+            gap: "4px",
           }}
         >
-          {profilePreview ? profilePreview.name || "이름 없음" : <Skeleton animation="wave" />}
-        </Typography>
+          <Typography
+            css={{
+              fontSize: "18px",
+              fontWeight: 600,
+            }}
+          >
+            {profilePreview ? profilePreview.username || "이름 없음" : <Skeleton animation="wave" />}
+          </Typography>
+
+          <Typography
+            css={{
+              fontSize: "12px",
+              fontWeight: 500,
+              color: "gray",
+            }}
+          >
+            {profilePreview ? `@${profilePreview.name}` : <Skeleton animation="wave" />}
+          </Typography>
+        </div>
         <Typography
           css={{
             fontSize: "14px",

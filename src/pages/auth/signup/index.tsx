@@ -21,8 +21,8 @@ import Name from "./components/Name";
 import Password from "./components/Password";
 import Complete from "./components/Complete";
 import submitSignup from "./utils/submitSignup";
-
-import type { Token } from "auth";
+import handleUsernameSubmit from "./utils/handleUsernameSubmit";
+import Username from "./components/Username";
 
 interface SignupLocationState {
   step: SignupStep;
@@ -31,40 +31,49 @@ interface SignupLocationState {
 export interface SubmitData {
   email: string;
   emailCode: string;
+  username: string;
   name: string;
   password: string;
   passwordConfirm: string;
-  emailVerifyToken?: Token;
+  emailVerifyToken?: {
+    token: string;
+    expiresIn: number;
+  };
 }
 
 export interface ReceivedData {
-  emailVerifyToken?: Token;
-  emailCodeExpiresAt?: Date;
+  emailVerifyToken?: {
+    token: string;
+    expiresIn: number;
+  };
+  emailCodeExpiresAt?: string;
   errorMessage?: string;
 }
 
 export enum SignupStep {
-  Name = 0,
-  Password = 1,
-  Email = 2,
-  Verify = 3,
-  Complete = 4,
+  Username = 0,
+  Name = 1,
+  Password = 2,
+  Email = 3,
+  Verify = 4,
+  Complete = 5,
 }
 
-const stepLabels = ["아이디", "비밀번호", "이메일", "인증"];
+const stepLabels = ["사용자 이름", "이름", "비밀번호", "이메일", "인증"];
 
 export default function Signup() {
   const navigate = useNavigate();
   const location = useLocation();
 
   // location.state를 가져온다.
-  const step = (location.state as SignupLocationState)?.step ?? SignupStep.Name;
+  const step = (location.state as SignupLocationState)?.step ?? SignupStep.Username;
 
   // submitData를 관리하는 reducer를 생성한다.
   const submitDataReducer = getReducer<SubmitData>();
   const [submitData, submitDataDispatch] = React.useReducer(submitDataReducer, {
     email: "",
     emailCode: "",
+    username: "",
     name: "",
     password: "",
     passwordConfirm: "",
@@ -90,6 +99,11 @@ export default function Signup() {
 
     try {
       switch (currentStep) {
+        case SignupStep.Username: {
+          await handleUsernameSubmit(submitData.username);
+          nextStep = SignupStep.Name;
+          break;
+        }
         case SignupStep.Name: {
           await handleNameSubmit(submitData.name);
           nextStep = SignupStep.Password;
@@ -138,6 +152,7 @@ export default function Signup() {
   function nextStepButtonDisabled() {
     return (
       loading ||
+      (step === SignupStep.Username && submitData.username === "") ||
       (step === SignupStep.Name && submitData.name === "") ||
       (step === SignupStep.Password && (submitData.password === "" || submitData.passwordConfirm === "")) ||
       (step === SignupStep.Email && submitData.email === "") ||
@@ -169,6 +184,16 @@ export default function Signup() {
         }}
       >
         <Narrow>
+          {step === SignupStep.Username && (
+            <Username
+              submitData={submitData}
+              submitDataDispatch={submitDataDispatch}
+              receivedData={receivedData}
+              loading={loading}
+              onSubmit={() => handleNextStep(SignupStep.Username)}
+            />
+          )}
+
           {step === SignupStep.Name && (
             <Name
               submitData={submitData}
@@ -224,7 +249,7 @@ export default function Signup() {
       >
         <BottomButton
           primaryText={step !== SignupStep.Complete ? "다음" : "완료"}
-          secondaryText={step !== SignupStep.Name && step !== SignupStep.Complete ? "이전" : undefined}
+          secondaryText={step !== SignupStep.Username && step !== SignupStep.Complete ? "이전" : undefined}
           primaryButtonProps={{
             variant: "contained",
             onClick: () => handleNextStep(step),

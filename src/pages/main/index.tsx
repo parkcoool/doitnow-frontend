@@ -5,11 +5,12 @@ import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 import CircularProgress from "@mui/material/CircularProgress";
+
+import refershToken from "apis/refreshToken";
+import getPrivateProfile from "apis/getPrivateProfile";
 import Layout from "components/layout/Layout";
 import { Tab } from "components/layout/Footer";
-
 import useSessionStore from "contexts/useSessionStore";
-import refershToken from "apis/refreshToken";
 
 export default function Main() {
   const location = useLocation();
@@ -22,31 +23,29 @@ export default function Main() {
       const refreshToken = Cookies.get("refreshToken");
 
       if (refreshToken !== undefined) {
-        refershToken({ refreshToken }).then((res) => {
-          const accessToken = res.result.token?.accessToken;
-          const newRefreshToken = res.result.token?.refreshToken;
+        (async function () {
+          // 새 토큰 요청
+          const refreshTokenRes = await refershToken({ refreshToken });
+          if (refreshTokenRes.status !== 200) navigate("/auth/login");
 
-          if (
-            res.code !== 1000 ||
-            accessToken === undefined ||
-            newRefreshToken === undefined ||
-            res.result.id === undefined ||
-            res.result.name === undefined
-          ) {
-            navigate("/auth/login");
-          } else {
-            session.setAccessToken(accessToken);
-            session.setUser({
-              id: res.result.id,
-              name: res.result.name,
-            });
+          const newAccessToken = refreshTokenRes.data.accessToken;
+          const newRefreshToken = refreshTokenRes.data.refreshToken;
 
-            Cookies.set("refreshToken", newRefreshToken.token, {
-              expires: newRefreshToken.expiresIn,
-              secure: process.env.NODE_ENV === "production",
-            });
-          }
-        });
+          // 사용자 정보 요청
+          const getPrivateProfileRes = await getPrivateProfile(newAccessToken.token);
+          if (getPrivateProfileRes.status !== 200) navigate("/auth/login");
+
+          // 새 토큰 저장
+          session.setAccessToken(newAccessToken);
+          Cookies.set("refreshToken", newRefreshToken.token, {
+            expires: newRefreshToken.expiresIn,
+            secure: process.env.NODE_ENV === "production",
+          });
+
+          // 사용자 정보 저장
+          const { ...user } = getPrivateProfileRes.data;
+          session.setUser({ ...user, createdAt: new Date(user.createdAt) });
+        })();
       } else {
         navigate("/auth/login");
       }

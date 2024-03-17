@@ -1,7 +1,7 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
-import { TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 
 import type { SubmitData, ReceivedData } from "..";
 
@@ -30,7 +30,7 @@ export default function Name({ submitData, submitDataDispatch, receivedData, loa
           margin: "4px 0 0 0",
         }}
       >
-        아이디를 입력해주세요.
+        이름을 입력해주세요.
       </h1>
 
       <h2
@@ -57,11 +57,14 @@ export default function Name({ submitData, submitDataDispatch, receivedData, loa
           disabled={loading}
           error={receivedData.errorMessage !== undefined}
           helperText={receivedData.errorMessage}
-          label="아이디"
+          label="이름"
           type="text"
           value={submitData.name}
-          autoComplete="username"
+          autoComplete="name"
           variant="standard"
+          InputProps={{
+            startAdornment: <InputAdornment position="start">@</InputAdornment>,
+          }}
           onChange={(e) => submitDataDispatch({ name: e.target.value })}
           css={{
             width: "100%",

@@ -2,7 +2,7 @@
 
 import React from "react";
 
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Slide } from "@mui/material";
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import ProfilePreview from "components/common/ProfilePreview";
 
@@ -18,12 +18,14 @@ interface ProfileProps {
 }
 
 export default function Edit({ profile, profileDispatch }: ProfileProps) {
+  const [profileChanged, setProfileChanged] = React.useState(false);
   const [loading, setLoading] = React.useState(false);
 
   function getProfilePreview(): SmallProfile | undefined {
     return (
       profile && {
         profileImage: profile?.profileImage ?? null,
+        username: profile?.username,
         name: profile?.name ?? "이름 없음",
         bio: profile?.bio || null,
       }
@@ -32,6 +34,12 @@ export default function Edit({ profile, profileDispatch }: ProfileProps) {
 
   function handleSubmit() {
     return;
+  }
+
+  // 값이 수정되면 profileChanged를 true로 설정한다.
+  function profileDispatchWithChange(payload: Partial<FullProfile | undefined>) {
+    profileDispatch(payload);
+    setProfileChanged(true);
   }
 
   return (
@@ -52,34 +60,38 @@ export default function Edit({ profile, profileDispatch }: ProfileProps) {
           <ProfilePreview profilePreview={getProfilePreview()} />
         </div>
 
+        {/* TODO: tab으로 공개 정보 및 개인 정보 수정 페이지를 나누기 */}
+
         {/* 공개 정보 */}
-        <Public profile={profile} profileDispatch={profileDispatch} />
+        <Public profile={profile} profileDispatch={profileDispatchWithChange} loading={loading} />
 
         {/* 개인 정보 */}
-        <Private profile={profile} profileDispatch={profileDispatch} />
+        <Private profile={profile} profileDispatch={profileDispatchWithChange} loading={loading} />
       </div>
 
       {/* 저장 버튼 */}
-      <div
-        css={{
-          position: "fixed",
-          left: 0,
-          bottom: "64px",
-          width: "100%",
-          zIndex: 100,
-        }}
-      >
-        <BottomButton
-          primaryText="저장"
-          primaryButtonProps={{
-            variant: "contained",
-            onClick: handleSubmit,
-            disabled: loading,
-            endIcon: loading ? <CircularProgress size={16} color="inherit" /> : <SaveRoundedIcon color="inherit" />,
-            disableElevation: true,
+      <Slide direction="up" in={profileChanged} mountOnEnter>
+        <div
+          css={{
+            position: "fixed",
+            left: 0,
+            bottom: "64px",
+            width: "100%",
+            zIndex: 100,
           }}
-        />
-      </div>
+        >
+          <BottomButton
+            primaryText="저장"
+            primaryButtonProps={{
+              variant: "contained",
+              onClick: handleSubmit,
+              disabled: loading,
+              endIcon: loading ? <CircularProgress size={16} color="inherit" /> : <SaveRoundedIcon color="inherit" />,
+              disableElevation: true,
+            }}
+          />
+        </div>
+      </Slide>
     </>
   );
 }
