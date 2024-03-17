@@ -62,6 +62,7 @@ export default function Header({ content, loading = false }: HeaderProps) {
       <div
         css={{
           height: "3px",
+          backgroundColor: "white",
         }}
       >
         {loading && (

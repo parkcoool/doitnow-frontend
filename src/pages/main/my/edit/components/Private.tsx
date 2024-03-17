@@ -1,10 +1,8 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
-import { Box, Button, Skeleton, TextField } from "@mui/material";
+import { Box, Skeleton, TextField } from "@mui/material";
 import { LockRounded as LockRoundedIcon } from "@mui/icons-material";
-
-import FieldsetTitle from "./FieldsetTitle";
 
 import type { FullProfile } from "user";
 
@@ -18,34 +16,25 @@ export default function Private({ profile, profileDispatch, loading }: PrivatePr
   return (
     <div
       css={{
-        marginTop: "36px",
+        display: "flex",
+        flexDirection: "column",
+        gap: "24px",
       }}
     >
-      <FieldsetTitle icon={<LockRoundedIcon fontSize="inherit" />} title="개인 정보" />
-
-      <Box
-        css={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "24px",
-          padding: "24px 0",
-        }}
-      >
-        {profile ? (
-          <TextField
-            label="이메일"
-            value={profile?.email}
-            onChange={(e) => profileDispatch({ email: e.target.value })}
-            disabled={loading}
-            fullWidth
-            required
-          />
-        ) : (
-          <Skeleton>
-            <TextField fullWidth required />
-          </Skeleton>
-        )}
-      </Box>
+      {profile ? (
+        <TextField
+          label="이메일"
+          value={profile?.email}
+          onChange={(e) => profileDispatch({ email: e.target.value })}
+          disabled={loading}
+          fullWidth
+          required
+        />
+      ) : (
+        <Skeleton>
+          <TextField fullWidth required />
+        </Skeleton>
+      )}
     </div>
   );
 }

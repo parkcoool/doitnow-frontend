@@ -51,7 +51,7 @@ export default function ProfilePreview({ profilePreview, onClick }: ProfileProps
               fontWeight: 600,
             }}
           >
-            {profilePreview ? profilePreview.username || "이름 없음" : <Skeleton animation="wave" />}
+            {profilePreview ? profilePreview.username || "이름 없음" : <Skeleton animation="wave" width="64px" />}
           </Typography>
 
           <Typography
@@ -61,7 +61,7 @@ export default function ProfilePreview({ profilePreview, onClick }: ProfileProps
               color: "gray",
             }}
           >
-            {profilePreview ? `@${profilePreview.name}` : <Skeleton animation="wave" />}
+            {profilePreview ? `@${profilePreview.name}` : <Skeleton animation="wave" width="32px" />}
           </Typography>
         </div>
         <Typography
