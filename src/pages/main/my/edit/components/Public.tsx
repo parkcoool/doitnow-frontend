@@ -1,31 +1,32 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
-import { Box, InputAdornment, Skeleton, TextField } from "@mui/material";
+import { InputAdornment, Skeleton, TextField } from "@mui/material";
 
 import ProfilePreview from "components/common/ProfilePreview";
 
-import type { FullProfile, SmallProfile } from "user";
+import type { SmallProfile } from "user";
+import type { PublicData } from "..";
 
-interface ProfileProps {
-  profile: FullProfile | undefined;
-  profileDispatch: React.Dispatch<Partial<FullProfile | undefined>>;
+interface PublicProps {
+  publicData: PublicData | undefined;
+  publicDataDispatch: React.Dispatch<Partial<PublicData | undefined>>;
   loading: boolean;
 }
 
-export default function Public({ profile, profileDispatch, loading }: ProfileProps) {
-  function getProfilePreview(profile: FullProfile): SmallProfile | undefined {
-    return (
-      profile && {
-        profileImage: profile?.profileImage ?? null,
-        username: profile?.username,
-        name: profile?.name ?? "이름 없음",
-        bio: profile?.bio || null,
-      }
-    );
-  }
+function getProfilePreview(profile: PublicData): SmallProfile | undefined {
+  return (
+    profile && {
+      profileImage: profile?.profileImage ?? null,
+      username: profile?.username,
+      name: profile?.name ?? "이름 없음",
+      bio: profile?.bio || null,
+    }
+  );
+}
 
-  const profilePreview = profile && getProfilePreview(profile);
+export default function Public({ publicData, publicDataDispatch, loading }: PublicProps) {
+  const profilePreview = publicData && getProfilePreview(publicData);
 
   return (
     <div
@@ -43,11 +44,12 @@ export default function Public({ profile, profileDispatch, loading }: ProfilePro
         <ProfilePreview profilePreview={profilePreview} />
       </div>
 
-      {profile ? (
+      {publicData ? (
         <TextField
           label="사용자 이름"
-          value={profile?.username ?? ""}
-          onChange={(e) => profileDispatch({ username: e.target.value })}
+          autoComplete="username"
+          value={publicData.username ?? ""}
+          onChange={(e) => publicDataDispatch({ username: e.target.value })}
           disabled={loading}
           fullWidth
           required
@@ -58,11 +60,12 @@ export default function Public({ profile, profileDispatch, loading }: ProfilePro
         </Skeleton>
       )}
 
-      {profile ? (
+      {publicData ? (
         <TextField
           label="이름"
-          value={profile?.name ?? ""}
-          onChange={(e) => profileDispatch({ name: e.target.value })}
+          autoComplete="name"
+          value={publicData.name ?? ""}
+          onChange={(e) => publicDataDispatch({ name: e.target.value })}
           disabled={loading}
           InputProps={{
             startAdornment: <InputAdornment position="start">@</InputAdornment>,
@@ -76,11 +79,12 @@ export default function Public({ profile, profileDispatch, loading }: ProfilePro
         </Skeleton>
       )}
 
-      {profile ? (
+      {publicData ? (
         <TextField
           label="소개"
-          value={profile?.bio ?? ""}
-          onChange={(e) => profileDispatch({ bio: e.target.value })}
+          autoComplete="off"
+          value={publicData.bio ?? ""}
+          onChange={(e) => publicDataDispatch({ bio: e.target.value })}
           disabled={loading}
           fullWidth
           multiline
