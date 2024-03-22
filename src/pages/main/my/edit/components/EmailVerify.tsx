@@ -176,7 +176,7 @@ export default function EmailVerify({ email, setEmailToken, loading, setLoading 
               helperText={errorMessage}
               autoComplete="one-time-code"
               disabled={loading}
-              onChange={(e) => setCode(e.currentTarget.value)}
+              onChange={(e) => setCode(e.currentTarget.value.trim())}
               fullWidth
               autoFocus
             />

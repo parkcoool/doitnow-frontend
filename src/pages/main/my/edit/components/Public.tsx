@@ -20,7 +20,7 @@ function getProfilePreview(profile: PublicData): SmallProfile | undefined {
       profileImage: profile?.profileImage ?? null,
       username: profile?.username,
       name: profile?.name ?? "이름 없음",
-      bio: profile?.bio || null,
+      bio: profile?.bio?.trim() || null,
     }
   );
 }
@@ -49,7 +49,7 @@ export default function Public({ publicData, publicDataDispatch, loading }: Publ
           label="사용자 이름"
           autoComplete="username"
           value={publicData.username ?? ""}
-          onChange={(e) => publicDataDispatch({ username: e.target.value })}
+          onChange={(e) => publicDataDispatch({ username: e.target.value.trim() })}
           disabled={loading}
           fullWidth
           required
@@ -65,7 +65,7 @@ export default function Public({ publicData, publicDataDispatch, loading }: Publ
           label="이름"
           autoComplete="name"
           value={publicData.name ?? ""}
-          onChange={(e) => publicDataDispatch({ name: e.target.value })}
+          onChange={(e) => publicDataDispatch({ name: e.target.value.trim() })}
           disabled={loading}
           InputProps={{
             startAdornment: <InputAdornment position="start">@</InputAdornment>,

@@ -50,7 +50,7 @@ export default function Email({ submitData, submitDataDispatch, receivedData, lo
           value={submitData.email}
           autoComplete="email"
           variant="standard"
-          onChange={(e) => submitDataDispatch({ email: e.target.value })}
+          onChange={(e) => submitDataDispatch({ email: e.target.value.trim() })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

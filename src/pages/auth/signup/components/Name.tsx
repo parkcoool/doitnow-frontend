@@ -65,7 +65,7 @@ export default function Name({ submitData, submitDataDispatch, receivedData, loa
           InputProps={{
             startAdornment: <InputAdornment position="start">@</InputAdornment>,
           }}
-          onChange={(e) => submitDataDispatch({ name: e.target.value })}
+          onChange={(e) => submitDataDispatch({ name: e.target.value.trim() })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

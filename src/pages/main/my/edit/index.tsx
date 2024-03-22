@@ -134,6 +134,7 @@ export default function Edit() {
       const accessToken = session.accessToken;
       if (accessToken === null || publicData === undefined) return;
 
+      publicDataDispatch({ bio: publicData.bio?.trim() });
       setLoading(true);
       const res = await updatePublicProfile(publicData, accessToken.token);
       if (res.status === 200) {

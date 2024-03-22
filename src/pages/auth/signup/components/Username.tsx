@@ -62,7 +62,7 @@ export default function Username({ submitData, submitDataDispatch, receivedData,
           value={submitData.username}
           autoComplete="username"
           variant="standard"
-          onChange={(e) => submitDataDispatch({ username: e.target.value })}
+          onChange={(e) => submitDataDispatch({ username: e.target.value.trim() })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

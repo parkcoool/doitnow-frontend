@@ -138,7 +138,7 @@ export default function Verify({ submitData, submitDataDispatch, receivedData, l
           value={submitData.emailCode}
           autoComplete="one-time-code"
           variant="standard"
-          onChange={(e) => submitDataDispatch({ emailCode: e.target.value })}
+          onChange={(e) => submitDataDispatch({ emailCode: e.target.value.trim() })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",

@@ -69,7 +69,7 @@ export default function Identifier({
           type="text"
           value={submitData.identifier}
           autoComplete="username"
-          onChange={(e) => submitDataDispatch({ identifier: e.target.value })}
+          onChange={(e) => submitDataDispatch({ identifier: e.target.value.trim() })}
           css={{
             width: "100%",
             margin: "16px 0 0 0",
