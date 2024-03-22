@@ -17,23 +17,23 @@ export default function Main() {
   const session = useSessionStore();
   const navigate = useNavigate();
 
-  // 로그인되어 있지 않으면 로그인 페이지로 이동
   React.useEffect(() => {
     if (!session.user) {
       const refreshToken = Cookies.get("refreshToken");
 
+      // 리프레시 토큰이 존재하는 경우
       if (refreshToken !== undefined) {
         (async function () {
           // 새 토큰 요청
           const refreshTokenRes = await refershToken({ refreshToken });
-          if (refreshTokenRes.status !== 200) navigate("/auth/login");
+          if (refreshTokenRes.status !== 200) return navigate("/auth/login");
 
           const newAccessToken = refreshTokenRes.data.accessToken;
           const newRefreshToken = refreshTokenRes.data.refreshToken;
 
           // 사용자 정보 요청
           const getPrivateProfileRes = await getPrivateProfile(newAccessToken.token);
-          if (getPrivateProfileRes.status !== 200) navigate("/auth/login");
+          if (getPrivateProfileRes.status !== 200) return navigate("/auth/login");
 
           // 새 토큰 저장
           session.setAccessToken(newAccessToken);
@@ -46,7 +46,10 @@ export default function Main() {
           const { ...user } = getPrivateProfileRes.data;
           session.setUser({ ...user, createdAt: new Date(user.createdAt) });
         })();
-      } else {
+      }
+
+      // 로그인되어 있지 않으면 로그인 페이지로 이동
+      else {
         navigate("/auth/login");
       }
     }
