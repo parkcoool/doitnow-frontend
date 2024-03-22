@@ -134,11 +134,14 @@ export default function Edit() {
       const accessToken = session.accessToken;
       if (accessToken === null || publicData === undefined) return;
 
-      publicDataDispatch({ bio: publicData.bio?.trim() });
+      const newPublicDataDispatch: Partial<PublicData> = { bio: publicData.bio?.trim() ?? null };
+      const newPublicData: PublicData = { ...publicData, ...newPublicDataDispatch };
+      publicDataDispatch(newPublicDataDispatch);
       setLoading(true);
-      const res = await updatePublicProfile(publicData, accessToken.token);
+
+      const res = await updatePublicProfile(newPublicData, accessToken.token);
       if (res.status === 200) {
-        setInitialPublicData(publicData);
+        setInitialPublicData(newPublicData);
         setEmailToken(undefined);
       }
 
