@@ -134,7 +134,7 @@ export default function Edit() {
       const accessToken = session.accessToken;
       if (accessToken === null || publicData === undefined) return;
 
-      const newPublicDataDispatch: Partial<PublicData> = { bio: publicData.bio?.trim() ?? null };
+      const newPublicDataDispatch: Partial<PublicData> = { bio: publicData.bio?.trim() || null };
       const newPublicData: PublicData = { ...publicData, ...newPublicDataDispatch };
       publicDataDispatch(newPublicDataDispatch);
       setLoading(true);
