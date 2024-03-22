@@ -8,11 +8,11 @@ import Typography from "@mui/material/Typography";
 import {
   HomeOutlined as HomeOutlinedIcon,
   PeopleOutline as PeopleOutlineIcon,
-  ExploreOutlined as ExploreOutlinedIcon,
+  NotificationsOutlined as NotificationsOutlinedIcon,
   AccountCircleOutlined as AccountCircleOutlinedIcon,
   Home as HomeIcon,
   People as PeopleIcon,
-  Explore as ExploreIcon,
+  Notifications as NotificationsIcon,
   AccountCircle as AccountCircleIcon,
 } from "@mui/icons-material";
 
@@ -34,7 +34,7 @@ const FooterButtonTypography = styled(Typography)({
 export enum Tab {
   Home = "home",
   Friend = "friend",
-  Explore = "explore",
+  Notification = "notification",
   My = "my",
 }
 
@@ -76,9 +76,13 @@ export default function Footer({ selectedTab }: FooterProps) {
         <FooterButtonTypography color="inherit">친구</FooterButtonTypography>
       </FooterButton>
 
-      <FooterButton color={getColor(Tab.Explore)} onClick={() => navigate("/explore", { replace: true })}>
-        {selectedTab === Tab.Explore ? <ExploreIcon color="inherit" /> : <ExploreOutlinedIcon color="inherit" />}
-        <FooterButtonTypography color="inherit">탐색</FooterButtonTypography>
+      <FooterButton color={getColor(Tab.Notification)} onClick={() => navigate("/notification", { replace: true })}>
+        {selectedTab === Tab.Notification ? (
+          <NotificationsIcon color="inherit" />
+        ) : (
+          <NotificationsOutlinedIcon color="inherit" />
+        )}
+        <FooterButtonTypography color="inherit">알림</FooterButtonTypography>
       </FooterButton>
 
       <FooterButton color={getColor(Tab.My)} onClick={() => navigate("/my", { replace: true })}>

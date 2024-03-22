@@ -60,8 +60,8 @@ export default function Main() {
     switch (location.pathname.split("/")[1]) {
       case "":
         return Tab.Home;
-      case "explore":
-        return Tab.Explore;
+      case "notification":
+        return Tab.Notification;
       case "friend":
         return Tab.Friend;
       case "my":
