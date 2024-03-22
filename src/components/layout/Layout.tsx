@@ -16,6 +16,7 @@ interface LayoutProps {
   loading?: boolean;
   tab?: Tab;
   headerContent?: React.ReactNode;
+  notificationCount?: number;
   headerDisabled?: boolean;
   footerDisabled?: boolean;
 }
@@ -25,6 +26,7 @@ export default function Layout({
   loading = false,
   tab,
   headerContent,
+  notificationCount,
   headerDisabled = false,
   footerDisabled = false,
 }: LayoutProps) {
@@ -49,7 +51,7 @@ export default function Layout({
       >
         {children}
       </main>
-      {!footerDisabled && <Footer selectedTab={tab} />}
+      {!footerDisabled && <Footer selectedTab={tab} notificationCount={notificationCount} />}
     </div>
   );
 }

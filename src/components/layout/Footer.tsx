@@ -2,6 +2,7 @@
 import { useNavigate } from "react-router-dom";
 
 import Button from "@mui/material/Button";
+import Badge from "@mui/material/Badge";
 import styled from "@mui/system/styled";
 import Typography from "@mui/material/Typography";
 
@@ -40,9 +41,10 @@ export enum Tab {
 
 interface FooterProps {
   selectedTab?: Tab;
+  notificationCount?: number;
 }
 
-export default function Footer({ selectedTab }: FooterProps) {
+export default function Footer({ selectedTab, notificationCount }: FooterProps) {
   const navigate = useNavigate();
 
   function getColor(tab: Tab) {
@@ -77,11 +79,23 @@ export default function Footer({ selectedTab }: FooterProps) {
       </FooterButton>
 
       <FooterButton color={getColor(Tab.Notification)} onClick={() => navigate("/notification", { replace: true })}>
-        {selectedTab === Tab.Notification ? (
-          <NotificationsIcon color="inherit" />
-        ) : (
-          <NotificationsOutlinedIcon color="inherit" />
-        )}
+        <Badge
+          color="primary"
+          badgeContent={notificationCount}
+          css={{
+            "& .MuiBadge-badge": {
+              width: "16px",
+              height: "16px",
+              padding: "0",
+            },
+          }}
+        >
+          {selectedTab === Tab.Notification ? (
+            <NotificationsIcon color="inherit" />
+          ) : (
+            <NotificationsOutlinedIcon color="inherit" />
+          )}
+        </Badge>
         <FooterButtonTypography color="inherit">알림</FooterButtonTypography>
       </FooterButton>
 

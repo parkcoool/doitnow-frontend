@@ -11,11 +11,14 @@ import getPrivateProfile from "apis/getPrivateProfile";
 import Layout from "components/layout/Layout";
 import { Tab } from "components/layout/Footer";
 import useSessionStore from "contexts/useSessionStore";
+import getNotificationCount from "apis/getNotificationCount";
 
 export default function Main() {
   const location = useLocation();
   const session = useSessionStore();
   const navigate = useNavigate();
+
+  const [notifcationCount, setNotificationCount] = React.useState(0);
 
   React.useEffect(() => {
     if (!session.user) {
@@ -55,6 +58,22 @@ export default function Main() {
     }
   }, []);
 
+  React.useEffect(() => {
+    const updateNotificationCount = async () => {
+      const { accessToken } = session;
+      if (accessToken === null) return;
+
+      const notificationRes = await getNotificationCount(accessToken.token);
+      if (notificationRes.status !== 200) return;
+      setNotificationCount(notificationRes.data.count);
+    };
+
+    const inveralId = setInterval(updateNotificationCount, 1000 * 30);
+    updateNotificationCount();
+
+    return () => clearInterval(inveralId);
+  }, [session]);
+
   // 현재 경로에 따라 탭을 반환
   function getTab(): Tab | undefined {
     switch (location.pathname.split("/")[1]) {
@@ -72,7 +91,7 @@ export default function Main() {
   }
 
   return (
-    <Layout headerDisabled tab={getTab()}>
+    <Layout headerDisabled tab={getTab()} notificationCount={notifcationCount}>
       {session.user !== null ? (
         <Outlet />
       ) : (
