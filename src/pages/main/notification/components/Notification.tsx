@@ -10,17 +10,17 @@ import PersonAddRoundedIcon from "@mui/icons-material/PersonAddRounded";
 import HowToRegRoundedIcon from "@mui/icons-material/HowToRegRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 
+import { Skeleton } from "@mui/material";
 import timeForToday from "utils/common/timeForToday";
 import readNotification from "apis/readNotification";
 import useSessionStore from "contexts/useSessionStore";
 
-interface FriendRequestProps {
-  id: number;
-  text: string;
-  link: string;
-  read: boolean;
-  type: string;
-  createdAt: string;
+import useNotificationStore from "contexts/useNotificationStore";
+import type { Notification } from "notification";
+
+interface NotificationProps {
+  notification?: Notification;
+  setNotifications?: React.Dispatch<React.SetStateAction<Notification[] | undefined>>;
 }
 
 function getTypeString(type: string) {
@@ -45,20 +45,42 @@ function TypeIcon({ type }: { type: string }) {
   }
 }
 
-export default function Notification({ id, text, link, read, type, createdAt }: FriendRequestProps) {
+export default function Notification({ notification, setNotifications }: NotificationProps) {
   const session = useSessionStore();
+  const setNotificationCount = useNotificationStore((state) => state.setCount);
   const navigate = useNavigate();
 
   async function readThisNotification() {
+    if (notification === undefined || setNotifications === undefined) return;
+    if (notification.read) return;
+
     const { accessToken } = session;
     if (accessToken === null) return;
 
-    await readNotification({ id }, accessToken.token);
+    const res = await readNotification({ id: notification.id }, accessToken.token);
+    if (res.status !== 200) return;
+
+    // notifications 상태 읽음 처리
+    setNotifications((prev) => {
+      if (prev === undefined) return prev;
+
+      const index = prev.findIndex((n) => n.id === notification.id);
+      if (index === -1) return prev;
+
+      const newNotifications = [...prev];
+      newNotifications[index] = { ...newNotifications[index], read: true };
+      return newNotifications;
+    });
+
+    // 알림 개수 읽음 처리
+    if (!notification.read) setNotificationCount((prev) => prev - 1);
   }
 
   function handleClick() {
+    if (notification === undefined) return;
+
     readThisNotification();
-    navigate(link);
+    navigate(notification.link);
   }
 
   return (
@@ -95,10 +117,16 @@ export default function Notification({ id, text, link, read, type, createdAt }: 
               gap: "8px",
             }}
             fontSize="16px"
-            color={read ? "text.secondary" : "primary"}
+            color={notification?.read ? "text.secondary" : "primary"}
           >
-            <TypeIcon type={type} />
-            {getTypeString(type)}
+            {notification === undefined ? (
+              <Skeleton width="100px" />
+            ) : (
+              <>
+                <TypeIcon type={notification.type} />
+                {getTypeString(notification.type)}
+              </>
+            )}
           </Typography>
 
           <Typography
@@ -110,7 +138,7 @@ export default function Notification({ id, text, link, read, type, createdAt }: 
             fontSize="14px"
             color="text.secondary"
           >
-            {timeForToday(createdAt)}
+            {notification === undefined ? <Skeleton width="50px" /> : timeForToday(notification.createdAt)}
           </Typography>
         </div>
 
@@ -121,12 +149,12 @@ export default function Notification({ id, text, link, read, type, createdAt }: 
             fontWeight: 500,
             textAlign: "left",
           }}
-          color={read ? "text.secondary" : "text.primary"}
+          color={notification?.read ? "text.secondary" : "text.primary"}
         >
-          {text}
+          {notification === undefined ? <Skeleton /> : notification.text}
         </Typography>
       </div>
-      <ArrowForwardIosRoundedIcon fontSize="small" />
+      {notification !== undefined && <ArrowForwardIosRoundedIcon fontSize="small" />}
     </ButtonBase>
   );
 }
