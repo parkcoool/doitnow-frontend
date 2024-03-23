@@ -24,33 +24,45 @@ export default function Notification() {
   const setNotificationCount = useNotificationStore((state) => state.setCount);
   const session = useSessionStore();
 
+  const [initialLoading, setInitialLoading] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
   const [loadingMore, setLoadingMore] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);
   const [notifications, setNotifications] = React.useState<Notification[]>([]);
 
   React.useEffect(() => {
-    handleLoadMore();
+    handleInitialLoad();
   }, [session]);
 
   // 알림 불러오기
-  async function handleLoadMore() {
+  async function loadNotifications() {
     const accessToken = session.accessToken?.token;
     if (accessToken === undefined) return;
-    if (loading || loadingMore) return;
 
-    setLoadingMore(true);
     const res = await getNotifications({ offsetDate: notifications?.at(-1)?.createdAt }, accessToken);
-
-    setLoadingMore(false);
     if (res.status !== 200) return;
 
     setHasMore(res.data.hasMore);
     setNotifications((prev) => [...prev, ...res.data.notifications]);
   }
 
+  async function handleLoadMore() {
+    if (loadingMore || !hasMore) return;
+    setLoadingMore(true);
+    await loadNotifications();
+    setLoadingMore(false);
+  }
+
+  async function handleInitialLoad() {
+    setInitialLoading(true);
+    await loadNotifications();
+    setInitialLoading(false);
+  }
+
   // 모두 삭제
   async function handleDeleteAll() {
+    if (loading) return;
+
     const { accessToken } = session;
     if (accessToken === null) return;
 
@@ -67,7 +79,7 @@ export default function Notification() {
 
   // 모두 읽기 처리
   async function handleReadAll() {
-    if (notifications === undefined) return;
+    if (loading) return;
 
     const { accessToken } = session;
     if (accessToken === null) return;
@@ -107,7 +119,7 @@ export default function Notification() {
       </div>
       <div>
         {/* 로드 중일 때 */}
-        {(loading || (loadingMore && notifications.length === 0)) && (
+        {initialLoading && (
           <>
             <NotificationComponent />
             <NotificationComponent />
@@ -118,9 +130,9 @@ export default function Notification() {
         )}
 
         {/* 알림이 있을 때 */}
-        {!loading && notifications.length > 0 && (
+        {!initialLoading && notifications.length > 0 && (
           <InfiniteScroll
-            loadMore={handleLoadMore}
+            loadMore={loadNotifications}
             hasMore={hasMore}
             useWindow
             loader={
@@ -148,7 +160,7 @@ export default function Notification() {
         )}
 
         {/* 알림이 없을 때 */}
-        {!loading && notifications.length === 0 && (
+        {!initialLoading && notifications.length === 0 && (
           <div
             css={{
               display: "flex",
