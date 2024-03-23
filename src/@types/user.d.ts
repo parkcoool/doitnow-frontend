@@ -1,4 +1,6 @@
 declare module "user" {
+  import type { FriendStatus } from "constant/friendStatus";
+
   /**
    * @description 프로필 미리보기 정보입니다.
    */
@@ -19,7 +21,7 @@ declare module "user" {
     name: string;
     bio: string | null;
     createdAt: Date;
-    isFriend: boolean;
+    friendStatus: FriendStatus | null;
   }
 
   /**

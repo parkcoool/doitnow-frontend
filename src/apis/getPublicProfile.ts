@@ -1,4 +1,5 @@
 import axios from "axios";
+import { FriendStatus } from "constant/friendStatus";
 
 import type { APIResponse } from "api";
 
@@ -15,7 +16,7 @@ interface ResBody extends APIResponse {
   bio: string | null;
   createdAt: string;
   profileImage: string | null;
-  isFriend: boolean;
+  friendStatus: FriendStatus | null;
 }
 
 export default async function getPublicProfile(query: ReqQuery, accessToken: string) {
