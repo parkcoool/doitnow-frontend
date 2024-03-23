@@ -25,7 +25,10 @@ export default function My() {
     const userId = session.user?.id;
     if (userId === undefined) return;
 
-    getPublicProfile({ id: userId }).then((res) => {
+    const accessToken = session.accessToken?.token;
+    if (accessToken === undefined) return;
+
+    getPublicProfile({ id: userId }, accessToken).then((res) => {
       if (res.status !== 200) return;
 
       setMyProfilePreview({

@@ -1,9 +1,9 @@
-import getPublicProfile from "apis/getPublicProfile";
+import getUserIdentifier from "apis/getUserIdentifier";
 import sendEmail from "apis/sendEmail";
 
 export default async function handleEmailSubmit(email: string) {
   // 이메일이 존재하는지 확인
-  const getPublicProfileRes = await getPublicProfile({ email });
+  const getPublicProfileRes = await getUserIdentifier({ email });
   if (getPublicProfileRes.status !== 200) throw new Error(getPublicProfileRes.data.message);
   const id = getPublicProfileRes.data.id;
 
