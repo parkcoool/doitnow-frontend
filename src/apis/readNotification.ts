@@ -6,9 +6,7 @@ interface ReqBody {
   id?: number;
 }
 
-interface ResBody extends APIResponse {
-  id?: number;
-}
+type ResBody = APIResponse;
 
 export default async function readNotification(reqBody: ReqBody, accessToken: string) {
   const response = await axios.patch<ResBody>(`${process.env.REACT_APP_API_PATH}/notification`, reqBody, {

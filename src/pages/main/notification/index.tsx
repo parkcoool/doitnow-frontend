@@ -4,10 +4,11 @@ import React from "react";
 
 import Button from "@mui/material/Button";
 import ClearAllRoundedIcon from "@mui/icons-material/ClearAllRounded";
-import CircularProgress from "@mui/material/CircularProgress";
+import DeleteSweepRoundedIcon from "@mui/icons-material/DeleteSweepRounded";
 
 import getNotifications from "apis/getNotifications";
 import readNotification from "apis/readNotification";
+import deleteNotification from "apis/deleteNotification";
 
 import useSessionStore from "contexts/useSessionStore";
 import useNotificationStore from "contexts/useNotificationStore";
@@ -38,6 +39,25 @@ export default function Notification() {
     })();
   }, [session]);
 
+  // 모두 삭제
+  async function handleDeleteAll() {
+    if (notifications === undefined) return;
+
+    const { accessToken } = session;
+    if (accessToken === null) return;
+
+    setLoading(true);
+    const res = await deleteNotification({}, accessToken.token);
+
+    setLoading(false);
+    if (res.status !== 200) return;
+
+    // 상태 삭제 처리
+    setNotifications([]);
+    setNotificationCount(0);
+  }
+
+  // 모두 읽기 처리
   async function handleReadAll() {
     if (notifications === undefined) return;
 
@@ -68,12 +88,11 @@ export default function Notification() {
           zIndex: 1,
         }}
       >
-        <Button
-          variant="outlined"
-          onClick={handleReadAll}
-          startIcon={loading ? <CircularProgress size={20} color="inherit" /> : <ClearAllRoundedIcon />}
-          disabled={loading}
-        >
+        <Button variant="outlined" onClick={handleDeleteAll} startIcon={<DeleteSweepRoundedIcon />} disabled={loading}>
+          모두 삭제
+        </Button>
+
+        <Button variant="outlined" onClick={handleReadAll} startIcon={<ClearAllRoundedIcon />} disabled={loading}>
           모두 읽음 처리
         </Button>
       </div>
