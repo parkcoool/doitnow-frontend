@@ -5,6 +5,7 @@ declare module "user" {
    * @description 프로필 미리보기 정보입니다.
    */
   interface SmallProfile {
+    id: number;
     profileImage: string | null;
     username: string;
     name: string;

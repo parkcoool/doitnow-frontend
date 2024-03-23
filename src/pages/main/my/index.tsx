@@ -36,6 +36,7 @@ export default function My() {
         username: res.data.username,
         name: res.data.name,
         bio: res.data.bio,
+        id: res.data.id,
       });
     });
   }, []);

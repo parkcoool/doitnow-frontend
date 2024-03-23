@@ -21,6 +21,7 @@ function getProfilePreview(profile: PublicData): SmallProfile | undefined {
       username: profile?.username,
       name: profile?.name ?? "이름 없음",
       bio: profile?.bio?.trim() || null,
+      id: -1,
     }
   );
 }
