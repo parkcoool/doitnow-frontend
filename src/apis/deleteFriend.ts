@@ -3,13 +3,13 @@ import axios from "axios";
 import type { APIResponse } from "api";
 
 interface ReqQuery {
-  id?: number;
+  to: number;
 }
 
 type ResBody = APIResponse;
 
-export default async function deleteNotification(query: ReqQuery, accessToken: string) {
-  const response = await axios.delete<ResBody>(`${process.env.REACT_APP_API_PATH}/notification`, {
+export default async function deleteFriend(query: ReqQuery, accessToken: string) {
+  const response = await axios.delete<ResBody>(`${process.env.REACT_APP_API_PATH}/friend`, {
     params: query,
     headers: {
       Authorization: `Bearer ${accessToken}`,
