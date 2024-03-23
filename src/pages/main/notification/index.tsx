@@ -6,6 +6,7 @@ import Button from "@mui/material/Button";
 import ClearAllRoundedIcon from "@mui/icons-material/ClearAllRounded";
 import DeleteSweepRoundedIcon from "@mui/icons-material/DeleteSweepRounded";
 
+import { Typography } from "@mui/material";
 import getNotifications from "apis/getNotifications";
 import readNotification from "apis/readNotification";
 import deleteNotification from "apis/deleteNotification";
@@ -86,6 +87,7 @@ export default function Notification() {
           top: 0,
           backgroundColor: "white",
           zIndex: 1,
+          gap: "8px",
         }}
       >
         <Button variant="outlined" onClick={handleDeleteAll} startIcon={<DeleteSweepRoundedIcon />} disabled={loading}>
@@ -93,11 +95,12 @@ export default function Notification() {
         </Button>
 
         <Button variant="outlined" onClick={handleReadAll} startIcon={<ClearAllRoundedIcon />} disabled={loading}>
-          모두 읽음 처리
+          모두 읽기
         </Button>
       </div>
       <div>
-        {notifications === undefined ? (
+        {/* 로드 중일 때 */}
+        {notifications === undefined && (
           <>
             <NotificationComponent />
             <NotificationComponent />
@@ -105,14 +108,31 @@ export default function Notification() {
             <NotificationComponent />
             <NotificationComponent />
           </>
-        ) : (
-          notifications.map((notification) => (
+        )}
+
+        {/* 알림이 있을 때 */}
+        {notifications !== undefined &&
+          notifications.length > 0 &&
+          notifications?.map((notification) => (
             <NotificationComponent
               key={notification.id}
               notification={notification}
               setNotifications={setNotifications}
             />
-          ))
+          ))}
+
+        {/* 알림이 없을 때 */}
+        {notifications !== undefined && notifications.length === 0 && (
+          <div
+            css={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              marginTop: "300px",
+            }}
+          >
+            <Typography>알림이 없어요.</Typography>
+          </div>
         )}
       </div>
     </>

@@ -90,6 +90,7 @@ export default function Notification({ notification, setNotifications }: Notific
         width: "100%",
         padding: "16px",
       }}
+      disabled={notification === undefined}
       onClick={handleClick}
     >
       <div
