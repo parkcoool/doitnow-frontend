@@ -53,6 +53,7 @@ export default function Friend({ profile, expand = false, onExpand, onCollapse }
           width: "100%",
           padding: "12px",
         }}
+        disabled={profile === undefined}
         onClick={handleButtonClick}
       >
         {/* 프로필 사진 */}
@@ -106,7 +107,7 @@ export default function Friend({ profile, expand = false, onExpand, onCollapse }
               marginTop: "8px",
             }}
           >
-            <FriendButton>
+            <FriendButton onClick={handleDelete}>
               <PersonRemoveRoundedIcon />
               <Typography fontWeight={600} fontSize="14px">
                 친구 삭제

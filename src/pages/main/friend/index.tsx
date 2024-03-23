@@ -17,13 +17,14 @@ import type { SmallProfile } from "user";
 export default function Friend() {
   const session = useSessionStore();
 
-  const [loading, setLoading] = React.useState(false);
+  const [initialLoading, setInitialLoading] = React.useState(true);
+  const [moreLoading, setMoreLoading] = React.useState(false);
   const [hasMore, setHasMore] = React.useState(true);
   const [friends, setFriends] = React.useState<SmallProfile[]>([]);
   const [expand, setExpand] = React.useState<number[]>([]);
 
   React.useEffect(() => {
-    handleLoadMore();
+    handleInitialLoad();
   }, [session]);
 
   function handleExpand(id: number) {
@@ -31,26 +32,35 @@ export default function Friend() {
   }
 
   // 친구 불러오기
-  async function handleLoadMore() {
+  async function loadFriends() {
     const accessToken = session.accessToken?.token;
     if (accessToken === undefined) return;
-    if (loading) return;
 
-    setLoading(true);
     const res = await getFriends({ offset: friends.length }, accessToken);
-
-    setLoading(false);
     if (res.status !== 200) return;
 
     setHasMore(res.data.hasMore);
     setFriends((prev) => [...prev, ...res.data.friends]);
   }
 
+  async function handleMoreLoad() {
+    if (moreLoading || !hasMore) return;
+    setMoreLoading(true);
+    await loadFriends();
+    setMoreLoading(false);
+  }
+
+  async function handleInitialLoad() {
+    setInitialLoading(true);
+    await loadFriends();
+    setInitialLoading(false);
+  }
+
   return (
     <>
       <div>
         {/* 로드 중일 때 */}
-        {loading && friends.length === 0 && (
+        {initialLoading && (
           <>
             <FriendComponent />
             <FriendComponent />
@@ -61,14 +71,14 @@ export default function Friend() {
         )}
 
         {/* 친구가 있을 때 */}
-        {friends.length > 0 && (
+        {!initialLoading && friends.length > 0 && (
           <InfiniteScroll
             css={{
               display: "flex",
               flexDirection: "column",
               gap: "8px",
             }}
-            loadMore={handleLoadMore}
+            loadMore={handleMoreLoad}
             hasMore={hasMore}
             useWindow
             loader={
@@ -98,7 +108,7 @@ export default function Friend() {
         )}
 
         {/* 친구가 없을 때 */}
-        {!loading && friends.length === 0 && (
+        {!initialLoading && friends.length === 0 && (
           <div
             css={{
               display: "flex",
