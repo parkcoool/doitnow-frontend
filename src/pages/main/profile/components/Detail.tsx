@@ -1,6 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import { Paper, Skeleton, Typography, styled } from "@mui/material";
+import { Paper, Typography, styled } from "@mui/material";
 import DateRangeRoundedIcon from "@mui/icons-material/DateRangeRounded";
+
+import DeferredSkeleton from "components/common/DeferredSkeleton";
 
 import type { TypographyProps } from "@mui/material/Typography";
 import type { PublicProfile } from "user";
@@ -41,7 +43,7 @@ export default function Detail({ profile }: DetailProps) {
             <Typography>{profile.createdAt.toLocaleDateString()}</Typography>
           </>
         ) : (
-          <Skeleton width="100%" animation="wave" />
+          <DeferredSkeleton width="100%" animation="wave" />
         )}
       </div>
     </Paper>

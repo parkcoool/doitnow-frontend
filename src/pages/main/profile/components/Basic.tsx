@@ -1,7 +1,8 @@
 /** @jsxImportSource @emotion/react */
-import { Skeleton, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 
 import Avatar from "components/common/Avatar";
+import DeferredSkeleton from "components/common/DeferredSkeleton";
 
 import type { PublicProfile } from "user";
 
@@ -31,7 +32,7 @@ export default function Basic({ profile }: BasicProps) {
           }}
         />
       ) : (
-        <Skeleton variant="circular" width={80} height={80} animation="wave" />
+        <DeferredSkeleton variant="circular" width={80} height={80} animation="wave" />
       )}
 
       {/* 사용자 이름 */}
@@ -43,7 +44,7 @@ export default function Basic({ profile }: BasicProps) {
           marginTop: "18px",
         }}
       >
-        {profile ? profile.username : <Skeleton width={200} animation="wave" />}
+        {profile ? profile.username : <DeferredSkeleton width={200} animation="wave" />}
       </Typography>
 
       {/* 이름 */}
@@ -55,7 +56,7 @@ export default function Basic({ profile }: BasicProps) {
           color: "#818181",
         }}
       >
-        {profile ? `@${profile.name}` : <Skeleton width={200} animation="wave" />}
+        {profile ? `@${profile.name}` : <DeferredSkeleton width={200} animation="wave" />}
       </Typography>
 
       {/* 소개 */}
@@ -68,7 +69,7 @@ export default function Basic({ profile }: BasicProps) {
           color: "#818181",
         }}
       >
-        {profile ? profile.bio ?? "소개가 등록되지 않았어요." : <Skeleton width={200} animation="wave" />}
+        {profile ? profile.bio ?? "소개가 등록되지 않았어요." : <DeferredSkeleton width={200} animation="wave" />}
       </Typography>
     </div>
   );

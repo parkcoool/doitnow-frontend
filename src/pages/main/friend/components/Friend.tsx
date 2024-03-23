@@ -1,11 +1,12 @@
 /** @jsxImportSource @emotion/react */
 import { useNavigate } from "react-router-dom";
 
-import { ButtonBase, Collapse, Paper, Skeleton, Typography } from "@mui/material";
+import { ButtonBase, Collapse, Paper, Typography } from "@mui/material";
 import PersonRemoveRoundedIcon from "@mui/icons-material/PersonRemoveRounded";
 import AccountCircleRoundedIcon from "@mui/icons-material/AccountCircleRounded";
 
 import Avatar from "components/common/Avatar";
+import DeferredSkeleton from "components/common/DeferredSkeleton";
 
 import FriendButton from "./FriendButton";
 
@@ -69,9 +70,9 @@ export default function Friend({ profile, expand = false, onExpand, onCollapse }
             alignItems: "flex-start",
           }}
         >
-          <Typography fontWeight={600}>{profile ? profile.username : <Skeleton width={200} />}</Typography>
+          <Typography fontWeight={600}>{profile ? profile.username : <DeferredSkeleton width={200} />}</Typography>
           <Typography fontWeight={500} fontSize="14px" color="text.secondary">
-            {profile ? `@${profile.name}` : <Skeleton width={300} />}
+            {profile ? `@${profile.name}` : <DeferredSkeleton width={300} />}
           </Typography>
         </span>
       </ButtonBase>
@@ -92,7 +93,7 @@ export default function Friend({ profile, expand = false, onExpand, onCollapse }
             </Typography>
 
             <Typography fontWeight={500} fontSize="14px" color="text.secondary">
-              {profile ? profile.bio : <Skeleton width={300} />}
+              {profile ? profile.bio : <DeferredSkeleton width={300} />}
             </Typography>
           </div>
 

@@ -1,7 +1,9 @@
 /** @jsxImportSource @emotion/react */
 
-import { Avatar as RawAvatar, Skeleton } from "@mui/material";
+import { Avatar as RawAvatar } from "@mui/material";
+
 import stringToColor from "utils/common/stringToColor";
+import DeferredSkeleton from "components/common/DeferredSkeleton";
 
 import type { AvatarProps } from "@mui/material";
 
@@ -17,8 +19,8 @@ export default function Avatar({ profileImage, name, username, ...props }: Profi
       {!profileImage && username.length >= 1 && username[0].toUpperCase()}
     </RawAvatar>
   ) : (
-    <Skeleton variant="circular" animation="wave">
+    <DeferredSkeleton variant="circular" animation="wave">
       <RawAvatar {...props} />
-    </Skeleton>
+    </DeferredSkeleton>
   );
 }

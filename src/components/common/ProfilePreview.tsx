@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
-import { Paper, Skeleton, Typography, IconButton, Tooltip } from "@mui/material";
+import { Paper, Typography, IconButton, Tooltip } from "@mui/material";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 
 import Avatar from "components/common/Avatar";
+import DeferredSkeleton from "components/common/DeferredSkeleton";
 
 import type { SmallProfile } from "user";
 
@@ -51,7 +52,11 @@ export default function ProfilePreview({ profilePreview, onClick }: ProfileProps
               fontWeight: 600,
             }}
           >
-            {profilePreview ? profilePreview.username || "이름 없음" : <Skeleton animation="wave" width="64px" />}
+            {profilePreview ? (
+              profilePreview.username || "이름 없음"
+            ) : (
+              <DeferredSkeleton animation="wave" width="64px" />
+            )}
           </Typography>
 
           <Typography
@@ -61,7 +66,7 @@ export default function ProfilePreview({ profilePreview, onClick }: ProfileProps
               color: "gray",
             }}
           >
-            {profilePreview ? `@${profilePreview.name}` : <Skeleton animation="wave" width="32px" />}
+            {profilePreview ? `@${profilePreview.name}` : <DeferredSkeleton animation="wave" width="32px" />}
           </Typography>
         </div>
         <Typography
@@ -72,7 +77,7 @@ export default function ProfilePreview({ profilePreview, onClick }: ProfileProps
             whiteSpace: "nowrap",
           }}
         >
-          {profilePreview ? profilePreview.bio ?? "소개가 등록되지 않았어요." : <Skeleton animation="wave" />}
+          {profilePreview ? profilePreview.bio ?? "소개가 등록되지 않았어요." : <DeferredSkeleton animation="wave" />}
         </Typography>
       </div>
 

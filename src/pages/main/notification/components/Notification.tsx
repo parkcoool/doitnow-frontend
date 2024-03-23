@@ -10,12 +10,15 @@ import PersonAddRoundedIcon from "@mui/icons-material/PersonAddRounded";
 import HowToRegRoundedIcon from "@mui/icons-material/HowToRegRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 
-import { Skeleton } from "@mui/material";
 import timeForToday from "utils/common/timeForToday";
-import readNotification from "apis/readNotification";
-import useSessionStore from "contexts/useSessionStore";
 
+import readNotification from "apis/readNotification";
+
+import useSessionStore from "contexts/useSessionStore";
 import useNotificationStore from "contexts/useNotificationStore";
+
+import DeferredSkeleton from "components/common/DeferredSkeleton";
+
 import type { Notification } from "notification";
 
 interface NotificationProps {
@@ -121,7 +124,7 @@ export default function Notification({ notification, setNotifications }: Notific
             color={notification?.read ? "text.secondary" : "primary"}
           >
             {notification === undefined ? (
-              <Skeleton width="100px" />
+              <DeferredSkeleton width="100px" />
             ) : (
               <>
                 <TypeIcon type={notification.type} />
@@ -139,7 +142,7 @@ export default function Notification({ notification, setNotifications }: Notific
             fontSize="14px"
             color="text.secondary"
           >
-            {notification === undefined ? <Skeleton width="50px" /> : timeForToday(notification.createdAt)}
+            {notification === undefined ? <DeferredSkeleton width="50px" /> : timeForToday(notification.createdAt)}
           </Typography>
         </div>
 
@@ -152,7 +155,7 @@ export default function Notification({ notification, setNotifications }: Notific
           }}
           color={notification?.read ? "text.secondary" : "text.primary"}
         >
-          {notification === undefined ? <Skeleton /> : notification.text}
+          {notification === undefined ? <DeferredSkeleton /> : notification.text}
         </Typography>
       </div>
       {notification !== undefined && <ArrowForwardIosRoundedIcon fontSize="small" />}

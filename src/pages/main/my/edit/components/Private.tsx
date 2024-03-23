@@ -1,8 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
-import { Button, Dialog, Skeleton, TextField, Typography } from "@mui/material";
+import { Button, Dialog, TextField, Typography } from "@mui/material";
 import { ShieldRounded as ShieldRoundedIcon, CheckCircleRounded as CheckCircleRoundedIcon } from "@mui/icons-material";
+
+import DeferredSkeleton from "components/common/DeferredSkeleton";
 
 import EmailVerify from "./EmailVerify";
 import type { PrivateData } from "..";
@@ -74,9 +76,9 @@ export default function Private({
                   required
                 />
               ) : (
-                <Skeleton>
+                <DeferredSkeleton>
                   <TextField fullWidth required />
-                </Skeleton>
+                </DeferredSkeleton>
               )}
             </span>
 

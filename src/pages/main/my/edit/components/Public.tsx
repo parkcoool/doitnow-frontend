@@ -1,9 +1,10 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
-import { InputAdornment, Skeleton, TextField } from "@mui/material";
+import { InputAdornment, TextField } from "@mui/material";
 
 import ProfilePreview from "components/common/ProfilePreview";
+import DeferredSkeleton from "components/common/DeferredSkeleton";
 
 import type { SmallProfile } from "user";
 import type { PublicData } from "..";
@@ -56,9 +57,9 @@ export default function Public({ publicData, publicDataDispatch, loading }: Publ
           required
         />
       ) : (
-        <Skeleton>
+        <DeferredSkeleton>
           <TextField fullWidth required />
-        </Skeleton>
+        </DeferredSkeleton>
       )}
 
       {publicData ? (
@@ -75,9 +76,9 @@ export default function Public({ publicData, publicDataDispatch, loading }: Publ
           required
         />
       ) : (
-        <Skeleton>
+        <DeferredSkeleton>
           <TextField fullWidth required />
-        </Skeleton>
+        </DeferredSkeleton>
       )}
 
       {publicData ? (
@@ -92,9 +93,9 @@ export default function Public({ publicData, publicDataDispatch, loading }: Publ
           rows={3}
         />
       ) : (
-        <Skeleton>
+        <DeferredSkeleton>
           <TextField fullWidth multiline minRows={3} />
-        </Skeleton>
+        </DeferredSkeleton>
       )}
     </div>
   );
