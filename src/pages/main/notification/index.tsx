@@ -1,12 +1,14 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
+import InfiniteScroll from "react-infinite-scroller";
 
 import Button from "@mui/material/Button";
+import Typography from "@mui/material/Typography";
 import ClearAllRoundedIcon from "@mui/icons-material/ClearAllRounded";
 import DeleteSweepRoundedIcon from "@mui/icons-material/DeleteSweepRounded";
 
-import { Typography } from "@mui/material";
+import { CircularProgress } from "@mui/material";
 import getNotifications from "apis/getNotifications";
 import readNotification from "apis/readNotification";
 import deleteNotification from "apis/deleteNotification";
@@ -23,27 +25,32 @@ export default function Notification() {
   const session = useSessionStore();
 
   const [loading, setLoading] = React.useState(false);
-  const [notifications, setNotifications] = React.useState<Notification[]>();
+  const [loadingMore, setLoadingMore] = React.useState(false);
+  const [hasMore, setHasMore] = React.useState(true);
+  const [notifications, setNotifications] = React.useState<Notification[]>([]);
 
   React.useEffect(() => {
-    (async function () {
-      const accessToken = session.accessToken?.token;
-      if (accessToken === undefined) return;
-
-      setLoading(true);
-      const res = await getNotifications({}, accessToken);
-
-      setLoading(false);
-      if (res.status !== 200) return;
-
-      setNotifications(res.data.notifications);
-    })();
+    handleLoadMore();
   }, [session]);
+
+  // 알림 불러오기
+  async function handleLoadMore() {
+    const accessToken = session.accessToken?.token;
+    if (accessToken === undefined) return;
+    if (loading || loadingMore) return;
+
+    setLoadingMore(true);
+    const res = await getNotifications({ offsetDate: notifications?.at(-1)?.createdAt }, accessToken);
+
+    setLoadingMore(false);
+    if (res.status !== 200) return;
+
+    setHasMore(res.data.hasMore);
+    setNotifications((prev) => [...prev, ...res.data.notifications]);
+  }
 
   // 모두 삭제
   async function handleDeleteAll() {
-    if (notifications === undefined) return;
-
     const { accessToken } = session;
     if (accessToken === null) return;
 
@@ -100,7 +107,7 @@ export default function Notification() {
       </div>
       <div>
         {/* 로드 중일 때 */}
-        {notifications === undefined && (
+        {(loading || (loadingMore && notifications.length === 0)) && (
           <>
             <NotificationComponent />
             <NotificationComponent />
@@ -111,18 +118,37 @@ export default function Notification() {
         )}
 
         {/* 알림이 있을 때 */}
-        {notifications !== undefined &&
-          notifications.length > 0 &&
-          notifications?.map((notification) => (
-            <NotificationComponent
-              key={notification.id}
-              notification={notification}
-              setNotifications={setNotifications}
-            />
-          ))}
+        {!loading && notifications.length > 0 && (
+          <InfiniteScroll
+            loadMore={handleLoadMore}
+            hasMore={hasMore}
+            useWindow
+            loader={
+              <div
+                key={0}
+                css={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  padding: "16px 0",
+                }}
+              >
+                <CircularProgress />
+              </div>
+            }
+          >
+            {notifications.map((notification) => (
+              <NotificationComponent
+                key={notification.id}
+                notification={notification}
+                setNotifications={setNotifications}
+              />
+            ))}
+          </InfiniteScroll>
+        )}
 
         {/* 알림이 없을 때 */}
-        {notifications !== undefined && notifications.length === 0 && (
+        {!loading && notifications.length === 0 && (
           <div
             css={{
               display: "flex",

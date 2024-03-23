@@ -20,7 +20,7 @@ import type { Notification } from "notification";
 
 interface NotificationProps {
   notification?: Notification;
-  setNotifications?: React.Dispatch<React.SetStateAction<Notification[] | undefined>>;
+  setNotifications?: React.Dispatch<React.SetStateAction<Notification[]>>;
 }
 
 function getTypeString(type: string) {

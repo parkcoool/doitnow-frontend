@@ -15,6 +15,7 @@ interface ResBody extends APIResponse {
     read: boolean;
     createdAt: string;
   }[];
+  hasMore: boolean;
 }
 
 export default async function getNotifications(query: ReqQuery, accessToken: string) {
