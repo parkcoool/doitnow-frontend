@@ -19,6 +19,7 @@ declare module "user" {
     name: string;
     bio: string | null;
     createdAt: Date;
+    isFriend: boolean;
   }
 
   /**
