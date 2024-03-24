@@ -10,7 +10,9 @@ type ResBody = APIResponse;
 
 export default async function deleteNotification(query: ReqQuery, accessToken: string) {
   const response = await axios.delete<ResBody>(`${process.env.REACT_APP_API_PATH}/notification`, {
-    params: query,
+    params: {
+      id: JSON.stringify(query.id),
+    },
     headers: {
       Authorization: `Bearer ${accessToken}`,
     },
