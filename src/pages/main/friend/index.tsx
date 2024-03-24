@@ -2,12 +2,13 @@
 
 import React from "react";
 
-import { ToggleButtonGroup, toggleButtonGroupClasses } from "@mui/material";
+import { ToggleButtonGroup, Typography, toggleButtonGroupClasses } from "@mui/material";
 import getFriends from "apis/getFriends";
 import useSessionStore from "contexts/useSessionStore";
 
 import FriendComponent from "./components/FriendToggleButton";
 
+import SeachBar from "./components/SearchBar";
 import type { SmallProfile } from "user";
 
 export default function Friend() {
@@ -64,40 +65,55 @@ export default function Friend() {
 
   return (
     <>
-      <ToggleButtonGroup
-        value={selectedFriend?.id}
-        onChange={handleSelectFriend}
-        exclusive
+      {/* 검색 바 */}
+      <div
         css={{
-          display: "flex",
-          flexDirection: "row",
-          padding: "8px",
-          overflowX: "auto",
-          gap: "4px",
-          [`& .${toggleButtonGroupClasses.grouped}`]: {
-            border: 0,
-            borderRadius: "4px",
-            [`&.${toggleButtonGroupClasses.disabled}`]: {
-              border: 0,
-            },
-          },
+          position: "sticky",
+          top: 0,
+          zIndex: 1,
+          width: "100%",
         }}
       >
-        {/* 로드 중일 때 */}
-        {initialLoading && (
-          <>
-            <FriendComponent value={0} />
-            <FriendComponent value={0} />
-            <FriendComponent value={0} />
-          </>
-        )}
+        <SeachBar />
+      </div>
 
-        {/* TODO: infinite scroll */}
-        {/* 친구가 있을 때 */}
-        {!initialLoading &&
-          friends.length > 0 &&
-          friends.map((friend) => <FriendComponent value={friend.id} key={friend.id} profile={friend} />)}
-      </ToggleButtonGroup>
+      {/* 친구 목록 */}
+      <div>
+        <ToggleButtonGroup
+          value={selectedFriend?.id}
+          onChange={handleSelectFriend}
+          exclusive
+          css={{
+            display: "flex",
+            flexDirection: "row",
+            overflowX: "auto",
+            gap: "4px",
+            padding: "0 8px",
+            [`& .${toggleButtonGroupClasses.grouped}`]: {
+              border: 0,
+              borderRadius: "4px",
+              [`&.${toggleButtonGroupClasses.disabled}`]: {
+                border: 0,
+              },
+            },
+          }}
+        >
+          {/* 로드 중일 때 */}
+          {initialLoading && (
+            <>
+              <FriendComponent value={0} />
+              <FriendComponent value={0} />
+              <FriendComponent value={0} />
+            </>
+          )}
+
+          {/* TODO: infinite scroll */}
+          {/* 친구가 있을 때 */}
+          {!initialLoading &&
+            friends.length > 0 &&
+            friends.map((friend) => <FriendComponent value={friend.id} key={friend.id} profile={friend} />)}
+        </ToggleButtonGroup>
+      </div>
     </>
   );
 }
