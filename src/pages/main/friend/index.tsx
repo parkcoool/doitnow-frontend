@@ -2,6 +2,7 @@
 
 import React from "react";
 import Narrow from "components/layout/Narrow";
+import DeferredView from "components/common/DeferredView";
 import SeachBar from "./components/SearchBar";
 import FriendList from "./components/FriendList";
 
@@ -16,8 +17,9 @@ export default function Friend() {
   }
 
   return (
-    <>
+    <DeferredView loaded={true}>
       {/* 검색 바 */}
+
       <div
         css={{
           position: "sticky",
@@ -44,6 +46,6 @@ export default function Friend() {
           </div>
         </Narrow>
       )}
-    </>
+    </DeferredView>
   );
 }

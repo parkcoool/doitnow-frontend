@@ -10,6 +10,7 @@ import Narrow from "components/layout/Narrow";
 import ProfilePreview from "components/common/ProfilePreview";
 import useSessionStore from "contexts/useSessionStore";
 
+import DeferredView from "components/common/DeferredView";
 import Menu from "./components/Menu";
 import LogoutDialog from "./components/LogoutDialog";
 
@@ -67,18 +68,20 @@ export default function My() {
   return (
     <>
       <Narrow>
-        {/* ===== 프로필 ===== */}
-        <div css={{ marginTop: "32px" }}>
-          <ProfilePreview
-            profilePreview={myProfilePreview}
-            onClick={() => session.user && navigate(`/profile/${session.user.id}`)}
-          />
-        </div>
+        <DeferredView loaded={myProfilePreview !== undefined}>
+          {/* ===== 프로필 ===== */}
+          <div css={{ marginTop: "32px" }}>
+            <ProfilePreview
+              profilePreview={myProfilePreview}
+              onClick={() => session.user && navigate(`/profile/${session.user.id}`)}
+            />
+          </div>
 
-        {/* ===== 메뉴 ===== */}
-        <div css={{ marginTop: "32px" }}>
-          <Menu onLogout={handleLogoutDialogOpen} onProfileEdit={handleProfileEdit} />
-        </div>
+          {/* ===== 메뉴 ===== */}
+          <div css={{ marginTop: "32px" }}>
+            <Menu onLogout={handleLogoutDialogOpen} onProfileEdit={handleProfileEdit} />
+          </div>
+        </DeferredView>
       </Narrow>
 
       {/* 로그아웃 다이얼로그 */}

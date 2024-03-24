@@ -12,7 +12,10 @@ import deleteNotification from "apis/deleteNotification";
 import useSessionStore from "contexts/useSessionStore";
 import useNotificationStore from "contexts/useNotificationStore";
 
+import DeferredView from "components/common/DeferredView";
+
 import NotificationList from "./components/NotificationList";
+
 import type { Notification } from "notification";
 
 export default function Notification() {
@@ -60,7 +63,7 @@ export default function Notification() {
   }
 
   return (
-    <>
+    <DeferredView loaded={true}>
       <div
         css={{
           display: "flex",
@@ -88,6 +91,6 @@ export default function Notification() {
         checkedNotifications={checkedNotifications}
         setCheckedNotifications={setCheckedNotifications}
       />
-    </>
+    </DeferredView>
   );
 }

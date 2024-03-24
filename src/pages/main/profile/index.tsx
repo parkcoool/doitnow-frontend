@@ -8,6 +8,7 @@ import getPublicProfile from "apis/getPublicProfile";
 import Narrow from "components/layout/Narrow";
 import Layout from "components/layout/Layout";
 import DeferredSkeleton from "components/common/DeferredSkeleton";
+import DeferredView from "components/common/DeferredView";
 
 import useSessionStore from "contexts/useSessionStore";
 
@@ -36,7 +37,9 @@ export default function Profile() {
   return (
     <Layout headerContent={profile?.username ?? <DeferredSkeleton width={100} />} footerDisabled>
       <Narrow>
-        <ProfileView profile={profile} />
+        <DeferredView loaded={profile !== undefined}>
+          <ProfileView profile={profile} />
+        </DeferredView>
       </Narrow>
     </Layout>
   );

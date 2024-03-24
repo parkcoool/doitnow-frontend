@@ -16,6 +16,7 @@ import useSessionStore from "contexts/useSessionStore";
 
 import getReducer from "utils/common/getReducer";
 
+import DeferredView from "components/common/DeferredView";
 import Public from "./components/Public";
 import Private from "./components/Private";
 import EmailVerify from "./components/EmailVerify";
@@ -169,33 +170,35 @@ export default function Edit() {
         </div>
 
         <Narrow>
-          <div
-            css={{
-              marginTop: "24px",
-              paddingBottom: profileChanged ? "80px" : 0,
-            }}
-          >
-            {tab === EditTab.Public && (
-              <Public publicData={publicData} publicDataDispatch={publicDataDispatch} loading={loading} />
-            )}
-            {tab === EditTab.Private && emailToken !== undefined && (
-              <Private
-                initialPrivateData={initialPrivateData}
-                privateData={privateData}
-                privateDataDispatch={privateDataDispatch}
-                loading={loading}
-                setLoading={setLoading}
-              />
-            )}
-            {tab === EditTab.Private && emailToken === undefined && (
-              <EmailVerify
-                email={initialPrivateData?.email}
-                setEmailToken={setEmailToken}
-                loading={loading}
-                setLoading={setLoading}
-              />
-            )}
-          </div>
+          <DeferredView loaded={publicData !== undefined && privateData !== undefined}>
+            <div
+              css={{
+                marginTop: "24px",
+                paddingBottom: profileChanged ? "80px" : 0,
+              }}
+            >
+              {tab === EditTab.Public && (
+                <Public publicData={publicData} publicDataDispatch={publicDataDispatch} loading={loading} />
+              )}
+              {tab === EditTab.Private && emailToken !== undefined && (
+                <Private
+                  initialPrivateData={initialPrivateData}
+                  privateData={privateData}
+                  privateDataDispatch={privateDataDispatch}
+                  loading={loading}
+                  setLoading={setLoading}
+                />
+              )}
+              {tab === EditTab.Private && emailToken === undefined && (
+                <EmailVerify
+                  email={initialPrivateData?.email}
+                  setEmailToken={setEmailToken}
+                  loading={loading}
+                  setLoading={setLoading}
+                />
+              )}
+            </div>
+          </DeferredView>
         </Narrow>
       </Layout>
 
