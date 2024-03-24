@@ -63,14 +63,18 @@ export default function Main() {
 
   // 알림 개수 업데이트
   React.useEffect(() => {
-    const updateNotificationCount = async () => {
+    async function updateNotificationCount() {
       const { accessToken } = session;
       if (accessToken === null) return;
 
-      const notificationRes = await getNotificationCount(accessToken.token);
-      if (notificationRes.status !== 200) return;
-      notification.setCount(notificationRes.data.count);
-    };
+      try {
+        const notificationRes = await getNotificationCount(accessToken.token);
+        if (notificationRes.status !== 200) return;
+        notification.setCount(notificationRes.data.count);
+      } catch (error) {
+        return;
+      }
+    }
 
     const intervalId = setInterval(updateNotificationCount, 1000 * 10);
     updateNotificationCount();
