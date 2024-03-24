@@ -1,9 +1,11 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
+import Narrow from "components/layout/Narrow";
 import SeachBar from "./components/SearchBar";
 import FriendList from "./components/FriendList";
 
+import Feed from "./components/Feed";
 import type { SmallProfile } from "user";
 
 export default function Friend() {
@@ -29,6 +31,19 @@ export default function Friend() {
 
       {/* 친구 목록 */}
       <FriendList selectedFriend={selectedFriend} onChange={handleSelectFriend} />
+
+      {/* 피드 */}
+      {selectedFriend !== null && (
+        <Narrow>
+          <div
+            css={{
+              marginTop: "8px",
+            }}
+          >
+            <Feed selectedFriend={selectedFriend} />
+          </div>
+        </Narrow>
+      )}
     </>
   );
 }
