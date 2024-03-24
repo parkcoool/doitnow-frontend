@@ -4,7 +4,9 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 
 import Narrow from "components/layout/Narrow";
 
-export default function SeachBar() {
+import type { TextFieldProps } from "@mui/material";
+
+export default function SeachBar(props: TextFieldProps) {
   return (
     <div
       css={{
@@ -16,6 +18,7 @@ export default function SeachBar() {
     >
       <Narrow>
         <TextField
+          {...props}
           size="small"
           placeholder="사용자 검색"
           fullWidth
