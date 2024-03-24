@@ -19,7 +19,13 @@ export default function DeferredView({ loaded, timeout = 500, children, ...props
   }, []);
 
   return (
-    <Fade in={loaded || timeover}>
+    <Fade
+      in={loaded || timeover}
+      timeout={{
+        enter: 100,
+        exit: 100,
+      }}
+    >
       <div {...props}> {children}</div>
     </Fade>
   );

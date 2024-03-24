@@ -2,9 +2,10 @@
 
 import React from "react";
 
-import Button from "@mui/material/Button";
-import ClearAllRoundedIcon from "@mui/icons-material/ClearAllRounded";
-import DeleteSweepRoundedIcon from "@mui/icons-material/DeleteSweepRounded";
+import DraftsRoundedIcon from "@mui/icons-material/DraftsRounded";
+import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Fade, IconButton, Tooltip, Typography } from "@mui/material";
 
 import readNotification from "apis/readNotification";
 import deleteNotification from "apis/deleteNotification";
@@ -66,23 +67,57 @@ export default function Notification() {
     <DeferredView loaded={true}>
       <div
         css={{
+          height: "64px",
           display: "flex",
-          justifyContent: "flex-end",
-          padding: "8px",
+          alignItems: "center",
+          justifyContent: "space-between",
+          padding: "0 16px",
           position: "sticky",
           top: 0,
           backgroundColor: "white",
+          boxShadow: "0 1px 4px rgba(0, 0, 0, 0.1)",
           zIndex: 1,
-          gap: "8px",
         }}
       >
-        <Button variant="outlined" onClick={handleDeleteAll} startIcon={<DeleteSweepRoundedIcon />} disabled={loading}>
-          모두 삭제
-        </Button>
+        <span>
+          {checkedNotifications.length > 0 && (
+            <span
+              css={{
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
+              <span
+                css={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
+                <Tooltip title="읽기">
+                  <IconButton>
+                    <DraftsRoundedIcon />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="삭제">
+                  <IconButton>
+                    <DeleteRoundedIcon />
+                  </IconButton>
+                </Tooltip>
+              </span>
 
-        <Button variant="outlined" onClick={handleReadAll} startIcon={<ClearAllRoundedIcon />} disabled={loading}>
-          모두 읽기
-        </Button>
+              <span>
+                <Typography fontWeight={500} fontSize="16px" color="text.secondary">
+                  {checkedNotifications.length.toLocaleString()}개 선택됨
+                </Typography>
+              </span>
+            </span>
+          )}
+        </span>
+
+        <IconButton>
+          <MoreVertIcon />
+        </IconButton>
       </div>
 
       <NotificationList
