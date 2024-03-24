@@ -2,7 +2,6 @@
 
 import { useNavigate } from "react-router-dom";
 
-import ButtonBase from "@mui/material/ButtonBase";
 import ArrowForwardIosRoundedIcon from "@mui/icons-material/ArrowForwardIosRounded";
 import Typography from "@mui/material/Typography";
 
@@ -10,6 +9,7 @@ import PersonAddRoundedIcon from "@mui/icons-material/PersonAddRounded";
 import HowToRegRoundedIcon from "@mui/icons-material/HowToRegRounded";
 import NotificationsRoundedIcon from "@mui/icons-material/NotificationsRounded";
 
+import { Checkbox, IconButton } from "@mui/material";
 import timeForToday from "utils/common/timeForToday";
 
 import readNotification from "apis/readNotification";
@@ -24,6 +24,8 @@ import type { Notification } from "notification";
 interface NotificationProps {
   notification?: Notification;
   setNotifications?: React.Dispatch<React.SetStateAction<Notification[]>>;
+  checked?: boolean;
+  onChange?: (event: React.ChangeEvent<HTMLInputElement>, checked: boolean) => void;
 }
 
 function getTypeString(type: string) {
@@ -48,7 +50,7 @@ function TypeIcon({ type }: { type: string }) {
   }
 }
 
-export default function Notification({ notification, setNotifications }: NotificationProps) {
+export default function Notification({ notification, setNotifications, checked, onChange }: NotificationProps) {
   const session = useSessionStore();
   const setNotificationCount = useNotificationStore((state) => state.setCount);
   const navigate = useNavigate();
@@ -79,7 +81,7 @@ export default function Notification({ notification, setNotifications }: Notific
     if (!notification.read) setNotificationCount((prev) => prev - 1);
   }
 
-  function handleClick() {
+  function handleLinkClick() {
     if (notification === undefined) return;
 
     readThisNotification();
@@ -87,81 +89,114 @@ export default function Notification({ notification, setNotifications }: Notific
   }
 
   return (
-    <ButtonBase
+    <div
       css={{
         display: "flex",
+        flexDirection: "row",
+        alignItems: "center",
         width: "100%",
         padding: "16px",
       }}
-      disabled={notification === undefined}
-      onClick={handleClick}
     >
       <div
         css={{
-          width: "100%",
           display: "flex",
-          flexDirection: "column",
-          gap: "4px",
+          flexDirection: "row",
+          alignItems: "center",
+          gap: "16px",
+          width: "100%",
         }}
       >
-        {/* 상단 */}
+        {notification !== undefined && (
+          <Checkbox
+            checked={checked}
+            onChange={onChange}
+            css={{
+              width: "40px",
+              height: "40px",
+            }}
+          />
+        )}
+
         <div
           css={{
+            flexGrow: "1",
             display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            gap: "16px",
+            flexDirection: "column",
+            gap: "4px",
           }}
         >
-          <Typography
+          {/* 상단 */}
+          <div
             css={{
               display: "flex",
+              flexDirection: "row",
               alignItems: "center",
-              fontWeight: 600,
-              gap: "8px",
+              gap: "16px",
             }}
-            component={"div"}
-            fontSize="16px"
-            color={notification?.read ? "text.secondary" : "primary"}
           >
-            {notification === undefined ? (
-              <DeferredSkeleton width="100px" />
-            ) : (
-              <>
-                <TypeIcon type={notification.type} />
-                {getTypeString(notification.type)}
-              </>
-            )}
-          </Typography>
+            <Typography
+              css={{
+                display: "flex",
+                alignItems: "center",
+                fontWeight: 600,
+                gap: "8px",
+              }}
+              component={"div"}
+              fontSize="16px"
+              color={notification?.read ? "text.secondary" : "primary"}
+            >
+              {notification === undefined ? (
+                <DeferredSkeleton width="100px" />
+              ) : (
+                <>
+                  <TypeIcon type={notification.type} />
+                  {getTypeString(notification.type)}
+                </>
+              )}
+            </Typography>
 
+            <Typography
+              css={{
+                display: "flex",
+                alignItems: "center",
+                fontWeight: 500,
+              }}
+              component={"div"}
+              fontSize="14px"
+              color="text.secondary"
+            >
+              {notification === undefined ? <DeferredSkeleton width="50px" /> : timeForToday(notification.createdAt)}
+            </Typography>
+          </div>
+
+          {/* 내용 */}
           <Typography
             css={{
-              display: "flex",
-              alignItems: "center",
+              fontSize: "14px",
               fontWeight: 500,
+              textAlign: "left",
             }}
             component={"div"}
-            fontSize="14px"
-            color="text.secondary"
+            color={notification?.read ? "text.secondary" : "text.primary"}
           >
-            {notification === undefined ? <DeferredSkeleton width="50px" /> : timeForToday(notification.createdAt)}
+            {notification === undefined ? <DeferredSkeleton /> : notification.text}
           </Typography>
         </div>
-
-        {/* 내용 */}
-        <Typography
-          css={{
-            fontSize: "14px",
-            fontWeight: 500,
-            textAlign: "left",
-          }}
-          component={"div"}
-          color={notification?.read ? "text.secondary" : "text.primary"}
-        >
-          {notification === undefined ? <DeferredSkeleton /> : notification.text}
-        </Typography>
       </div>
-      {notification !== undefined && <ArrowForwardIosRoundedIcon fontSize="small" />}
-    </ButtonBase>
+
+      {notification !== undefined && (
+        <IconButton
+          disabled={notification === undefined}
+          onClick={handleLinkClick}
+          css={{
+            height: "40px",
+            width: "40px",
+          }}
+        >
+          <ArrowForwardIosRoundedIcon fontSize="small" />
+        </IconButton>
+      )}
+    </div>
   );
 }

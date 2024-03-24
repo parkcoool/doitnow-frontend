@@ -1,63 +1,27 @@
 /** @jsxImportSource @emotion/react */
 
 import React from "react";
-import InfiniteScroll from "react-infinite-scroller";
 
 import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
 import ClearAllRoundedIcon from "@mui/icons-material/ClearAllRounded";
 import DeleteSweepRoundedIcon from "@mui/icons-material/DeleteSweepRounded";
 
-import { CircularProgress } from "@mui/material";
-import getNotifications from "apis/getNotifications";
 import readNotification from "apis/readNotification";
 import deleteNotification from "apis/deleteNotification";
 
 import useSessionStore from "contexts/useSessionStore";
 import useNotificationStore from "contexts/useNotificationStore";
 
-import NotificationComponent from "./components/Notification";
-
+import NotificationList from "./components/NotificationList";
 import type { Notification } from "notification";
 
 export default function Notification() {
   const setNotificationCount = useNotificationStore((state) => state.setCount);
   const session = useSessionStore();
 
-  const [initialLoading, setInitialLoading] = React.useState(true);
   const [loading, setLoading] = React.useState(false);
-  const [loadingMore, setLoadingMore] = React.useState(false);
-  const [hasMore, setHasMore] = React.useState(true);
   const [notifications, setNotifications] = React.useState<Notification[]>([]);
-
-  React.useEffect(() => {
-    handleInitialLoad();
-  }, [session]);
-
-  // 알림 불러오기
-  async function loadNotifications() {
-    const accessToken = session.accessToken?.token;
-    if (accessToken === undefined) return;
-
-    const res = await getNotifications({ offsetDate: notifications?.at(-1)?.createdAt }, accessToken);
-    if (res.status !== 200) return;
-
-    setHasMore(res.data.hasMore);
-    setNotifications((prev) => [...prev, ...res.data.notifications]);
-  }
-
-  async function handleLoadMore() {
-    if (loadingMore || !hasMore) return;
-    setLoadingMore(true);
-    await loadNotifications();
-    setLoadingMore(false);
-  }
-
-  async function handleInitialLoad() {
-    setInitialLoading(true);
-    await loadNotifications();
-    setInitialLoading(false);
-  }
+  const [checkedNotifications, setCheckedNotifications] = React.useState<number[]>([]);
 
   // 모두 삭제
   async function handleDeleteAll() {
@@ -117,62 +81,13 @@ export default function Notification() {
           모두 읽기
         </Button>
       </div>
-      <div>
-        {/* 로드 중일 때 */}
-        {initialLoading && (
-          <>
-            <NotificationComponent />
-            <NotificationComponent />
-            <NotificationComponent />
-            <NotificationComponent />
-            <NotificationComponent />
-          </>
-        )}
 
-        {/* 알림이 있을 때 */}
-        {!initialLoading && notifications.length > 0 && (
-          <InfiniteScroll
-            loadMore={loadNotifications}
-            hasMore={hasMore}
-            useWindow
-            loader={
-              <div
-                key={0}
-                css={{
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  padding: "16px 0",
-                }}
-              >
-                <CircularProgress />
-              </div>
-            }
-          >
-            {notifications.map((notification) => (
-              <NotificationComponent
-                key={notification.id}
-                notification={notification}
-                setNotifications={setNotifications}
-              />
-            ))}
-          </InfiniteScroll>
-        )}
-
-        {/* 알림이 없을 때 */}
-        {!initialLoading && notifications.length === 0 && (
-          <div
-            css={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              marginTop: "300px",
-            }}
-          >
-            <Typography>알림이 없어요.</Typography>
-          </div>
-        )}
-      </div>
+      <NotificationList
+        notifications={notifications}
+        setNotifications={setNotifications}
+        checkedNotifications={checkedNotifications}
+        setCheckedNotifications={setCheckedNotifications}
+      />
     </>
   );
 }
