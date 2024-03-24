@@ -3,7 +3,7 @@ import axios from "axios";
 import type { APIResponse } from "api";
 
 interface ReqQuery {
-  id?: number;
+  id?: number[];
 }
 
 type ResBody = APIResponse;

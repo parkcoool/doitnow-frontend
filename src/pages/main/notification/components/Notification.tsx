@@ -60,7 +60,7 @@ export default function Notification({ notification, setNotifications }: Notific
     const { accessToken } = session;
     if (accessToken === null) return;
 
-    const res = await readNotification({ id: notification.id }, accessToken.token);
+    const res = await readNotification({ id: [notification.id] }, accessToken.token);
     if (res.status !== 200) return;
 
     // notifications 상태 읽음 처리
