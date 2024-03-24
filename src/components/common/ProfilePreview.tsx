@@ -47,6 +47,7 @@ export default function ProfilePreview({ profilePreview, onClick }: ProfileProps
           }}
         >
           <Typography
+            component={"div"}
             css={{
               fontSize: "18px",
               fontWeight: 600,
@@ -60,6 +61,7 @@ export default function ProfilePreview({ profilePreview, onClick }: ProfileProps
           </Typography>
 
           <Typography
+            component={"div"}
             css={{
               fontSize: "12px",
               fontWeight: 500,
@@ -70,6 +72,7 @@ export default function ProfilePreview({ profilePreview, onClick }: ProfileProps
           </Typography>
         </div>
         <Typography
+          component={"div"}
           css={{
             fontSize: "14px",
             overflow: "hidden",

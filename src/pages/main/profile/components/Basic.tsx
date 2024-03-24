@@ -38,6 +38,7 @@ export default function Basic({ profile }: BasicProps) {
       {/* 사용자 이름 */}
       <Typography
         variant="h1"
+        component={"div"}
         css={{
           fontSize: "28px",
           fontWeight: 700,
@@ -50,6 +51,7 @@ export default function Basic({ profile }: BasicProps) {
       {/* 이름 */}
       <Typography
         variant="h2"
+        component={"div"}
         css={{
           fontSize: "14px",
           fontWeight: 500,
@@ -62,6 +64,7 @@ export default function Basic({ profile }: BasicProps) {
       {/* 소개 */}
       <Typography
         variant="h2"
+        component={"div"}
         css={{
           fontSize: "16px",
           marginTop: "24px",

@@ -57,6 +57,7 @@ export default function FriendToggleButton({ profile, ...props }: FriendProps) {
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",
           }}
+          component={"div"}
           fontWeight={600}
           fontSize="12px"
         >

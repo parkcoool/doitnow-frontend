@@ -120,6 +120,7 @@ export default function Notification({ notification, setNotifications }: Notific
               fontWeight: 600,
               gap: "8px",
             }}
+            component={"div"}
             fontSize="16px"
             color={notification?.read ? "text.secondary" : "primary"}
           >
@@ -139,6 +140,7 @@ export default function Notification({ notification, setNotifications }: Notific
               alignItems: "center",
               fontWeight: 500,
             }}
+            component={"div"}
             fontSize="14px"
             color="text.secondary"
           >
@@ -153,6 +155,7 @@ export default function Notification({ notification, setNotifications }: Notific
             fontWeight: 500,
             textAlign: "left",
           }}
+          component={"div"}
           color={notification?.read ? "text.secondary" : "text.primary"}
         >
           {notification === undefined ? <DeferredSkeleton /> : notification.text}

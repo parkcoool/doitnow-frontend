@@ -54,7 +54,7 @@ export default function FriendList({ selectedFriend, onChange }: FriendToggleBut
 
   function handleChange(event: React.MouseEvent<HTMLElement, MouseEvent>, id: number | null) {
     if (id === null) return onChange(event, null);
-    
+
     const friend = friends.find((friend) => friend.id === id);
     if (friend === undefined) onChange(event, null);
     else onChange(event, friend);
@@ -82,13 +82,7 @@ export default function FriendList({ selectedFriend, onChange }: FriendToggleBut
         }}
       >
         {/* 로드 중일 때 */}
-        {initialLoading && (
-          <>
-            <FriendToggleButton value={0} />
-            <FriendToggleButton value={0} />
-            <FriendToggleButton value={0} />
-          </>
-        )}
+        {initialLoading && [1, 2, 3].map((value) => <FriendToggleButton key={value} value={value} />)}
 
         {/* TODO: infinite scroll */}
         {/* 친구가 있을 때 */}
