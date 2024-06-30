@@ -66,9 +66,20 @@ export default function Login() {
   // 로딩 여부 상태를 관리한다.
   const [loading, setLoading] = React.useState(false);
 
-  // 값 수정이 감지되면 에러 메시지를 초기화한다.
+  // 계정 생성 시 전달할 정보 상태를 관리한다.
+  const [initialSignupData, setInitialSignupData] = React.useState<{email?: string; username?: string;}>({});
+
+  // 값 수정이 감지되면 에러 메시지를 초기화하고 initialSignupData를 갱신한다.
   React.useEffect(() => {
     receivedDataDispatch({ errorMessage: undefined });
+    if (submitData.identifier.includes("@"))
+      setInitialSignupData({
+        email: submitData.identifier,
+      });
+    else
+      setInitialSignupData({
+        username: submitData.identifier,
+      });
   }, [submitData]);
 
   // 다음 단계로 이동하는 함수
@@ -182,9 +193,7 @@ export default function Login() {
             onClick: () =>
               navigate("/auth/signup", {
                 state: {
-                  sourceLocation: {
-                    pathname: location.pathname,
-                  },
+                  initial: initialSignupData,
                 },
               }),
           }}

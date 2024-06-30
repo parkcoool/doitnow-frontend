@@ -26,6 +26,7 @@ import Username from "./components/Username";
 
 interface SignupLocationState {
   step: SignupStep;
+  initial?: {email?: string; username?: string;};
 }
 
 export interface SubmitData {
@@ -67,13 +68,14 @@ export default function Signup() {
 
   // location.state를 가져온다.
   const step = (location.state as SignupLocationState)?.step ?? SignupStep.Username;
+  const initial = (location.state as SignupLocationState)?.initial;
 
   // submitData를 관리하는 reducer를 생성한다.
   const submitDataReducer = getReducer<SubmitData>();
   const [submitData, submitDataDispatch] = React.useReducer(submitDataReducer, {
-    email: "",
+    email: initial?.email ?? "",
     emailCode: "",
-    username: "",
+    username: initial?.username ?? "",
     name: "",
     password: "",
     passwordConfirm: "",
