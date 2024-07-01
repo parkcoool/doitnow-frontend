@@ -20,7 +20,7 @@ export default function SeachBar(props: TextFieldProps) {
         <TextField
           {...props}
           size="small"
-          placeholder="사용자 검색"
+          placeholder="이름, 사용자 이름 또는 이메일을 이용하여 사용자 검색"
           fullWidth
           InputProps={{
             startAdornment: (
