@@ -13,9 +13,11 @@ import searchUser from "apis/searchUser";
 import Narrow from "components/layout/Narrow";
 import useSessionStore from "contexts/useSessionStore";
 
+import SearchItem from "./SearchItem";
+
 import type { TextFieldProps } from "@mui/material";
 
-interface UserSearchResult {
+export interface UserSearchResult {
   id: number;
   name: string;
   username: string;
@@ -35,7 +37,7 @@ export default function SeachBar(props: TextFieldProps) {
     const accessToken = session.accessToken;
     if (accessToken === null) return;
 
-    if (inputValue.length < 3) {
+    if (inputValue.length < 2) {
       setSearchResults([]);
       return;
     }
@@ -43,9 +45,7 @@ export default function SeachBar(props: TextFieldProps) {
     let canceled = false;
     setLoading(true);
     searchUser({ query: inputValue }, accessToken.token).then((results) => {
-      if (canceled) {
-        return;
-      }
+      if (canceled) return;
       setLoading(false);
       setSearchResults(results.data.users);
     });
@@ -66,17 +66,29 @@ export default function SeachBar(props: TextFieldProps) {
     >
       <Narrow>
         <Autocomplete
+          freeSolo
           inputValue={inputValue}
           onInputChange={(_, value) => setInputValue(value)}
+          getOptionLabel={(option) =>
+            typeof option === "string" ? option : option.username
+          }
           options={searchResults}
-          getOptionLabel={(option) => option.name}
+          filterOptions={(x) => x}
           open={inputValue.length > 2}
+          renderOption={(props, option) => (
+            <SearchItem
+              {...props}
+              {...option}
+              query={inputValue}
+              key={option.id}
+            />
+          )}
           renderInput={(params) => (
             <TextField
               {...params}
               {...props}
               size="small"
-              placeholder="이름 또는 사용자 이름을 이용하여 사용자 검색"
+              placeholder="사용자 검색"
               fullWidth
               InputProps={{
                 ...params.InputProps,
